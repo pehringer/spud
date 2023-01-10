@@ -5,23 +5,24 @@ A very simple CPU that resembles modern designs (register based / Von Neumann ar
    _________________________
   |                         |
   |                     ____|___
-  |                    /        \                                     wrire memory
-  |                   /   adder  \-CUO0                              /
-  |                  /     /\     \                             CUO12
-  |  CUI1-.         /_____/  \_____\                                  read memory
-  |       |         |              |                                 /
-  |  CUI2-|    __   ]|-CUO2        ]|-CUO1                      CUO11
-  |       |   /  |  |              |                                  memory address bus
-  |  CUI3-|__sign|__|              |_________________________________/
-  |          \   |  |              |          |            |       |
-  |  CUI0     \__|  |              ]|--CUO4   ]|-CUO6      ]|-CU08 ]|-CUO9
-  |  |___________   |___________   |_______   |_________   |_______|
-  |  |instruction|  |accumulator|  |program|  |temporary|  |operand|
-  |  |register   |  |           |  |counter|  |         |  |       |
-  |  |___________|  |___________|  |_______|  |_________|  |_______|
-  |  |           |  |           |  |       |  |         |  |       |
-  |  |        CUO1  |        CU03  |    CU05  |      CU07  |   CUO10  memory data bus
-  |__|______________|______________|__________|____________|_________/
+  |                    /        \                                                wrire memory
+  |                   /   adder  \-CUO0                                         /
+  |                  /     /\     \                                        CUO12
+  |  CUI1-.         /_____/  \_____\                                             read memory
+  |       |         |              |                                            /
+  |  CUI2-|    __   ]|-CUO2        ]|-CUO1                                 CUO11
+  |       |   /  |  |              |                                             memory address bus
+  |  CUI3-|__sign|__|              |____________________________________________/
+  |          \   |  |              |              |              |           |
+  |  CUI0     \__|  |              ]|--CUO4       ]|-CUO6        ]|-CU08     ]|-CUO9
+  |  |___________   |___________   |___________   |___________   |___________|
+  |  |instruction|  |accumulator|  |program    |  |temporary  |  |operand    |
+  |  |register   |  |register   |  |counter    |  |register   |  |register   |
+  |  |           |  |           |  |register   |  |           |  |           |
+  |  |___________|  |___________|  |___________|  |___________|  |___________|
+  |  |           |  |           |  |           |  |           |  |           |
+  |  |        CUO1  |        CU03  |        CU05  |        CU07  |       CUO10   memory data bus
+  |__|______________|______________|______________|______________|______________/
 
 CUI0 - control unit input opcode
 CUI1 - control unit input accumulator zero
