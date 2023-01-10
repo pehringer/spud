@@ -5,7 +5,7 @@ A very simple CPU that resembles modern designs (register based / Von Neumann ar
    _________________________
   |                         |
   |                     ____|___
-  |                    /        \                                                wrire memory
+  |                    /        \                                                write memory
   |                   /   adder  \-carry in                                   __/
   |                  /     /\     \
   |  (0) -.         /_____/  \_____\                                             read memory
