@@ -6,7 +6,7 @@ A very simple CPU that resembles modern designs (register based / Von Neumann ar
   |                         |
   |                     ____|___
   |                    /        \                                                write memory
-  |                   /   adder  \-carry in                                   __/
+  |                   /   adder  \-carry in (++)                              __/
   |                  /     /\     \
   |  (0) -.         /_____/  \_____\                                             read memory
   |       |         |              |                                          __/
@@ -14,7 +14,7 @@ A very simple CPU that resembles modern designs (register based / Von Neumann ar
   |       |   /  |  |              |                                             memory address bus
   |  (+) -|__sign|__|              |____________________________________________/
   |          \   |  |              |              |              |           |
-  |  opcode   \__|  |              ]|-read        ]|-read        ]|-read     ]|-read
+  |  opcode   \__|  |              ]|-read        ]|-read        ]|-read     ]|-read not (~)
   |  |___________   |___________   |___________   |___________   |___________|
   |  |instruction|  |accumulator|  |program    |  |temporary  |  |operand    |
   |  |register   |  |register   |  |counter    |  |register   |  |register   |
