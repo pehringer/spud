@@ -15,17 +15,13 @@ A very simple CPU that resembles modern designs (register based / Von Neumann ar
 |  |  |_______________|  |  |
 |  |   _______________   |  |
 |  |  |Registers      |  |  |
-|  |  |_______________|  |  |
-|  |_____________________|  |
-|___________________________|
-
-        ||         /\
-       _||_       /__\
-       \  /        ||
-        \/         ||
- ___________________________
-|Memory Unit                |
-|___________________________|
+|  |  |_______________|  |  |   ___________    __________________________
+|  |_____________________|  |  |Memory Unit|  |Memory Mapped Peripherals|
+|___________________________|  |___________|  |_________________________|
+            |   |                  |   |                 |   |
+            |   |__________________|   |_________________|   |
+            |Memory Data Bus / Memory Address Bus            |
+            |________________________________________________|
 ```
 ###### Datapath Diagram
 ```
@@ -69,9 +65,9 @@ Machine Representation|Assembly Representation| Name     |Behaviour
 ```0xA [ADDRESS]```   |```JUMP_Z [ADDRESS]``` |Jump Zero     |```program_counter = accumulator == 0 ? memory[program_counter] : program_counter + 1```
 ```0xB [ADDRESS]```   |```JUMP_N [ADDRESS]``` |Jump Negative |```program_counter = accumulator < 0 ? memory[program_counter] : program_counter + 1```
 ```0xC [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter = accumulator > 0 ? memory[program_counter] : program_counter + 1```
-```0xD```             |```INPUT```            |Input         |```operand = input()```
-```0xE```             |```OUTPUT```           |Output        |```print(operand)```
-```0xF```             |```HALT```             |Halt          |```exit(opcode)```
+```0xD```             |```HALT```             |Halt          |```exit(opcode)```
+```0xE```             |                       |**RESERVED**  |
+```0xF```             |                       |**RESERVED**  |
 ###### Reduced 3-Bit Opcode Instruction Set
 Machine Representation|Assembly Representation| Name     |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------
