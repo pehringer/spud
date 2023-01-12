@@ -75,7 +75,7 @@ Machine Representation|Assembly Representation| Name     |Behaviour
 ###### Reduced 3-Bit Opcode Instruction Set
 Machine Representation|Assembly Representation| Name     |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------
-```0x0```             |```LOAD_I [VALUE]```   |Load Immediate|```operand = memory[program_counter++]```
+```0x0 [VALUE]```     |```LOAD_I [VALUE]```   |Load Immediate|```operand = memory[program_counter++]```
 ```0x1```             |```LOAD```             |Load          |```operand = memory[operand]```
 ```0x2```             |```SWAP```             |Swap          |```accumulator <=> operand```
 ```0x3```             |```ADD```              |Add           |```accumulator += operand```
