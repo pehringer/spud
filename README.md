@@ -1,7 +1,7 @@
 # Minimal_CPU
 A very simple CPU that resembles modern designs (register based / Von Neumann architecture) that is easy use and understand in its entirety.
 ## Diagrams
-###### System Diagram
+###### System Diagram:
 ```
  ___________________________
 |Central Processing Unit    |
@@ -23,7 +23,7 @@ A very simple CPU that resembles modern designs (register based / Von Neumann ar
             |Memory Data Bus / Memory Address Bus            |
             |________________________________________________|
 ```
-###### Datapath Diagram
+###### Datapath Diagram:
 ```
    _________________________
   |                         |
@@ -49,7 +49,19 @@ A very simple CPU that resembles modern designs (register based / Von Neumann ar
   
 ```
 ## Instruction Set
-###### 4-Bit Opcode Instruction Set
+
+##### 4-Bit Opcode Instruction Set
+
+###### Rules of Thumb
+- Any instructions with a letter abbreviation ending are operations involving immediate values.
+- Any instructions without a letter abbreviation ending are operations involving the operand register.
+- Values are loaded to the operand register.
+- Values are strore fron the accumulator register.
+- The arithmetic operations use the accumulator and operand registers.
+- The result of arithmetic operations are stored in the accumulator registers.
+- Values can be swapped between the accumulator and operand registers.
+- Conditional jumps use the accumulator register as the condition.
+
 Machine Representation|Assembly Representation| Name     |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------
 ```0x0 [VALUE]```     |```LOAD_I [VALUE]```   |Load Immediate|```operand = memory[program_counter++]```
@@ -68,7 +80,11 @@ Machine Representation|Assembly Representation| Name     |Behaviour
 ```0xD```             |```HALT```             |Halt          |```exit(opcode)```
 ```0xE```             |                       |**RESERVED**  |
 ```0xF```             |                       |**RESERVED**  |
-###### Reduced 3-Bit Opcode Instruction Set
+
+####### Reduced 3-Bit Opcode Instruction Set
+
+It is possible to reduce the instruction set down to the bare minimum. *NOTE* Conditional jumps now use the operand register instead of immediate values.
+
 Machine Representation|Assembly Representation| Name     |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------
 ```0x0 [VALUE]```     |```LOAD_I [VALUE]```   |Load Immediate|```operand = memory[program_counter++]```
