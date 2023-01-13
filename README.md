@@ -54,7 +54,7 @@ s |                                                                             
 
 ## Instruction Set
 
-Rules of Thumb
+**Rules of Thumb**
 - Instructions with letter abbreviation endings are operations involving immediate values.
 - Instructions without letter abbreviation endings are operations involving the operand register.
 - Values are loaded to the operand register.
@@ -85,8 +85,8 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 
 ## Reduced  Instruction Set
 
-**NOTE**: It is possible to further simplify the instruction set down to 8 instructions, however this impacts code density.  
-**NOTE**: conditional jumps now use the operand register instead of immediate values.  
+**NOTE** - it is possible to further simplify the instruction set down to 8 instructions, however this impacts code density.  
+**NOTE** - conditional jumps now use the operand register instead of immediate values.  
 
 Machine Representation|Assembly Representation| Name         |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------
