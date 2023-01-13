@@ -53,12 +53,12 @@ A very simple CPU that resembles modern designs (register based / Von Neumann ar
 ##### 4-Bit Opcode Instruction Set
 
 ###### Rules of Thumb
-- Any instructions with a letter abbreviation ending are operations involving immediate values.
-- Any instructions without a letter abbreviation ending are operations involving the operand register.
+- Instructions with letter abbreviation endings are operations involving immediate values.
+- Instructions without letter abbreviation endings are operations involving the operand register.
 - Values are loaded to the operand register.
 - Values are strore fron the accumulator register.
-- The arithmetic operations use the accumulator and operand registers.
-- The result of arithmetic operations are stored in the accumulator registers.
+- Arithmetic operations use the accumulator and operand registers.
+- Result of arithmetic operations are stored in the accumulator register.
 - Values can be swapped between the accumulator and operand registers.
 - Conditional jumps use the accumulator register as the condition.
 
@@ -83,7 +83,7 @@ Machine Representation|Assembly Representation| Name     |Behaviour
 
 ####### Reduced 3-Bit Opcode Instruction Set
 
-It is possible to reduce the instruction set down to the bare minimum. *NOTE* Conditional jumps now use the operand register instead of immediate values.
+It is possible to further simplify the instruction set down to 8 instructions. However impacts code density *NOTE* Conditional jumps now use the operand register instead of immediate values.
 
 Machine Representation|Assembly Representation| Name     |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------
