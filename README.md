@@ -1,56 +1,58 @@
 # Minimal_CPU
 A very simple CPU that resembles modern designs (register based / Von Neumann architecture) that is easy use and understand in its entirety.
-## Diagrams
-###### System Diagram:
-```
- ___________________________
-|Central Processing Unit    |
-|   _____________________   |
-|  |Control Unit         |  |
-|  |_____________________|  |
-|   _____________________   |
-|  |Datapath             |  |
-|  |   _______________   |  |
-|  |  |Arithmetic Unit|  |  |
-|  |  |_______________|  |  |
-|  |   _______________   |  |
-|  |  |Registers      |  |  |
-|  |  |_______________|  |  |   ___________    __________________________
-|  |_____________________|  |  |Memory Unit|  |Memory Mapped Peripherals|
-|___________________________|  |___________|  |_________________________|
-            |   |                  |   |                 |   |
-            |   |__________________|   |_________________|   |
-            |Memory Data Bus / Memory Address Bus            |
-            |________________________________________________|
-```
-###### Datapath Diagram:
-```
-   _________________________
-  |                         |
-  |                    _____|____
-  |                   /Arithmetic\                                               Memory Write
-  |                  / Unit       \--Carry In (++)                          ____/
-  |                 /      /\      \
-  |  (0)--.        /______/  \______\                                            Memory Read
-  |       |         |              |                                        ____/
-  |  (-)--|    __   ]|--Use Input  ]|--Use Input
-  |       |   /  |  |              |                                             Memory Address Bus
-  |  (+)--|__Sign|__|              |____________________________________________/
-  |          \   |  |              |              |              |           |
-  |  Opcode   \__|  |              ]|--Read       ]|--Read       ]|--Read    ]|--Read Not (~)
-  |  |___________   |___________   |___________   |___________   |___________|
-  |  |Instruction|  |Accumulator|  |Program    |  |Temporary  |  |Operand    |
-  |  |Register   |  |Register   |  |Counter    |  |Register   |  |Register   |
-  |  |           |  |           |  |Register   |  |           |  |           |
-  |  |___________|  |___________|  |___________|  |___________|  |___________|
-  |  |           |  |           |  |           |  |           |  |           |
-  |  |       Write  |       Write  |       Write  |       Write  |       Write   Memory Data Bus
-  |__|______________|______________|______________|______________|______________/
-  
-```
-## Instruction Set
 
-##### 4-Bit Opcode Instruction Set
+## System Diagram
+```
+   ___________________________________________________________________________________
+  |Control Unit                                                                       |
+  |___________________________________________________________________________________|
+                                   |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+                                   Z  P  |  N  I  |  O  W  W  R  W  R  W  R  W  R  W  R
+                                   e  o  |  e  n  |  p  r  r  e  r  e  r  e  r  e  r  e
+                                   r  s  |  g  p  |  c  i  i  a  i  a  i  a  i  a  i  a
+                                   o  i  |  a  u  |  o  t  t  d  t  d  t  d  t  d  t  d
+   _________________________          t  |  t  t  |  d  e  w  0  e  1  e  2  e  |  e  |
+  |                         |         i  |  i  0  |  e  0  1     2     3     4  N  |  M
+  |  .--Zero           _____|____     v  |  v     |                             o  M  e
+  |  |                /Arithmetic\    e  |  e     |                             t  e  m
+  |  |--Positive     /Addition    \______|        |                                m  o
+  |  |              /Unit  /\      \ Carry In     |                                o  r
+  |  |--Negative   /______/  \______\             |                                r  y
+  |  |              |              |    __________|                                y
+  |  |         __   ]|--Input0     ]|--' Input1
+  |  |        /  |  |              |
+  |  |_______Sign|__|              |____________________________________________
+  |          \   |  |              |              |              |     Read  |  |
+  |  Opcode   \__|  |      Read0--|[      Read1--|[      Read2--|[     Not--|[  |
+  |  |___________   |___________   |___________   |___________   |___________|  |
+  |  |Instruction|  |Accumulator|  |Program    |  |Temporary  |  |Operand    |  |
+M |  |Register   |  |Register   |  |Counter    |  |Register   |  |Register   |  | M
+e |  |           |  |           |  |Register   |  |           |  |           |  | e
+m |  |___________|  |___________|  |___________|  |___________|  |___________|  | m
+o |  |           |  |           |  |           |  |           |  |           |  | o
+r |  |      Write0  |      Write1  |      Write2  |      Write3  |      Write4  | r
+y |__|______________|______________|______________|______________|              | y
+  |                                                                             |
+D |                                                                             | A
+a |                                                                             | d
+t |   _______________________________________________________________________   | d
+a |__|Memory Unit                                                            |__| r
+  |  |_______________________________________________________________________|  | e
+B |                                                                             | s
+u |                                                                             | s
+s |                                                                             |
+  |   _______________________________________________________________________   | B
+  |__|Memory Mapped Peripheral - Terminal Input                              |__| u
+  |  |_______________________________________________________________________|  | s
+  |                                                                             |
+  |                                                                             |
+  |                                                                             |
+  |   _______________________________________________________________________   |
+  |__|Memory Mapped Peripheral - Terminal Output                             |__|
+     |_______________________________________________________________________|
+```
+
+## Instruction Set
 
 ###### Rules of Thumb
 - Instructions with letter abbreviation endings are operations involving immediate values.
@@ -62,7 +64,7 @@ A very simple CPU that resembles modern designs (register based / Von Neumann ar
 - Values can be swapped between the accumulator and operand registers.
 - Conditional jumps use the accumulator register as the condition.
 
-Machine Representation|Assembly Representation| Name     |Behaviour
+Machine Representation|Assembly Representation| Name         |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------
 ```0x0 [VALUE]```     |```LOAD_I [VALUE]```   |Load Immediate|```operand = memory[program_counter++]```
 ```0x1```             |```LOAD```             |Load          |```operand = memory[operand]```
@@ -81,11 +83,12 @@ Machine Representation|Assembly Representation| Name     |Behaviour
 ```0xE```             |                       |**RESERVED**  |
 ```0xF```             |                       |**RESERVED**  |
 
-####### Reduced 3-Bit Opcode Instruction Set
+###### Reduced 3-Bit Opcode Instruction Set
 
-It is possible to further simplify the instruction set down to 8 instructions. However impacts code density *NOTE* Conditional jumps now use the operand register instead of immediate values.
+It is possible to further simplify the instruction set down to 8 instructions. However this impacts code density
+- *NOTE*: conditional jumps now use the operand register instead of immediate values.
 
-Machine Representation|Assembly Representation| Name     |Behaviour
+Machine Representation|Assembly Representation| Name         |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------
 ```0x0 [VALUE]```     |```LOAD_I [VALUE]```   |Load Immediate|```operand = memory[program_counter++]```
 ```0x1```             |```LOAD```             |Load          |```operand = memory[operand]```
