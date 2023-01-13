@@ -83,7 +83,7 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```0xE```             |                       |**RESERVED**  |
 ```0xF```             |                       |**RESERVED**  |
 
-## Reduced Instruction Set
+## Reduced Instruction Set (Not Used)
 
 It is possible to further simplify the instruction set down to 8 instructions. However this impacts code density. Note that the conditional jumps now use the operand register instead of immediate values.  
 
