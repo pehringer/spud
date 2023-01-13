@@ -80,8 +80,6 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```0xB [ADDRESS]```   |```JUMP_N [ADDRESS]``` |Jump Negative |```program_counter = accumulator < 0 ? memory[program_counter] : program_counter + 1```
 ```0xC [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter = accumulator > 0 ? memory[program_counter] : program_counter + 1```
 ```0xD```             |```HALT```             |Halt          |```exit(opcode)```
-```0xE```             |                       |**RESERVED**  |
-```0xF```             |                       |**RESERVED**  |
 
 ## Reduced Instruction Set (Not Used)
 
