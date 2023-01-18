@@ -144,3 +144,5 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 #### JUMP_N
 
 #### JUMP_P
+
+#### HALT
