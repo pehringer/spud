@@ -1,4 +1,5 @@
 # Minimal_Computer
+
 A very simple computer that resembles modern designs. That is easy use and understand in its entirety.
  - Von Neumann architecture.
  - Word addressable memory.
@@ -6,6 +7,7 @@ A very simple computer that resembles modern designs. That is easy use and under
  - Register based instructions.
 
 ## System Diagram
+
 ```
    ######################################################################### 
    #============================# PROCESSOR #==============================#
@@ -56,13 +58,13 @@ A very simple computer that resembles modern designs. That is easy use and under
 |  #########################################################################  |
 |                                                                             |
 |   _______________________________________________________________________   |
-|  |Terminal Input                                                         |  |
+|  |Terminal Input Unit                                                    |  |
 |  |_______________________________________________________________________|  |
 |__|Character Input Register                                 Address: 65500|__|
 |  |_______________________________________________________________________|  |
 |                                                                             |
 |   _______________________________________________________________________   |
-|  |Terminal Output                                                        |  |
+|  |Terminal Output Unit                                                   |  |
 |  |_______________________________________________________________________|  |
 |__|Character Output Register                                Address: 65501|__|
 |  |_______________________________________________________________________|  |
@@ -71,7 +73,7 @@ A very simple computer that resembles modern designs. That is easy use and under
 Data Bus                                                            Address Bus
 ```
 
-## Instruction Set
+## Processor Instruction Set
 
 Rules of Thumb
 - Instructions with letter abbreviation endings are operations involving immediate values.
@@ -95,12 +97,12 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```0x7 [ADDRESS]```   |```SAVE_A [ADDRESS]``` |Save Address  |```memory[memory[program_counter_register++]] = accumulator_register```
 ```0x8```             |```JUMP```             |Jump          |```program_counter_register = memory[operand_register]```
 ```0x9 [ADDRESS]```   |```JUMP_A [ADDRESS]``` |Jump Any      |```program_counter_register = memory[program_counter]```
-```0xA [ADDRESS]```   |```JUMP_Z [ADDRESS]``` |Jump Zero     |```program_counter_register = accumulator_register == 0 ? memory[program_counter_register] : program_counter_register + 1```
-```0xB [ADDRESS]```   |```JUMP_N [ADDRESS]``` |Jump Negative |```program_counter_register = accumulator_register < 0 ? memory[program_counter_register] : program_counter_register + 1```
-```0xC [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter_register = accumulator_register > 0 ? memory[program_counter_register] : program_counter_register + 1```
+```0xA [ADDRESS]```   |```JUMP_Z [ADDRESS]``` |Jump Zero     |```program_counter_register = accumulator_register == 0 ? memory[program_counter_register] : ++program_counter_register```
+```0xB [ADDRESS]```   |```JUMP_N [ADDRESS]``` |Jump Negative |```program_counter_register = accumulator_register < 0 ? memory[program_counter_register] : ++program_counter_register```
+```0xC [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter_register = accumulator_register > 0 ? memory[program_counter_register] : ++program_counter_register```
 ```0xD```             |```HALT```             |Halt          |```exit(operand)```
 
-## Reduced Instruction Set (Not Used)
+## Reduced Processor Instruction Set (Not Used)
 
 It is possible to further simplify the instruction set down to 8 instructions. However this impacts code density. Note that the conditional jumps now use the operand register instead of immediate values.
 
@@ -112,6 +114,33 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```0x3```             |```ADD```              |Add           |```accumulator_register += operand_register```
 ```0x4```             |```SUB```              |Subtract      |```accumulator_register -= operand_register```
 ```0x5```             |```SAVE```             |Save          |```memory[operand_register] = accumulator_register```
-```0x6```             |```JUMP_N```           |Jump Negative |```program_counter_register = accumulator_register < 0 ? operand_register : program_counter_register + 1```
-```0x7```             |```JUMP_P```           |Jump Positive |```program_counter_register = accumulator_register > 0 ? operand_register : program_counter_register + 1```
+```0x6```             |```JUMP_N```           |Jump Negative |```program_counter_register = accumulator_register < 0 ? operand_register : ++program_counter_register```
+```0x7```             |```JUMP_P```           |Jump Positive |```program_counter_register = accumulator_register > 0 ? operand_register : ++program_counter_register```
 
+## Processor Instruction Examples
+
+#### LOAD_I
+
+#### LOAD
+
+#### LOAD_A
+
+#### SWAP
+
+#### ADD
+
+#### SUB
+
+#### SAVE
+
+#### SAVE_A
+
+#### JUMP
+
+#### JUMP_A
+
+#### JUMP_Z
+
+#### JUMP_N
+
+#### JUMP_P
