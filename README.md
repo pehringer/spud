@@ -91,7 +91,6 @@ Instruction Set Rules of Thumb
 - Conditional jumps use the accumulator registers as the condition.
 
 Instruction Set Data Flow Diagram
-
 ```
  _____________________________________________________
 | Memory/Input/Output Unit                            |
@@ -108,6 +107,8 @@ Instruction Set Data Flow Diagram
 |Register   |  |           |  \  ____  /  |           |
 |___________|  |___________|   \|    |/   |___________|
 ```
+
+Instruction Set
 
 Machine Representation|Assembly Representation| Name         |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------------------------------------------
