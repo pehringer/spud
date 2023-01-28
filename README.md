@@ -77,7 +77,7 @@ Data Bus                                                            Address Bus
 
 Rules of Thumb
 - Instructions with letter abbreviation endings are operations involving immediate values.
-- Instructions without letter abbreviation endings are operations involving the operand register.
+- Instructions without letter abbreviation endings are operations involving the operand register (except for HALT).
 - Values are loaded to the operand register.
 - Values are strore fron the accumulator register.
 - Arithmetic operations use the accumulator and operand registers.
@@ -100,7 +100,7 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```0xA [ADDRESS]```   |```JUMP_Z [ADDRESS]``` |Jump Zero     |```program_counter_register = accumulator_register == 0 ? memory[program_counter_register] : ++program_counter_register```
 ```0xB [ADDRESS]```   |```JUMP_N [ADDRESS]``` |Jump Negative |```program_counter_register = accumulator_register < 0 ? memory[program_counter_register] : ++program_counter_register```
 ```0xC [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter_register = accumulator_register > 0 ? memory[program_counter_register] : ++program_counter_register```
-```0xD```             |```HALT```             |Halt          |```exit(operand)```
+```0xD```             |```HALT```             |Halt          |```exit()```
 
 ## Reduced Processor Instruction Set (Not Used)
 

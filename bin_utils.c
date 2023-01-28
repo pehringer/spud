@@ -16,6 +16,10 @@ void create_binary_file(const char *filepath, const struct machine_code program)
 
 struct machine_code load_binary_file(const char *filepath) {
   FILE *file = fopen(filepath, "rb");
+  if(!file) {
+    printf("Could not open: %s\n", filepath);
+    exit(-1);
+  }
   int size = 0;
   fread(&size, sizeof(int), 1, file);
   int *data = malloc(sizeof(int) * size);
@@ -36,7 +40,7 @@ void free_machine_code(struct machine_code program) {
 Example Machine Code Programs
 ****************************/
 
-int hello_world_machine_code[65] = {
+int hello_world_machine_code[63] = {
 LOAD_I,
 'H',
 SWAP,
@@ -99,12 +103,10 @@ LOAD_I,
 SWAP,
 SAVE_A,
 TERMINAL_OUTPUT,
-LOAD_I,
-0,
 HALT
 };
 
-int echo_machine_code[37] = {
+int echo_machine_code[35] = {
 LOAD_I,
 '>',
 SWAP,
@@ -139,17 +141,15 @@ SAVE_A,
 TERMINAL_INPUT,
 JUMP_A,
 17,
-LOAD_I,
-0,
 HALT
 };
 
 void recreate_example_binary_files() {
   struct machine_code program;
-  program.size = 65;
+  program.size = sizeof(hello_world_machine_code);
   program.data = hello_world_machine_code;
   create_binary_file("binary_examples/hello_world.BIN", program);
-  program.size = 37;
+  program.size = sizeof(echo_machine_code);
   program.data = echo_machine_code;
   create_binary_file("binary_examples/echo.BIN", program);
 }
