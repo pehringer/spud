@@ -3,6 +3,10 @@
 
 
 
+/********************
+Binary File Utilities
+********************/
+
 void create_binary_file(const char *filepath, const struct machine_code program) {
   FILE *file = fopen(filepath, "wb");
   fwrite(&program.size, sizeof(int), 1, file);
@@ -24,6 +28,13 @@ struct machine_code load_binary_file(const char *filepath) {
 void free_machine_code(struct machine_code program) {
   free(program.data);
 }
+
+
+
+
+/****************************
+Example Machine Code Programs
+****************************/
 
 int hello_world_machine_code[65] = {
 LOAD_I,
@@ -106,16 +117,12 @@ LOAD_I,
 SWAP,
 SAVE_A,
 TERMINAL_OUTPUT,
-
-
 LOAD_I,
 0,
 SWAP,
 SAVE_A,
 TERMINAL_INPUT,
-
-
-LOAD_A, //here
+LOAD_A,
 TERMINAL_INPUT,
 SWAP,
 SAVE_A,

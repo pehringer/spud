@@ -7,6 +7,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdint.h>
+#include<string.h>
+#include<time.h>
 #include"bin_utils.h"
 
 
@@ -14,6 +16,7 @@
 /***************
 Pocessor Opcodes
 ***************/
+
 #define LOAD_I 0
 #define LOAD 1
 #define LOAD_A 2
@@ -35,6 +38,7 @@ Pocessor Opcodes
 /****************************
 Peripheral Register Addresses
 ****************************/
+
 #define FIRST_PERIPHERAL 65500
 #define TERMINAL_INPUT 65500
 #define TERMINAL_OUTPUT 65501
@@ -45,6 +49,7 @@ Peripheral Register Addresses
 /****************************
 Miscellaneous Register Values
 *****************************/
+
 #define EMPTY 0
 #define END_OF_INPUT '\n'
 

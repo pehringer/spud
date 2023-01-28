@@ -18,18 +18,18 @@ static uint16_t temporary_register = EMPTY;
 static uint16_t memory[FIRST_PERIPHERAL];
 
 //Memory mapped peripheral register inits.
-static uint16_t character_input_register = END_OF_INPUT;
-static uint16_t character_output_register = EMPTY;
+static uint16_t input_register = END_OF_INPUT;
+static uint16_t output_register = EMPTY;
 
 static uint16_t memory_read(uint16_t address) {
   if(address < FIRST_PERIPHERAL) {
     return memory[address];
   }
   if(address == TERMINAL_INPUT) {
-    return character_input_register;
+    return input_register;
   }
   if(address == TERMINAL_OUTPUT) {
-    return character_output_register;
+    return output_register;
   }
   return 0;
 }
@@ -39,10 +39,10 @@ static void memory_write(uint16_t address, uint16_t value) {
     memory[address] = value;
   }
   if(address == TERMINAL_INPUT) {
-    character_input_register = value;
+    input_register = value;
   }
   if(address == TERMINAL_OUTPUT) {
-    character_output_register = value;
+    output_register = value;
   }
 }
 
@@ -63,17 +63,17 @@ static void load_memory(struct machine_code program) {
 Computer Peripherals
 *******************/
 
-static void simulate_terminal_input() {
-  if(character_input_register == EMPTY) {
-    character_input_register = getc(stdin);
+static void simulate_input() {
+  if(input_register == EMPTY) {
+    input_register = getc(stdin);
   }
 }
 
-static void simulate_terminal_output() {
-  if(character_output_register != EMPTY) {
-    putc(character_output_register, stdout);
+static void simulate_output() {
+  if(output_register != EMPTY) {
+    putc(output_register, stdout);
     fflush(stdout);
-    character_output_register = EMPTY;
+    output_register = EMPTY;
   }
 }
 
@@ -182,30 +182,54 @@ static void simulate_processor() {
 Computer Runtime
 ***************/
 
+//Simulation parameter inits.
+static const char *program_filepath = "binary_examples/hello_world.BIN";
+static int input_cycle_milliseconds = 10;
+static int output_cycle_milliseconds = 10;
+static int processor_cycle_milliseconds = 10;
+
 static void simulate_runtime(const char *program_filepath) {
   struct machine_code program = load_binary_file(program_filepath);
   load_memory(program);
   free_machine_code(program);
+  struct timespec now;
+  unsigned long now_milliseconds;
+  unsigned long last_input_cycle = 0;
+  unsigned long last_output_cycle = 0;
+  unsigned long last_processor_cycle = 0;
   while(1) {
-    simulate_terminal_input();
-    simulate_terminal_output();
-    simulate_processor();
+    clock_gettime(CLOCK_REALTIME, &now);
+    now_milliseconds = (now.tv_sec * 1000) + (now.tv_nsec / 1000000);
+    if(now_milliseconds - last_input_cycle >= input_cycle_milliseconds) {
+      last_input_cycle = now_milliseconds;
+      simulate_input();
+    }
+    if(now_milliseconds - last_output_cycle >= output_cycle_milliseconds) {
+      last_output_cycle = now_milliseconds;
+      simulate_output();
+    }
+    if(now_milliseconds - last_processor_cycle >= processor_cycle_milliseconds) {
+      last_processor_cycle = now_milliseconds;
+      simulate_processor();
+    }
   }
 }
 
 void main(int argc, char **argv) {
-  const char *program_filepath;
-  switch(argc) {
-    case 1:
-      recreate_example_binary_files();
-      program_filepath = "binary_examples/hello_world.BIN";
-      break;
-    case 2:
-      program_filepath = argv[1];
-      break;
-    default:
-      printf("Too Many Arguments\n");
-      exit(1);
+  recreate_example_binary_files();
+  if(argc > 1) {
+    program_filepath = argv[1];
+    for(int arg_number = 2; arg_number < argc; arg_number++) {
+      if(!strcmp(argv[arg_number], "-inCycMilli")) {
+        input_cycle_milliseconds = strtol(argv[++arg_number], NULL, 10);
+      }
+      else if(!strcmp(argv[arg_number], "-outCycMilli")) {
+        output_cycle_milliseconds = strtol(argv[++arg_number], NULL, 10);
+      }
+      else if(!strcmp(argv[arg_number], "-proCycMilli")) {
+        processor_cycle_milliseconds = strtol(argv[++arg_number], NULL, 10);
+      }
+    }
   }
   simulate_runtime(program_filepath);
   exit(0);
