@@ -6,7 +6,7 @@ A very simple computer that resembles modern designs. That is easy use and under
  - Memory mapped peripherals.
  - Register based instructions.
 
-## Hardware System Diagram
+## System Hardware Diagram
 
 ```
  _____________________________________________________________________________ 
