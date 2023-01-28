@@ -6,7 +6,7 @@ A very simple computer that resembles modern designs. That is easy use and under
  - Memory mapped peripherals.
  - Register based instructions.
 
-## System Diagram
+## Hardware System Diagram
 
 ```
    ######################################################################### 
@@ -71,6 +71,25 @@ A very simple computer that resembles modern designs. That is easy use and under
 |                                                                             |
 |                                                                             |
 Data Bus                                                            Address Bus
+```
+
+## Programmatic System Diagram
+
+```
+ ___________________________________________________
+| Memory/Input/Output Unit                          |
+|___________________________________________________|
+     __             __
+    |  |           |  |                      /\
+   _|  |_         _|  |_                    /  \
+   \    /         \    /                   /_  _\
+    \  /           \  /                     |  |
+     \/             \/                      |__|
+ ___________    ___________              ___________
+|Program    |  |Operand    |  /|____|\  |Accumulator|
+|Counter    |  |Register   | /        \ |Register   |
+|Register   |  |           | \  ____  / |           |
+|___________|  |___________|  \|    |/  |___________|
 ```
 
 ## Processor Instruction Set
