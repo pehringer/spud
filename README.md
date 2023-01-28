@@ -9,16 +9,12 @@ A very simple computer that resembles modern designs. That is easy use and under
 ## Hardware System Diagram
 
 ```
-   ######################################################################### 
-   #============================# PROCESSOR #==============================#
-   #########################################################################
-
  _____________________________________________________________________________ 
 |Control Unit                                                                 |
 |_____________________________________________________________________________|
                            |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
                           /  /   Z  P  |  N  I  |  O  W  W  R  W  R  W  R  W  R
-             Data Bus Read  /    o  |  e  n  |  p  r  r  e  r  e  r  e  r  e  e
+             Data Bus Read  /    o  o  |  e  n  |  p  r  r  e  r  e  r  e  r  e
                            /     r  s  |  g  p  |  c  i  i  a  i  a  i  a  i  a
              Data Bus Write      o  i  |  a  u  |  o  t  t  d  t  d  t  d  t  d
  _________________________          t  |  t  t  |  d  e  w  0  e  1  e  2  e  |
@@ -44,18 +40,27 @@ A very simple computer that resembles modern designs. That is easy use and under
 |__|______________|______________|______________|______________|              |
 |                                                                             |
 |                                                                             |
-|  #########################################################################  |
-|  #==============================# MEMORY #===============================#  |
-|  #########################################################################  |
+|                                                                             |
+|                                                                             |
+|                                                                             |
+|                                                                             |
 |                                                                             |
 |   _______________________________________________________________________   |
 |__|Memory Unit                                    Address Range: 0 - 65499|__|
 |  |_______________________________________________________________________|  |
+|  |_______________________________________________________________________|  |
+|  |_______________________________________________________________________|  |
+|  |_______________________________________________________________________|  |
+|  |_______________________________________________________________________|  |
+|  |_______________________________________________________________________|  |
+|  |_______________________________________________________________________|  |
+|  |_______________________________________________________________________|  |
 |                                                                             |
 |                                                                             |
-|  #########################################################################  |
-|  #============================# PERIPHERALS #============================#  |
-|  #########################################################################  |
+|                                                                             |
+|                                                                             |
+|                                                                             |
+|                                                                             |
 |                                                                             |
 |   _______________________________________________________________________   |
 |  |Input Unit                                                             |  |
@@ -73,36 +78,36 @@ A very simple computer that resembles modern designs. That is easy use and under
 Data Bus                                                            Address Bus
 ```
 
-## Programmatic System Diagram
-
-```
- ___________________________________________________
-| Memory/Input/Output Unit                          |
-|___________________________________________________|
-     __             __
-    |  |           |  |                      /\
-   _|  |_         _|  |_                    /  \
-   \    /         \    /                   /_  _\
-    \  /           \  /                     |  |
-     \/             \/                      |__|
- ___________    ___________              ___________
-|Program    |  |Operand    |  /|____|\  |Accumulator|
-|Counter    |  |Register   | /        \ |Register   |
-|Register   |  |           | \  ____  / |           |
-|___________|  |___________|  \|    |/  |___________|
-```
-
 ## Processor Instruction Set
 
-Rules of Thumb
+Instruction Set Rules of Thumb
 - Instructions with letter abbreviation endings are operations involving immediate values.
 - Instructions without letter abbreviation endings are operations involving the operand register (except for HALT).
-- Values are loaded to the operand register.
-- Values are strore fron the accumulator register.
+- Values are loaded into the operand and program counter registers.
+- Values are strore from the accumulator register.
 - Arithmetic operations use the accumulator and operand registers.
 - Result of arithmetic operations are stored in the accumulator register.
 - Values can be swapped between the accumulator and operand registers.
-- Conditional jumps use the accumulator register as the condition.
+- Conditional jumps use the accumulator registers as the condition.
+
+Instruction Set Data Flow Diagram
+
+```
+ _____________________________________________________
+| Memory/Input/Output Unit                            |
+|_____________________________________________________|
+     __             __
+    |  |           |  |                        /\
+   _|  |_         _|  |_                      /  \
+   \    /         \    /                     /_  _\
+    \  /           \  /                       |  |
+     \/             \/                        |__|
+ ___________    ___________                ___________
+|Program    |  |Operand    |   /|____|\   |Accumulator|
+|Counter    |  |Register   |  /        \  |Register   |
+|Register   |  |           |  \  ____  /  |           |
+|___________|  |___________|   \|    |/   |___________|
+```
 
 Machine Representation|Assembly Representation| Name         |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------------------------------------------
@@ -121,7 +126,7 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```0xC [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter_register = accumulator_register > 0 ? memory[program_counter_register] : ++program_counter_register```
 ```0xD```             |```HALT```             |Halt          |```exit()```
 
-## Reduced Processor Instruction Set (Not Used)
+## Processor Reduced Instruction Set (Not Used)
 
 It is possible to further simplify the instruction set down to 8 instructions. However this impacts code density. Note that the conditional jumps now use the operand register instead of immediate values.
 
