@@ -5,7 +5,7 @@ A very simple computer that resembles modern designs. That is easy use and under
  - Von Neumann architecture.
  - Word addressable memory.
  - Memory mapped peripherals.
- - Register based instructions.
+ - Register based machine.
 
 ---
 # Table of Contents
