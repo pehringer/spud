@@ -146,39 +146,201 @@ Keep the below diagram in mind when using the instruction set.
 |___________|  |___________|   \|    |/   |___________|
 ```
 
-### ++X
+### X += 1
 
-Given:
-
-- ```X_ADDRESS``` - Address of variable X.
+```X``` - Address of variable X.  
 
 ```
-LOAD_A X_ADDRESS    ;Load X
+LOAD_A X
 SWAP
 LOAD_I 1
 ADD
 SAVE_A X
 ```
 
-### X = Y + Z
+### X = Y - Z
 
-### Y = ARRAY[X]
+```X``` - Address of variable X.  
+```Y``` - Address of variable Y.  
+```Z``` - Address of variable Z.  
 
-### IF X < Y
+```
+LOAD_A Y
+SWAP
+LOAD_A Z
+SUB
+SAVE_A X
+```
+
+### X = A[Y]
+
+```A``` - Address of first array element.  
+```X``` - Address of variable X.  
+```Y``` - Address of variable Y.  
+
+```
+LOAD_I A
+SWAP
+LOAD_A Y
+ADD
+SWAP
+LOAD
+SWAP
+SAVE_A X
+```
+
+### IF(X < Y)
+
+```X``` - Address of variable X.  
+```Y``` - Address of variable Y.  
+```A``` - Address of first instruction after if block.  
+
+```
+LOAD_A X
+SWAP
+LOAD_A Y
+SUB
+JUMP_Z A
+JUMP_P A
+```
 
 ### IF(X <= Y)
 
+```X``` - Address of variable X.  
+```Y``` - Address of variable Y.  
+```A``` - Address of first instruction after if block.  
+
+```
+LOAD_A X
+SWAP
+LOAD_A Y
+SUB
+JUMP_P A
+```
+
 ### IF(X == Y)
+
+```X``` - Address of variable X.  
+```Y``` - Address of variable Y.  
+```A``` - Address of first instruction after if block.  
+
+```
+LOAD_A X
+SWAP
+LOAD_A Y
+SUB
+JUMP_N A
+JUMP_P A
+```
 
 ### IF(X != y)
 
+```X``` - Address of variable X.  
+```Y``` - Address of variable Y.  
+```A``` - Address of first instruction after if block.  
+
+```
+LOAD_A X
+SWAP
+LOAD_A Y
+SUB
+JUMP_Z A
+```
+
 ### IF(X >= Y)
+
+```X``` - Address of variable X.  
+```Y``` - Address of variable Y.  
+```A``` - Address of first instruction after if block.
+
+```
+LOAD_A X
+SWAP
+LOAD_A Y
+SUB
+JUMP_N A
+```
 
 ### IF(X > Y)
 
+```X``` - Address of variable X.  
+```Y``` - Address of variable Y.  
+```A``` - Address of first instruction after if block.  
+
+```
+LOAD_A X
+SWAP
+LOAD_A Y
+SUB
+JUMP_N A
+JUMP_Z A
+```
+
+### WHILE(X++ != 0)
+
+```X``` - Address of variable X.  
+```Y``` - Address of variable Y.  
+```A``` - Address of first instruction after while block.  
+```W``` - Address of first while statement instruction.  
+
+```
+LOAD_A X
+SWAP
+JUMP_Z A
+LOAD_I 1
+ADD
+SAVE_A X
+JUMP_A W
+```
+
 ### PUSH(X)
 
-### PEEK()
+```X``` - Address of variable X.  
+```S``` - Address of stack pointer (holds address of next empty element on top of the stack).  
+
+```
+LOAD_A X
+SWAP
+LOAD_A S
+SAVE
+SWAP
+LOAD_I 1
+SUB
+SAVE_A S
+```
+
+### X = PEEK()
+
+```X``` - Address of variable X.  
+```S``` - Address of stack pointer (holds address of next empty element on top of the stack).  
+
+```
+LOAD_A S
+SWAP
+LOAD_I 1
+ADD
+SWAP
+LOAD
+SWAP
+SAVE_A X
+```
 
 ### X = POP()
 
+```X``` - Address of variable X.  
+```S``` - Address of stack pointer (holds address of next empty element on top of the stack).  
+
+```
+LOAD_A S
+SWAP
+LOAD_I 1
+ADD
+SAVE_A S
+SWAP
+LOAD
+SWAP
+SAVE_A X
+```
+
+---
+# That All... For Now!!!
