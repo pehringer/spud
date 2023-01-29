@@ -245,9 +245,9 @@ IF: LOAD_A VAR_X
     SUB
     JUMP_Z END_IF
     JUMP_P END_IF
-  
+
     ; Conditional code here.
-  
+
 END_IF:
 ```
 
@@ -282,7 +282,7 @@ IF: LOAD_A VAR_X
     JUMP_P END_IF
 
     ; Conditional code here.
-  
+
 END_IF:
 ```
 
@@ -299,7 +299,7 @@ IF: LOAD_A VAR_X
     JUMP_Z END_IF
 
     ; Conditional code here.
-  
+
 END_IF:
 ```
 
@@ -316,7 +316,7 @@ IF: LOAD_A VAR_X
     JUMP_N END_IF
 
     ; Conditional code here.
-  
+
 END_IF:
 ```
 
@@ -334,7 +334,7 @@ IF: LOAD_A VAR_X
     JUMP_Z END_IF
 
     ; Conditional code here.
-  
+
 END_IF:
 ```
 
