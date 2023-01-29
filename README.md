@@ -13,7 +13,7 @@ A very simple computer that resembles modern designs. That is easy use and under
 [Hardware Diagram](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#hardware-diagram)  
 [Hardware Workarounds](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#hardware-workarounds)  
 [Instruction Set](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#instruction-set)  
-[Instruction Set Examples](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#instruction-set-examples)  
+[Assembly Code Examples](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#assembly-code-examples)  
 
 ---
 # Hardware Diagram
@@ -111,17 +111,17 @@ So to subtract the computer does the following:
 The computer lacks a stack pointer register, so how then does the computer support stack operations? The computer simply stores the stack pointer in memory and loads it in when need. So to push a variable onto the stack the computer does the following:
 
 ```VAR``` - Address of variable.  
-```PTR``` - Address of stack pointer.  
+```STK_PTR``` - Address of stack pointer.  
 
 ```
 LOAD_A VAR
 SWAP
-LOAD_A PTR
+LOAD_A STK_PTR
 SAVE
 SWAP
 LOAD_I 1
 SUB
-SAVE_A PTR
+SAVE_A STK_PTR
 ```
 
 ---
@@ -160,9 +160,9 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```7```             |```JUMP_P```           |Jump Positive |```program_counter_register = accumulator_register > 0 ? operand_register : ++program_counter_register```
 
 ---
-# Instruction Set Examples
+# Assembly Code Examples
 
-When using the instruction set it is useful to keep in mind how data is moved around and used
+When using the instruction set it is useful to keep in mind how data is moved around and used.
 
 - Values are loaded into the operand and program counter registers.
 - Values are strore from the accumulator register.
@@ -192,198 +192,214 @@ Keep the below diagram in mind when using the instruction set.
 
 ### X += 1
 
-```X``` - Address of variable X.  
+```VAR_X``` - Address of variable X.  
 
 ```
-LOAD_A X
+LOAD_A VAR_X
 SWAP
 LOAD_I 1
 ADD
-SAVE_A X
+SAVE_A VAR_X
 ```
 
 ### X = Y - Z
 
-```X``` - Address of variable X.  
-```Y``` - Address of variable Y.  
-```Z``` - Address of variable Z.  
+```VAR_X``` - Address of variable X.  
+```VAR_Y``` - Address of variable Y.  
+```VAR_Z``` - Address of variable Z.  
 
 ```
-LOAD_A Y
+LOAD_A VAR_Y
 SWAP
-LOAD_A Z
+LOAD_A VAR_Z
 SUB
-SAVE_A X
+SAVE_A VAR_X
 ```
 
 ### X = A[Y]
 
-```A``` - Address of first array element.  
-```X``` - Address of variable X.  
-```Y``` - Address of variable Y.  
+```ARRAY``` - Address of first array element.  
+```VAR_X``` - Address of variable X.  
+```VAR_Y``` - Address of variable Y.  
 
 ```
-LOAD_I A
+LOAD_I ARRAY
 SWAP
-LOAD_A Y
+LOAD_A VAR_Y
 ADD
 SWAP
 LOAD
 SWAP
-SAVE_A X
+SAVE_A VAR_X
 ```
 
 ### IF(X < Y)
 
-```X``` - Address of variable X.  
-```Y``` - Address of variable Y.  
-```A``` - Address of first instruction after if block.  
+```VAR_X``` - Address of variable X.  
+```VAR_Y``` - Address of variable Y.  
 
 ```
-LOAD_A X
-SWAP
-LOAD_A Y
-SUB
-JUMP_Z A
-JUMP_P A
+IF: LOAD_A VAR_X
+    SWAP
+    LOAD_A VAR_Y
+    SUB
+    JUMP_Z END_IF
+    JUMP_P END_IF
+  
+    ; Conditional code here.
+  
+END_IF:
 ```
 
 ### IF(X <= Y)
 
-```X``` - Address of variable X.  
-```Y``` - Address of variable Y.  
-```A``` - Address of first instruction after if block.  
+```VAR_X``` - Address of variable X.  
+```VAR_Y``` - Address of variable Y.  
 
 ```
-LOAD_A X
-SWAP
-LOAD_A Y
-SUB
-JUMP_P A
+IF: LOAD_A VAR_X
+    SWAP
+    LOAD_A VAR_Y
+    SUB
+    JUMP_P END_IF
+
+    ; Conditional code here.
+
+END_IF:
 ```
 
 ### IF(X == Y)
 
-```X``` - Address of variable X.  
-```Y``` - Address of variable Y.  
-```A``` - Address of first instruction after if block.  
+```VAR_X``` - Address of variable X.  
+```VAR_Y``` - Address of variable Y.  
 
 ```
-LOAD_A X
-SWAP
-LOAD_A Y
-SUB
-JUMP_N A
-JUMP_P A
+IF: LOAD_A VAR_X
+    SWAP
+    LOAD_A VAR_Y
+    SUB
+    JUMP_N END_IF
+    JUMP_P END_IF
+
+    ; Conditional code here.
+  
+END_IF:
 ```
 
 ### IF(X != y)
 
-```X``` - Address of variable X.  
-```Y``` - Address of variable Y.  
-```A``` - Address of first instruction after if block.  
+```VAR_X``` - Address of variable X.  
+```VAR_Y``` - Address of variable Y.  
 
 ```
-LOAD_A X
-SWAP
-LOAD_A Y
-SUB
-JUMP_Z A
+IF: LOAD_A VAR_X
+    SWAP
+    LOAD_A VAR_Y
+    SUB
+    JUMP_Z END_IF
+
+    ; Conditional code here.
+  
+END_IF:
 ```
 
 ### IF(X >= Y)
 
-```X``` - Address of variable X.  
-```Y``` - Address of variable Y.  
-```A``` - Address of first instruction after if block.
+```VAR_X``` - Address of variable X.  
+```VAR_Y``` - Address of variable Y.  
 
 ```
-LOAD_A X
-SWAP
-LOAD_A Y
-SUB
-JUMP_N A
+IF: LOAD_A VAR_X
+    SWAP
+    LOAD_A VAR_Y
+    SUB
+    JUMP_N END_IF
+
+    ; Conditional code here.
+  
+END_IF:
 ```
 
 ### IF(X > Y)
 
-```X``` - Address of variable X.  
-```Y``` - Address of variable Y.  
-```A``` - Address of first instruction after if block.  
+```VAR_X``` - Address of variable X.  
+```VAR_Y``` - Address of variable Y.  
 
 ```
-LOAD_A X
-SWAP
-LOAD_A Y
-SUB
-JUMP_N A
-JUMP_Z A
+IF: LOAD_A VAR_X
+    SWAP
+    LOAD_A VAR_Y
+    SUB
+    JUMP_N END_IF
+    JUMP_Z END_IF
+
+    ; Conditional code here.
+  
+END_IF:
 ```
 
-### WHILE(X++ != 0)
+### WHILE(X != 0)
 
-```X``` - Address of variable X.  
-```Y``` - Address of variable Y.  
-```A``` - Address of first instruction after while block.  
-```W``` - Address of first while statement instruction.  
+```VAR_X``` - Address of variable X.  
 
 ```
-LOAD_A X
-SWAP
-JUMP_Z A
-LOAD_I 1
-ADD
-SAVE_A X
-JUMP_A W
+WHILE: LOAD_A VAR_X
+       SWAP
+       JUMP_Z END
+
+       ; Conditional code here.
+
+       JUMP_A WHILE
+END_WHILE:
 ```
 
 ### PUSH(X)
 
-```X``` - Address of variable X.  
-```S``` - Address of stack pointer.  
+```VAR_X``` - Address of variable X.  
+```STK_PTR``` - Address of stack pointer.  
 
 ```
-LOAD_A X
+LOAD_A VAR_X
 SWAP
-LOAD_A S
+LOAD_A STK_PTR
 SAVE
 SWAP
 LOAD_I 1
 SUB
-SAVE_A S
+SAVE_A STK_PTR
 ```
 
 ### X = PEEK()
 
-```X``` - Address of variable X.  
-```S``` - Address of stack pointer.  
+```VAR_X``` - Address of variable X.  
+```STK_PTR``` - Address of stack pointer.  
 
 ```
-LOAD_A S
+LOAD_A STK_PTR
 SWAP
 LOAD_I 1
 ADD
 SWAP
 LOAD
 SWAP
-SAVE_A X
+SAVE_A VAR_X
 ```
 
 ### X = POP()
 
-```X``` - Address of variable X.  
-```S``` - Address of stack pointer.  
+```VAR_X``` - Address of variable X.  
+```STK_PTR``` - Address of stack pointer.  
 
 ```
-LOAD_A S
+LOAD_A STK_PTR
 SWAP
 LOAD_I 1
 ADD
-SAVE_A S
+SAVE_A STK_PTR
 SWAP
 LOAD
 SWAP
-SAVE_A X
+SAVE_A VAR_X
 ```
 
 ---
