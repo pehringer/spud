@@ -10,9 +10,9 @@ A very simple computer that resembles modern designs. That is easy use and under
 ---
 # Table of Contents
 
-[Hardware Diagram](https://github.com/pehringer/Minimal_Computer/edit/main/README.md#hardware-diagram)  
-[Instruction Set](https://github.com/pehringer/Minimal_Computer/edit/main/README.md#instruction-set)  
-[Instruction Set Examples](https://github.com/pehringer/Minimal_Computer/edit/main/README.md#instruction-set-examples)  
+[Hardware Diagram](https://github.com/pehringer/Minimal_Computer/main/README.md#hardware-diagram)  
+[Instruction Set](https://github.com/pehringer/Minimal_Computer/main/README.md#instruction-set)  
+[Instruction Set Examples](https://github.com/pehringer/Minimal_Computer/main/README.md#instruction-set-examples)  
 
 ---
 # Hardware Diagram
