@@ -8,6 +8,13 @@ A very simple computer that resembles modern designs. That is easy use and under
  - Register based instructions.
 
 ---
+# Table of Contents
+
+[Hardware Diagram](https://github.com/pehringer/Minimal_Computer/edit/main/README.md#hardware-diagram)  
+[Instruction Set](https://github.com/pehringer/Minimal_Computer/edit/main/README.md#instruction-set)  
+[Instruction Set Examples](https://github.com/pehringer/Minimal_Computer/edit/main/README.md#instruction-set-examples)  
+
+---
 # Hardware Diagram
 
 ```
@@ -343,4 +350,4 @@ SAVE_A X
 ```
 
 ---
-# That All... For Now!!!
+# That is All... For Now!!!
