@@ -108,7 +108,7 @@ So to subtract the computer does the following:
 
 ### Stack Operations
 
-The computer lacks a stack pointer register, so how then does the computer stack operations? The computer simply stores the stack pointer in memory and loads it in when need. So to push a variable onto the stack the computer does the following:
+The computer lacks a stack pointer register, so how then does the computer support stack operations? The computer simply stores the stack pointer in memory and loads it in when need. So to push a variable onto the stack the computer does the following:
 
 ```VAR``` - Address of variable.  
 ```PTR``` - Address of stack pointer.  
