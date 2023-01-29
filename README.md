@@ -1,3 +1,4 @@
+---
 # Minimal_Computer
 
 A very simple computer that resembles modern designs. That is easy use and understand in its entirety.
@@ -6,7 +7,8 @@ A very simple computer that resembles modern designs. That is easy use and under
  - Memory mapped peripherals.
  - Register based instructions.
 
-## System Hardware Diagram
+---
+# Hardware Diagram
 
 ```
  _____________________________________________________________________________ 
@@ -78,11 +80,46 @@ A very simple computer that resembles modern designs. That is easy use and under
 Data Bus                                                            Address Bus
 ```
 
-## Processor Instruction Set
+---
+# Instruction Set
 
-Instruction Set Rules of Thumb
-- Instructions with letter abbreviation endings are operations involving immediate values.
-- Instructions without letter abbreviation endings are operations involving the operand register (except for HALT).
+Machine Representation|Assembly Representation| Name         |Behaviour
+----------------------|-----------------------|--------------|---------------------------------------------------------------------------------------------------------------------------
+```0 [VALUE]```     |```LOAD_I [VALUE]```   |Load Immediate|```operand_register = memory[program_counter_register++]```
+```1```             |```LOAD```             |Load          |```operand_register = memory[operand_register]```
+```2 [ADDRESS]```   |```LOAD_A [ADDRESS]``` |Load Address  |```operand_register = memory[memory[program_counter_register++]]```
+```3```             |```SWAP```             |Swap          |```accumulator_register <=> operand_register```
+```4```             |```ADD```              |Add           |```accumulator_register += operand_register```
+```5```             |```SUB```              |Subtract      |```accumulator_register -= operand_register```
+```6```             |```SAVE```             |Save Operand  |```memory[operand_register] = accumulator_register```
+```7 [ADDRESS]```   |```SAVE_A [ADDRESS]``` |Save Address  |```memory[memory[program_counter_register++]] = accumulator_register```
+```8```             |```JUMP```             |Jump          |```program_counter_register = memory[operand_register]```
+```9 [ADDRESS]```   |```JUMP_A [ADDRESS]``` |Jump Any      |```program_counter_register = memory[program_counter]```
+```10 [ADDRESS]```   |```JUMP_Z [ADDRESS]``` |Jump Zero     |```program_counter_register = accumulator_register == 0 ? memory[program_counter_register] : ++program_counter_register```
+```11 [ADDRESS]```   |```JUMP_N [ADDRESS]``` |Jump Negative |```program_counter_register = accumulator_register < 0 ? memory[program_counter_register] : ++program_counter_register```
+```12 [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter_register = accumulator_register > 0 ? memory[program_counter_register] : ++program_counter_register```
+```13```             |```HALT```             |Halt          |```exit()```
+
+### Reduced Instruction Set (Not Used)
+
+It is possible to further simplify the instruction set down to 8 instructions. However this impacts code density. Note that the conditional jumps now use the operand register instead of immediate values.
+
+Machine Representation|Assembly Representation| Name         |Behaviour
+----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------------------------
+```0 [VALUE]```     |```LOAD_I [VALUE]```   |Load Immediate|```operand_register = memory[program_counter_register++]```
+```1```             |```LOAD```             |Load          |```operand_register = memory[operand_register]```
+```2```             |```SWAP```             |Swap          |```accumulator_register <=> operand_register```
+```3```             |```ADD```              |Add           |```accumulator_register += operand_register```
+```4```             |```SUB```              |Subtract      |```accumulator_register -= operand_register```
+```5```             |```SAVE```             |Save          |```memory[operand_register] = accumulator_register```
+```6```             |```JUMP_N```           |Jump Negative |```program_counter_register = accumulator_register < 0 ? operand_register : ++program_counter_register```
+```7```             |```JUMP_P```           |Jump Positive |```program_counter_register = accumulator_register > 0 ? operand_register : ++program_counter_register```
+
+---
+# Instruction Set Examples
+
+When using the instruction set it is useful to keep in mind how data is moved around and used
+
 - Values are loaded into the operand and program counter registers.
 - Values are strore from the accumulator register.
 - Arithmetic operations use the accumulator and operand registers.
@@ -90,7 +127,8 @@ Instruction Set Rules of Thumb
 - Values can be swapped between the accumulator and operand registers.
 - Conditional jumps use the accumulator registers as the condition.
 
-Instruction Set Data Flow Diagram
+Keep the below diagram in mind when using the instruction set.
+
 ```
  _____________________________________________________
 | Memory/Input/Output Unit                            |
@@ -108,66 +146,39 @@ Instruction Set Data Flow Diagram
 |___________|  |___________|   \|    |/   |___________|
 ```
 
-Instruction Set
+### ++X
 
-Machine Representation|Assembly Representation| Name         |Behaviour
-----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------------------------------------------
-```0x0 [VALUE]```     |```LOAD_I [VALUE]```   |Load Immediate|```operand_register = memory[program_counter_register++]```
-```0x1```             |```LOAD```             |Load          |```operand_register = memory[operand_register]```
-```0x2 [ADDRESS]```   |```LOAD_A [ADDRESS]``` |Load Address  |```operand_register = memory[memory[program_counter_register++]]```
-```0x3```             |```SWAP```             |Swap          |```accumulator_register <=> operand_register```
-```0x4```             |```ADD```              |Add           |```accumulator_register += operand_register```
-```0x5```             |```SUB```              |Subtract      |```accumulator_register -= operand_register```
-```0x6```             |```SAVE```             |Save Operand  |```memory[operand_register] = accumulator_register```
-```0x7 [ADDRESS]```   |```SAVE_A [ADDRESS]``` |Save Address  |```memory[memory[program_counter_register++]] = accumulator_register```
-```0x8```             |```JUMP```             |Jump          |```program_counter_register = memory[operand_register]```
-```0x9 [ADDRESS]```   |```JUMP_A [ADDRESS]``` |Jump Any      |```program_counter_register = memory[program_counter]```
-```0xA [ADDRESS]```   |```JUMP_Z [ADDRESS]``` |Jump Zero     |```program_counter_register = accumulator_register == 0 ? memory[program_counter_register] : ++program_counter_register```
-```0xB [ADDRESS]```   |```JUMP_N [ADDRESS]``` |Jump Negative |```program_counter_register = accumulator_register < 0 ? memory[program_counter_register] : ++program_counter_register```
-```0xC [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter_register = accumulator_register > 0 ? memory[program_counter_register] : ++program_counter_register```
-```0xD```             |```HALT```             |Halt          |```exit()```
+Given:
 
-## Processor Reduced Instruction Set (Not Used)
+- ```X_ADDRESS``` - Address of variable X.
 
-It is possible to further simplify the instruction set down to 8 instructions. However this impacts code density. Note that the conditional jumps now use the operand register instead of immediate values.
+```
+LOAD_A X_ADDRESS    ;Load X
+SWAP
+LOAD_I 1
+ADD
+SAVE_A X
+```
 
-Machine Representation|Assembly Representation| Name         |Behaviour
-----------------------|-----------------------|--------------|-----------------------------------------------------------------------------------------------------------
-```0x0 [VALUE]```     |```LOAD_I [VALUE]```   |Load Immediate|```operand_register = memory[program_counter_register++]```
-```0x1```             |```LOAD```             |Load          |```operand_register = memory[operand_register]```
-```0x2```             |```SWAP```             |Swap          |```accumulator_register <=> operand_register```
-```0x3```             |```ADD```              |Add           |```accumulator_register += operand_register```
-```0x4```             |```SUB```              |Subtract      |```accumulator_register -= operand_register```
-```0x5```             |```SAVE```             |Save          |```memory[operand_register] = accumulator_register```
-```0x6```             |```JUMP_N```           |Jump Negative |```program_counter_register = accumulator_register < 0 ? operand_register : ++program_counter_register```
-```0x7```             |```JUMP_P```           |Jump Positive |```program_counter_register = accumulator_register > 0 ? operand_register : ++program_counter_register```
+### X = Y + Z
 
-## Processor Instruction Examples
+### Y = ARRAY[X]
 
-#### LOAD_I
+### IF X < Y
 
-#### LOAD
+### IF(X <= Y)
 
-#### LOAD_A
+### IF(X == Y)
 
-#### SWAP
+### IF(X != y)
 
-#### ADD
+### IF(X >= Y)
 
-#### SUB
+### IF(X > Y)
 
-#### SAVE
+### PUSH(X)
 
-#### SAVE_A
+### PEEK()
 
-#### JUMP
+### X = POP()
 
-#### JUMP_A
-
-#### JUMP_Z
-
-#### JUMP_N
-
-#### JUMP_P
-
-#### HALT
