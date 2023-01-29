@@ -11,6 +11,7 @@ A very simple computer that resembles modern designs. That is easy use and under
 # Table of Contents
 
 [Hardware Diagram](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#hardware-diagram)  
+[Hardware Workarounds](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#hardware-workarounds)  
 [Instruction Set](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#instruction-set)  
 [Instruction Set Examples](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#instruction-set-examples)  
 
@@ -29,9 +30,9 @@ A very simple computer that resembles modern designs. That is easy use and under
  _________________________          t  |  t  t  |  d  e  w  0  e  1  e  2  e  |
 |                         |         i  |  i  0  |  e  0  1     2     3     4  N
 |  .--Zero           _____|____     v  |  v     |                             o
-|  |                /Arithmetic\    e  |  e     |                             t
-|  |--Positive     /Addition    \______|        |
-|  |              /Unit  /\      \ Carry In     |
+|  |                /Adder Unit\    e  |  e     |                             t
+|  |--Positive     /            \______|        |
+|  |              /      /\      \ Carry In     |
 |  |--Negative   /______/  \______\             |
 |  |              |              |    __________|
 |  |         __   ]|--Input0     ]|--' Input1
@@ -85,6 +86,42 @@ A very simple computer that resembles modern designs. That is easy use and under
 |                                                                             |
 |                                                                             |
 Data Bus                                                            Address Bus
+```
+
+---
+# Hardware Workarounds
+
+### Subtraction Operations
+
+The computer lacks a subtractor unit, so how then does the computer support subtraction operations? The computer simply makes the right operand negative and then adds it to the left operand:  
+
+```left - right  --->  left + (-right)```
+
+To get the twos compliments of a binary number (negative version of the number) two steps are required in the following order:
+
+1) Bitwise not the number (use operand registers ```Read Not```).
+2) Increment the number by one (use adders carry in).
+
+So to subtract the computer does the following:  
+
+```accumulator_register + (~operand_register) + 1```
+
+### Stack Operations
+
+The computer lacks a stack pointer register, so how then does the computer stack operations? The computer simply stores the stack pointer in memory and loads it in when need. So to push a variable onto the stack the computer does the following:
+
+```VAR``` - Address of variable.  
+```PTR``` - Address of stack pointer.  
+
+```
+LOAD_A VAR
+SWAP
+LOAD_A PTR
+SAVE
+SWAP
+LOAD_I 1
+SUB
+SAVE_A PTR
 ```
 
 ---
@@ -303,7 +340,7 @@ JUMP_A W
 ### PUSH(X)
 
 ```X``` - Address of variable X.  
-```S``` - Address of stack pointer (holds address of next empty element on top of the stack).  
+```S``` - Address of stack pointer.  
 
 ```
 LOAD_A X
@@ -319,7 +356,7 @@ SAVE_A S
 ### X = PEEK()
 
 ```X``` - Address of variable X.  
-```S``` - Address of stack pointer (holds address of next empty element on top of the stack).  
+```S``` - Address of stack pointer.  
 
 ```
 LOAD_A S
@@ -335,7 +372,7 @@ SAVE_A X
 ### X = POP()
 
 ```X``` - Address of variable X.  
-```S``` - Address of stack pointer (holds address of next empty element on top of the stack).  
+```S``` - Address of stack pointer.  
 
 ```
 LOAD_A S
