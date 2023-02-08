@@ -10,53 +10,51 @@ A very simple computer that resembles modern designs. That is easy use and under
 ---
 # Table of Contents
 
-[Hardware Diagram](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#hardware-diagram)  
-[Hardware Workarounds](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#hardware-workarounds)  
-[Instruction Set](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#instruction-set)  
-[Assembly Code Examples](https://github.com/pehringer/Minimal_Computer/blob/main/README.md#assembly-code-examples)  
+[Hardware Diagram](#hardware-diagram)  
+[Hardware Workarounds](#hardware-workarounds)  
+[Instruction Set](#instruction-set)  
+[Assembly Code Examples](#assembly-code-examples)  
 
 ---
 # Hardware Diagram
-
-```
- _____________________________________________________________________________ 
-|Control Unit                                                                 |
-|_____________________________________________________________________________|
-                           |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-                          /  /   Z  P  |  N  I  |  O  W  W  R  W  R  W  R  W  R
-             Data Bus Read  /    o  o  |  e  n  |  p  r  r  e  r  e  r  e  r  e
-                           /     r  s  |  g  p  |  c  i  i  a  i  a  i  a  i  a
-             Data Bus Write      o  i  |  a  u  |  o  t  t  d  t  d  t  d  t  d
- _________________________          t  |  t  t  |  d  e  w  0  e  1  e  2  e  |
-|                         |         i  |  i  0  |  e  0  1     2     3     4  N
-|  .--Zero           _____|____     v  |  v     |                             o
-|  |                /Adder Unit\    e  |  e     |                             t
-|  |--Positive     /            \______|        |
-|  |              /      /\      \ Carry In     |
-|  |--Negative   /______/  \______\             |
-|  |              |              |    __________|
-|  |         __   ]|--Input0     ]|--' Input1
-|  |        /  |  |              |
-|  |_______Sign|__|              |____________________________________________
-|          \   |  |              |              |              |     Read  |  |
-|  Opcode   \__|  |      Read0--|[      Read1--|[      Read2--|[     Not--|[  |
-|  |___________   |___________   |___________   |___________   |___________|  |
+```                        ___________________________________________________ 
+                          |Control Unit                                       |
+                         13__12__11__10___9___8___7___6___5___4___3___2___1___0
+                          |   |   |   |   |   |   |   |   |   |   |   |   |   |
+                Read Memory   |   C   I   I   W   W   R   W   R   W   R   W   R
+                              |   a   n   n   r   r   e   r   e   r   e   r   e
+                   Write Memory   r   p   p   i   i   a   i   a   i   a   i   a
+                                  r   u   u   t   t   d   t   d   t   d   t   d
+ _________________________        y   t   t   e   w   |   e   |   e   |   e   |
+|                         |       |   |   |   |   |   P   |   T   |   O   |   O
+|                    _____|____   I   L   R   I   A   C   P   E   T   P   O   P
+|                   /Adder Unit\  n   e   i   R   C       C       E       P   |
+|                  /            \_|   f   g                                   N
+|  Positive       /      /\      \    t   h                                   o
+|  |             /______/  \______\       t                                   t
+|  |  Negative    |              |        |
+|  |  |   _____   ]|--Input Left ]|-------'
+|  |  '--1     |  |              |                                  Address Bus
+|  |     | Sign|__|              |____________________________________________
+|  |     | Unit|  |              |              |              |   Read OP |  |
+|  |_____0_____|  |    Read PC--|[    Read TE--|[    Read OP--|[     Not--|[  |
+|   ___________   |___________   |___________   |___________   |___________|  |
 |  |Instruction|  |Accumulator|  |Program    |  |Temporary  |  |Operand    |  |
 |  |Register   |  |Register   |  |Counter    |  |Register   |  |Register   |  |
 |  |           |  |           |  |Register   |  |           |  |           |  |
 |  |___________|  |___________|  |___________|  |___________|  |___________|  |
 |  |           |  |           |  |           |  |           |  |           |  |
-|  |      Write0  |      Write1  |      Write2  |      Write3  |      Write4  |
+|  |    Write IR  |    Write AC  |    Write PC  |    Write TE  |    Write OP  |
 |__|______________|______________|______________|______________|              |
 |                                                                             |
-|                                                                             |
+| Data Bus                                                                    |
 |                                                                             |
 |                                                                             |
 |                                                                             |
 |                                                                             |
 |                                                                             |
 |   _______________________________________________________________________   |
-|__|Memory Unit                                    Address Range: 0 - 65499|__|
+|__|Memory Unit                                  Address Range: 0 - 1048575|__|
 |  |_______________________________________________________________________|  |
 |  |_______________________________________________________________________|  |
 |  |_______________________________________________________________________|  |
@@ -75,17 +73,14 @@ A very simple computer that resembles modern designs. That is easy use and under
 |   _______________________________________________________________________   |
 |  |Input Unit                                                             |  |
 |  |_______________________________________________________________________|  |
-|__|Input Register                                           Address: 65500|__|
+|__|Input Register                                         Address: 1048576|__|
 |  |_______________________________________________________________________|  |
 |                                                                             |
 |   _______________________________________________________________________   |
 |  |Output Unit                                                            |  |
 |  |_______________________________________________________________________|  |
-|__|Output Register                                          Address: 65501|__|
-|  |_______________________________________________________________________|  |
-|                                                                             |
-|                                                                             |
-Data Bus                                                            Address Bus
+|__|Output Register                                        Address: 1048577|__|
+   |_______________________________________________________________________|
 ```
 
 ---
