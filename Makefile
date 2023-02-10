@@ -1,2 +1,2 @@
 simulator :
-	gcc bin_utils.c simulator.c -o simulator
+	gcc binary_utils.c simulator.c -o simulator

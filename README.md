@@ -135,8 +135,8 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```8```             |```JUMP```             |Jump          |```program_counter_register = memory[operand_register]```
 ```9 [ADDRESS]```   |```JUMP_A [ADDRESS]``` |Jump Any      |```program_counter_register = memory[program_counter]```
 ```10 [ADDRESS]```   |```JUMP_Z [ADDRESS]``` |Jump Zero     |```program_counter_register = accumulator_register == 0 ? memory[program_counter_register] : ++program_counter_register```
-```11 [ADDRESS]```   |```JUMP_N [ADDRESS]``` |Jump Negative |```program_counter_register = accumulator_register < 0 ? memory[program_counter_register] : ++program_counter_register```
-```12 [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter_register = accumulator_register > 0 ? memory[program_counter_register] : ++program_counter_register```
+```13 [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter_register = accumulator_register > 0 ? memory[program_counter_register] : ++program_counter_register```
+```12 [ADDRESS]```   |```JUMP_N [ADDRESS]``` |Jump Negative |```program_counter_register = accumulator_register < 0 ? memory[program_counter_register] : ++program_counter_register```
 ```13```             |```HALT```             |Halt          |```exit()```
 
 ### Reduced Instruction Set (Not Used)
@@ -151,8 +151,8 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```3```             |```ADD```              |Add           |```accumulator_register += operand_register```
 ```4```             |```SUB```              |Subtract      |```accumulator_register -= operand_register```
 ```5```             |```SAVE```             |Save          |```memory[operand_register] = accumulator_register```
-```6```             |```JUMP_N```           |Jump Negative |```program_counter_register = accumulator_register < 0 ? operand_register : ++program_counter_register```
-```7```             |```JUMP_P```           |Jump Positive |```program_counter_register = accumulator_register > 0 ? operand_register : ++program_counter_register```
+```6```             |```JUMP_P```           |Jump Positive |```program_counter_register = accumulator_register > 0 ? operand_register : ++program_counter_register```
+```7```             |```JUMP_N```           |Jump Negative |```program_counter_register = accumulator_register < 0 ? operand_register : ++program_counter_register```
 
 ---
 # Assembly Code Examples
