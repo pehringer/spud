@@ -3,32 +3,40 @@
 
 
 
+
+
+
+
 //Control unit bitmasks.
-#define LINE_READ_OPERAND_REGISTER_NOT 1
-#define LINE_WRITE_OPERAND_REGISTER 2
-#define LINE_READ_OPERAND_REGISTER 4
-#define LINE_WRITE_TEMPORARY_REGISTER 8
-#define LINE_READ_TEMPORARY_REGISTER 16
-#define LINE_WRITE_PROGRAM_COUNTER_REGISTER 32
-#define LINE_READ_PROGRAM_COUNTER_REGISTER 64
-#define LINE_WRITE_ACCUMULATOR_REGISTER 128
-#define LINE_WRITE_INSTRUCTION_REGISTER 256
-#define LINE_INPUT_RIGHT 512
-#define LINE_INPUT_LEFT 1024
-#define LINE_CARRY_IN 2048
-#define LINE_WRITE_MEMORY 4096
-#define LINE_READ_MEMORY 8192
+#define LINE_READ_OPERAND_REGISTER_NOT 1       //Bit 0
+#define LINE_WRITE_OPERAND_REGISTER 2          //Bit 1
+#define LINE_READ_OPERAND_REGISTER 4           //Bit 2
+#define LINE_WRITE_TEMPORARY_REGISTER 8        //Bit 3
+#define LINE_READ_TEMPORARY_REGISTER 16        //Bit 4
+#define LINE_WRITE_PROGRAM_COUNTER_REGISTER 32 //Bit 5
+#define LINE_READ_PROGRAM_COUNTER_REGISTER 64  //Bit 6
+#define LINE_WRITE_ACCUMULATOR_REGISTER 128    //Bit 7
+#define LINE_WRITE_INSTRUCTION_REGISTER 256    //Bit 8
+#define LINE_INPUT_RIGHT 512                   //Bit 9
+#define LINE_INPUT_LEFT 1024                   //Bit 10
+#define LINE_CARRY_IN 2048                     //Bit 11
+#define LINE_WRITE_MEMORY 4096                 //Bit 12
+#define LINE_READ_MEMORY 8192                  //Bit 13
 
 //Sign unit bitmasks.
-#define LINE_POSITIVE 1
-#define LINE_NEGATIVE 2
-#define POSITIVE_BITS 2147483647
-#define NEGATIVE_BITS 2147483648
+#define LINE_POSITIVE 1          //Bit 0
+#define LINE_NEGATIVE 2          //Bit 1
+#define POSITIVE_BITS 2147483647 //Bit 0-30
+#define NEGATIVE_BITS 2147483648 //Bit 31
 
 
 
 
-static void simulate_system_clock_cycle(struct simulation *sim) {
+
+
+
+
+static int simulate_system_clock_cycle(struct simulation *sim) {
   /******* Simulate Control Unit *******/
   static const uint32_t CONTROL_UNIT_STATE[3][14][8] = {
     {//     Clock Count / Accumulator Register (0)
@@ -84,56 +92,49 @@ static void simulate_system_clock_cycle(struct simulation *sim) {
     }
   };
   int opcode = sim->instruction_register;
+  if(opcode > HALT)
+    return 0;
   int clock = sim->clock_count % 8;
   int sign = sim->sign_unit_lines;
   sim->control_unit_lines = CONTROL_UNIT_STATE[sign][opcode][clock];
   /******* Simulate Register Reads *******/
   sim->address_bus = 0;
-  if(sim->control_unit_lines & LINE_READ_PROGRAM_COUNTER_REGISTER) {
+  if(sim->control_unit_lines & LINE_READ_PROGRAM_COUNTER_REGISTER)
     sim->address_bus |= sim->program_counter_register;
-  }
-  if(sim->control_unit_lines & LINE_READ_TEMPORARY_REGISTER) {
+  if(sim->control_unit_lines & LINE_READ_TEMPORARY_REGISTER)
     sim->address_bus |= sim->temporary_register;
-  }
-  if(sim->control_unit_lines & LINE_READ_OPERAND_REGISTER) {
+  if(sim->control_unit_lines & LINE_READ_OPERAND_REGISTER)
     sim->address_bus |= sim->operand_register;
-  }
-  if(sim->control_unit_lines & LINE_READ_OPERAND_REGISTER_NOT) {
+  if(sim->control_unit_lines & LINE_READ_OPERAND_REGISTER_NOT)
     sim->address_bus |= ~(sim->operand_register);
-  }
   /******* Simulate Adder Unit *******/
   sim->data_bus = 0;
-  if(sim->control_unit_lines & LINE_INPUT_LEFT) {
+  if(sim->control_unit_lines & LINE_INPUT_LEFT)
     sim->data_bus += sim->accumulator_register;
-  }
-  if(sim->control_unit_lines & LINE_INPUT_RIGHT) {
+  if(sim->control_unit_lines & LINE_INPUT_RIGHT)
     sim->data_bus += sim->address_bus;
-  }
-  if(sim->control_unit_lines & LINE_CARRY_IN) {
+  if(sim->control_unit_lines & LINE_CARRY_IN)
     sim->data_bus += 1;
-  }
   /******* Simulate Memory Unit *******/
   if(sim->control_unit_lines & LINE_READ_MEMORY) {
-    if(sim->address_bus < ADDRESS_INPUT_REGISTER) {
+    if(sim->address_bus < ADDRESS_INPUT_REGISTER)
       sim->data_bus |= sim->memory[sim->address_bus];
-    }
-    if(sim->address_bus == ADDRESS_INPUT_REGISTER) {
+    if(sim->address_bus == ADDRESS_INPUT_REGISTER)
       sim->data_bus |= sim->input_register;
-    }
-    if(sim->address_bus == ADDRESS_OUTPUT_REGISTER) {
+    if(sim->address_bus == ADDRESS_OUTPUT_REGISTER)
       sim->data_bus |= sim->output_register;
-    }
+    if(sim->address_bus > ADDRESS_OUTPUT_REGISTER)
+      return 0;
   }
   if(sim->control_unit_lines & LINE_WRITE_MEMORY) {
-    if(sim->address_bus < ADDRESS_INPUT_REGISTER) {
+    if(sim->address_bus < ADDRESS_INPUT_REGISTER)
       sim->memory[sim->address_bus] = sim->data_bus;
-    }
-    if(sim->address_bus == ADDRESS_INPUT_REGISTER) {
+    if(sim->address_bus == ADDRESS_INPUT_REGISTER)
       sim->input_register = sim->data_bus;
-    }
-    if(sim->address_bus == ADDRESS_OUTPUT_REGISTER) {
+    if(sim->address_bus == ADDRESS_OUTPUT_REGISTER)
       sim->output_register = sim->data_bus;
-    }
+    if(sim->address_bus > ADDRESS_OUTPUT_REGISTER)
+      return 0;
   }
   /******* Simulate Register Writes *******/
   if(sim->control_unit_lines & LINE_WRITE_INSTRUCTION_REGISTER) {
@@ -142,49 +143,50 @@ static void simulate_system_clock_cycle(struct simulation *sim) {
   if(sim->control_unit_lines & LINE_WRITE_ACCUMULATOR_REGISTER) {
     sim->accumulator_register = sim->data_bus;
     sim->sign_unit_lines = 0;
-    if(sim->accumulator_register & POSITIVE_BITS) {
+    if(sim->accumulator_register & POSITIVE_BITS)
       sim->sign_unit_lines = LINE_POSITIVE;
-    }
-    if(sim->accumulator_register & NEGATIVE_BITS) {
+    if(sim->accumulator_register & NEGATIVE_BITS)
       sim->sign_unit_lines = LINE_NEGATIVE;
-    }
   }
-  if(sim->control_unit_lines & LINE_WRITE_PROGRAM_COUNTER_REGISTER) {
+  if(sim->control_unit_lines & LINE_WRITE_PROGRAM_COUNTER_REGISTER)
     sim->program_counter_register = sim->data_bus;
-  }
-  if(sim->control_unit_lines & LINE_WRITE_TEMPORARY_REGISTER) {
+  if(sim->control_unit_lines & LINE_WRITE_TEMPORARY_REGISTER)
     sim->temporary_register = sim->data_bus;
-  }
-  if(sim->control_unit_lines & LINE_WRITE_OPERAND_REGISTER) {
+  if(sim->control_unit_lines & LINE_WRITE_OPERAND_REGISTER)
     sim->operand_register = sim->data_bus;
-  }
+  return 1;
 }
 
-static void simulate_peripherals_clock_cycle(struct simulation *sim) {
+static int simulate_peripherals_clock_cycle(struct simulation *sim) {
   /******* Simulate Input Unit *******/
-  if(sim->input_register == EMPTY) {
+  if(sim->input_register == EMPTY)
     sim->input_register = getc(stdin);
-  }
   /******* Simulate Register Writes *******/
   if(sim->output_register != EMPTY) {
     putc(sim->output_register, stdout);
     fflush(stdout);
     sim->output_register = EMPTY;
   }
-}
-
-int simulate_clock_cycle(struct simulation *sim) {
-  if(sim->instruction_register == HALT) {
-    return 0;
-  }
-  simulate_system_clock_cycle(sim);
-  simulate_peripherals_clock_cycle(sim);
-  sim->clock_count++;
   return 1;
 }
 
 
 
+
+
+
+
+
+int simulate_clock_cycle(struct simulation *sim) {
+  if(!simulate_system_clock_cycle(sim))
+    return 0;
+  if(!simulate_peripherals_clock_cycle(sim))
+    return 0;
+  if(sim->instruction_register == HALT)
+    return 0;
+  sim->clock_count++;
+  return 1;
+}
 
 struct simulation* new_simulation(const char *filepath) {
   struct simulation *sim = malloc(sizeof(struct simulation));
@@ -205,9 +207,8 @@ struct simulation* new_simulation(const char *filepath) {
   sim->input_register = END_OF_INPUT;
   sim->output_register = EMPTY;
   struct binary bin = load_binary(filepath);
-  for(int address = 0; address < bin.size; address++) {
+  for(int address = 0; address < bin.size; address++)
     sim->memory[address] = bin.data[address];
-  }
   free_binary(bin);
   return sim;
 }
@@ -219,9 +220,15 @@ void delete_simulation(struct simulation *sim) {
 
 
 
+
+
+
+
 int main() {
   recreate_example_binaries();
-  struct simulation *sim = new_simulation("binary_examples/test.BIN");
+  //binary_examples/test.BIN  ...  shoud print "360_ + - ".
+  struct simulation *sim = new_simulation("binary_examples/hello_world.BIN");
+  int status = 0;
   while(simulate_clock_cycle(sim));
   delete_simulation(sim);
   return 0;

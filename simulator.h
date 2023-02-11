@@ -4,12 +4,20 @@
 
 
 
+
+
+
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdint.h>
 #include<string.h>
 #include<time.h>
 #include"binary_utils.h"
+
+
+
+
 
 
 
@@ -41,6 +49,10 @@
 
 
 
+
+
+
+
 struct simulation {
   uint64_t clock_count;
   uint32_t sign_unit_lines;//LSB 2 bits used.
@@ -62,6 +74,10 @@ struct simulation* new_simulation();
 void delete_simulation(struct simulation *sim);
 
 int simulate_clock_cycle(struct simulation *sim);
+
+
+
+
 
 
 
