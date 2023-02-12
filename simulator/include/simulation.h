@@ -1,5 +1,5 @@
-#ifndef SIMULATOR_H
-#define SIMULATOR_H
+#ifndef SIMULATION_H
+#define SIMULATION_H
 
 
 
@@ -13,7 +13,7 @@
 #include<stdint.h>
 #include<string.h>
 #include<time.h>
-#include"binary_utils.h"
+#include"binary.h"
 
 
 
@@ -66,14 +66,14 @@ struct simulation {
   uint32_t operand_register;
   uint32_t input_register;
   uint32_t output_register;
-  uint32_t memory[ADDRESS_INPUT_REGISTER];
+  uint32_t memory_unit[ADDRESS_INPUT_REGISTER];
 };
 
-struct simulation* new_simulation();
+struct simulation* simulation_new(const char *filepath);
 
-void delete_simulation(struct simulation *sim);
+void simulation_delete(struct simulation *sim);
 
-int simulate_clock_cycle(struct simulation *sim);
+int simulation_clock_cycle(struct simulation *sim);
 
 
 

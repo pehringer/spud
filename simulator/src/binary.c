@@ -1,44 +1,48 @@
-#include"binary_utils.h"
+#include"binary.h"
 
 
 
 
-/********************
-Binary File Utilities
-********************/
 
-void create_binary(const char *filepath, const struct binary bin) {
+
+
+
+int binary_write(const char *filepath, const struct binary *bin) {
   FILE *file = fopen(filepath, "wb");
-  fwrite(&bin.size, sizeof(int), 1, file);
-  fwrite(bin.data, sizeof(int), bin.size, file);
+  if(!file)
+    return 0;
+  fwrite(&(bin->size), sizeof(int), 1, file);
+  fwrite(bin->data, sizeof(int), bin->size, file);
   fclose(file);
+  return 1;
 }
 
-struct binary load_binary(const char *filepath) {
+struct binary* binary_new(const char *filepath) {
   FILE *file = fopen(filepath, "rb");
-  if(!file) {
-    printf("Could not open: %s\n", filepath);
-    exit(-1);
-  }
+  if(!file)
+    return 0;
   int size = 0;
   fread(&size, sizeof(int), 1, file);
   int *data = malloc(sizeof(int) * size);
   fread(data, sizeof(int), size, file);
   fclose(file);
-  struct binary bin = {size, data};
+  struct binary *bin = malloc(sizeof(struct binary));
+  bin->size = size;
+  bin->data = data;
   return bin;
 }
 
-void free_binary(struct binary bin) {
-  free(bin.data);
+void binary_delete(struct binary *bin) {
+  free(bin->data);
+  free(bin);
 }
 
 
 
 
-/****************************
-Example Machine Code Programs
-****************************/
+
+
+
 
 int hello_world_machine_code[63] = {
 LOAD_I,
@@ -283,15 +287,19 @@ HALT //130
 };
 
 
-void recreate_example_binaries() {
+int binary_recreate_examples() {
   struct binary bin;
   bin.size = 63;
   bin.data = hello_world_machine_code;
-  create_binary("binary_examples/hello_world.BIN", bin);
+  if(!binary_write("../machine_code/hello_world.BIN", &bin))
+    return 0;
   bin.size = 35;
   bin.data = echo_machine_code;
-  create_binary("binary_examples/echo.BIN", bin);
+  if(!binary_write("../machine_code/echo.BIN", &bin))
+    return 0;
   bin.size = 131;
   bin.data = test_machine_code;
-  create_binary("binary_examples/test.BIN", bin);
+  if(!binary_write("../machine_code/test.BIN", &bin))
+    return 0;
+  return 1;
 }

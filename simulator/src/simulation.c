@@ -1,4 +1,4 @@
-#include"simulator.h"
+#include"simulation.h"
 
 
 
@@ -20,8 +20,8 @@
 #define LINE_INPUT_RIGHT 512                   //Bit 9
 #define LINE_INPUT_LEFT 1024                   //Bit 10
 #define LINE_CARRY_IN 2048                     //Bit 11
-#define LINE_WRITE_MEMORY 4096                 //Bit 12
-#define LINE_READ_MEMORY 8192                  //Bit 13
+#define LINE_WRITE_DATA_BUS 4096                 //Bit 12
+#define LINE_READ_DATA_BUS 8192                  //Bit 13
 
 //Sign unit bitmasks.
 #define LINE_POSITIVE 1          //Bit 0
@@ -36,7 +36,7 @@
 
 
 
-static int simulate_system_clock_cycle(struct simulation *sim) {
+static int system_clock_cycle(struct simulation *sim) {
   /******* Simulate Control Unit *******/
   static const uint32_t CONTROL_UNIT_STATE[3][14][8] = {
     {//     Clock Count / Accumulator Register (0)
@@ -116,9 +116,9 @@ static int simulate_system_clock_cycle(struct simulation *sim) {
   if(sim->control_unit_lines & LINE_CARRY_IN)
     sim->data_bus += 1;
   /******* Simulate Memory Unit *******/
-  if(sim->control_unit_lines & LINE_READ_MEMORY) {
+  if(sim->control_unit_lines & LINE_READ_DATA_BUS) {
     if(sim->address_bus < ADDRESS_INPUT_REGISTER)
-      sim->data_bus |= sim->memory[sim->address_bus];
+      sim->data_bus |= sim->memory_unit[sim->address_bus];
     if(sim->address_bus == ADDRESS_INPUT_REGISTER)
       sim->data_bus |= sim->input_register;
     if(sim->address_bus == ADDRESS_OUTPUT_REGISTER)
@@ -126,9 +126,9 @@ static int simulate_system_clock_cycle(struct simulation *sim) {
     if(sim->address_bus > ADDRESS_OUTPUT_REGISTER)
       return 0;
   }
-  if(sim->control_unit_lines & LINE_WRITE_MEMORY) {
+  if(sim->control_unit_lines & LINE_WRITE_DATA_BUS) {
     if(sim->address_bus < ADDRESS_INPUT_REGISTER)
-      sim->memory[sim->address_bus] = sim->data_bus;
+      sim->memory_unit[sim->address_bus] = sim->data_bus;
     if(sim->address_bus == ADDRESS_INPUT_REGISTER)
       sim->input_register = sim->data_bus;
     if(sim->address_bus == ADDRESS_OUTPUT_REGISTER)
@@ -157,7 +157,7 @@ static int simulate_system_clock_cycle(struct simulation *sim) {
   return 1;
 }
 
-static int simulate_peripherals_clock_cycle(struct simulation *sim) {
+static int peripherals_clock_cycle(struct simulation *sim) {
   /******* Simulate Input Unit *******/
   if(sim->input_register == EMPTY)
     sim->input_register = getc(stdin);
@@ -177,10 +177,10 @@ static int simulate_peripherals_clock_cycle(struct simulation *sim) {
 
 
 
-int simulate_clock_cycle(struct simulation *sim) {
-  if(!simulate_system_clock_cycle(sim))
+int simulation_clock_cycle(struct simulation *sim) {
+  if(!system_clock_cycle(sim))
     return 0;
-  if(!simulate_peripherals_clock_cycle(sim))
+  if(!peripherals_clock_cycle(sim))
     return 0;
   if(sim->instruction_register == HALT)
     return 0;
@@ -188,7 +188,7 @@ int simulate_clock_cycle(struct simulation *sim) {
   return 1;
 }
 
-struct simulation* new_simulation(const char *filepath) {
+struct simulation* simulation_new(const char *filepath) {
   struct simulation *sim = malloc(sizeof(struct simulation));
   /******* Init Clock *******/
   sim->clock_count = 0;
@@ -206,14 +206,16 @@ struct simulation* new_simulation(const char *filepath) {
   /******* Init Memory *******/
   sim->input_register = END_OF_INPUT;
   sim->output_register = EMPTY;
-  struct binary bin = load_binary(filepath);
-  for(int address = 0; address < bin.size; address++)
-    sim->memory[address] = bin.data[address];
-  free_binary(bin);
+  struct binary *bin = binary_new(filepath);
+  if(!bin)
+    return 0;
+  for(int address = 0; address < bin->size; address++)
+    sim->memory_unit[address] = bin->data[address];
+  binary_delete(bin);
   return sim;
 }
 
-void delete_simulation(struct simulation *sim) {
+void simulation_delete(struct simulation *sim) {
   free(sim);
 }
 
@@ -225,12 +227,12 @@ void delete_simulation(struct simulation *sim) {
 
 
 int main() {
-  recreate_example_binaries();
+  binary_recreate_examples();
   //binary_examples/test.BIN  ...  shoud print "360_ + - ".
-  struct simulation *sim = new_simulation("binary_examples/hello_world.BIN");
+  struct simulation *sim = simulation_new("machine_code/hello_world.BIN");
   int status = 0;
-  while(simulate_clock_cycle(sim));
-  delete_simulation(sim);
+  while(simulation_clock_cycle(sim));
+  simulation_delete(sim);
   return 0;
 }
 

@@ -21,9 +21,9 @@ A very simple computer that resembles modern designs. That is easy use and under
                           |Control Unit                                       |
                          13__12__11__10___9___8___7___6___5___4___3___2___1___0
                           |   |   |   |   |   |   |   |   |   |   |   |   |   |
-                Read Memory   |   C   I   I   W   W   R   W   R   W   R   W   R
+              Read Data Bus   |   C   I   I   W   W   R   W   R   W   R   W   R
                               |   a   n   n   r   r   e   r   e   r   e   r   e
-                   Write Memory   r   p   p   i   i   a   i   a   i   a   i   a
+                 Write Data Bus   r   p   p   i   i   a   i   a   i   a   i   a
                                   r   u   u   t   t   d   t   d   t   d   t   d
  _________________________        y   t   t   e   w   |   e   |   e   |   e   |
 |                         |       |   |   |   |   |   P   |   T   |   O   |   O
