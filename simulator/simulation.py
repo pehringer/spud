@@ -1,6 +1,5 @@
 import ctypes
 import os
-from binary import binary
 
 
 
@@ -33,13 +32,9 @@ class struct_simulation(ctypes.Structure):
 
 
 class simulation:
-	def __init__(self):
+	def __init__(self, c_dll_path: str):
 		######## Load DLL ########
-		try:
-			c_dll = ctypes.CDLL("./c_dll.so")
-		except:
-			os.system("make")
-			c_dll = ctypes.CDLL("./c_dll.so")
+		c_dll = ctypes.CDLL(c_dll_path)
 		######## Wrap DLL Functions ########
 		self.new = c_dll.simulation_new
 		self.new.argtypes = [ctypes.POINTER(ctypes.c_char)]
@@ -49,18 +44,3 @@ class simulation:
 		self.clock_cycle = c_dll.simulation_clock_cycle
 		self.clock_cycle.argtypes = [ctypes.POINTER(struct_simulation)]
 		self.clock_cycle.restype = ctypes.c_int
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-	bin = binary()
-	bin.recreate_examples()
-	sim = simulation()
-	sim_state = sim.new(b"../machine_code/hello_world.BIN")
-	while sim.clock_cycle(sim_state) == 1:
-		pass;
