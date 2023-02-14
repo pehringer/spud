@@ -225,7 +225,7 @@ void simulation_delete(struct simulation *sim) {
 
 
 
-
+/*
 int main() {
   binary_recreate_examples();
   //binary_examples/test.BIN  ...  shoud print "360_ + - ".
@@ -235,7 +235,7 @@ int main() {
   simulation_delete(sim);
   return 0;
 }
-
+*/
 
 
 
