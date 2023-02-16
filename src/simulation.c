@@ -182,7 +182,7 @@ int simulation_clock_cycle(struct simulation *sim) {
     return 0;
   if(!peripherals_clock_cycle(sim))
     return 0;
-  if(sim->instruction_register == HALT)
+  if(sim->instruction_register == HALT && (sim->clock_count % 8))
     return 0;
   sim->clock_count++;
   return 1;
@@ -225,6 +225,7 @@ void simulation_delete(struct simulation *sim) {
 
 
 
+
 /*
 int main() {
   binary_recreate_examples();
@@ -236,17 +237,3 @@ int main() {
   return 0;
 }
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-

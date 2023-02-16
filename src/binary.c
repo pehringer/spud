@@ -291,15 +291,15 @@ int binary_recreate_examples() {
   struct binary bin;
   bin.size = 63;
   bin.data = hello_world_machine_code;
-  if(!binary_write("../machine_code/hello_world.BIN", &bin))
+  if(!binary_write("machine_code/hello_world.BIN", &bin))
     return 0;
   bin.size = 35;
   bin.data = echo_machine_code;
-  if(!binary_write("../machine_code/echo.BIN", &bin))
+  if(!binary_write("machine_code/echo.BIN", &bin))
     return 0;
   bin.size = 131;
   bin.data = test_machine_code;
-  if(!binary_write("../machine_code/test.BIN", &bin))
+  if(!binary_write("machine_code/test.BIN", &bin))
     return 0;
   return 1;
 }
