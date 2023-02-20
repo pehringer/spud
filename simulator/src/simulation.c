@@ -206,34 +206,15 @@ struct simulation* simulation_new(const char *filepath) {
   /******* Init Memory *******/
   sim->input_register = END_OF_INPUT;
   sim->output_register = EMPTY;
-  struct binary *bin = binary_new(filepath);
+  struct binary *bin = binary_read(filepath);
   if(!bin)
     return 0;
   for(int address = 0; address < bin->size; address++)
     sim->memory_unit[address] = bin->data[address];
-  binary_delete(bin);
+  binary_free(bin);
   return sim;
 }
 
 void simulation_delete(struct simulation *sim) {
   free(sim);
 }
-
-
-
-
-
-
-
-
-/*
-int main() {
-  binary_recreate_examples();
-  //binary_examples/test.BIN  ...  shoud print "360_ + - ".
-  struct simulation *sim = simulation_new("machine_code/hello_world.BIN");
-  int status = 0;
-  while(simulation_clock_cycle(sim));
-  simulation_delete(sim);
-  return 0;
-}
-*/
