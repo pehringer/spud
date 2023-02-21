@@ -1,21 +1,32 @@
----
+--------
+
 # SPUD - Simple Processor Unit Design
 
-A very simple computer that resembles modern designs. That is easy use and understand in its entirety.
+S.P.U.D. -> Simple Processor Unit Design. A very processor that resembles modern designs. That is easy use and understand in its entirety.
  - Von Neumann architecture.
  - Word addressable memory.
  - Memory mapped peripherals.
  - Register based machine.
 
----
+--------
+
 # Table of Contents
 
 [Hardware Diagram](#hardware-diagram)  
+  
 [Hardware Workarounds](#hardware-workarounds)  
-[Instruction Set](#instruction-set)  
-[Assembly Code Examples](#assembly-code-examples)  
+  
+[Instruction Set](#instruction-set)    
+  
+[Assembly Code](#assembly-code)  
+- [Assembly Arithmetic Examples]()  
+- [## Assembly Array Examples]()  
+- [Assembly Comparison Examples]()  
+- [Assembly Control Flow Examples]()
+- [Assemply Stack Examples]
 
----
+--------
+
 # Hardware Diagram
 ```                        ___________________________________________________ 
                           |Control Unit                                       |
@@ -83,7 +94,8 @@ A very simple computer that resembles modern designs. That is easy use and under
    |_______________________________________________________________________|
 ```
 
----
+--------
+
 # Hardware Workarounds
 
 ### Subtraction Operations
@@ -119,7 +131,8 @@ SUB
 SAVE_A STK_PTR
 ```
 
----
+--------
+
 # Instruction Set
 
 Machine Representation|Assembly Representation| Name         |Behaviour
@@ -154,8 +167,9 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```6```             |```JUMP_P```           |Jump Positive |```program_counter_register = accumulator_register > 0 ? operand_register : ++program_counter_register```
 ```7```             |```JUMP_N```           |Jump Negative |```program_counter_register = accumulator_register < 0 ? operand_register : ++program_counter_register```
 
----
-# Assembly Code Examples
+--------
+
+# Assembly Code
 
 When using the instruction set it is useful to keep in mind how data is moved around and used.
 
@@ -185,50 +199,155 @@ Keep the below diagram in mind when using the instruction set.
 |___________|  |___________|   \|    |/   |___________|
 ```
 
-### X += 1
+--------
 
-```VAR_X``` - Address of variable X.  
+## Assembly Arithmetic Examples
 
+#### X += 1  
 ```
-LOAD_A VAR_X
+; Increment X by 1.
+LOAD_A varX
 SWAP
 LOAD_I 1
 ADD
-SAVE_A VAR_X
+
+; Save result in X.
+SAVE_A varX
+HALT
+
+varX:
+    4
 ```
 
-### X = Y - Z
-
-```VAR_X``` - Address of variable X.  
-```VAR_Y``` - Address of variable Y.  
-```VAR_Z``` - Address of variable Z.  
-
+#### X -= 1  
 ```
-LOAD_A VAR_Y
+; Decrement X by 1.
+LOAD_A varX
 SWAP
-LOAD_A VAR_Z
+LOAD_I 1
 SUB
-SAVE_A VAR_X
+
+; Save result in X.
+SAVE_A varX
+HALT
+
+varX:
+    4
 ```
 
-### X = A[Y]
-
-```ARRAY``` - Address of first array element.  
-```VAR_X``` - Address of variable X.  
-```VAR_Y``` - Address of variable Y.  
-
+#### Z = X + Y
 ```
-LOAD_I ARRAY
+; Add X and Y.
+LOAD_A varX
 SWAP
-LOAD_A VAR_Y
+LOAD_A varY
 ADD
+
+; Save result in Z.
+SAVE_A varZ
+HALT
+
+varX:
+    4
+
+varY: 
+    2
+
+varZ:
+    0
+```
+
+#### Z = X - Y
+```
+; Subtract X and Y.
+LOAD_A varX
+SWAP
+LOAD_A varY
+SUB
+
+; Save result in Z.
+SAVE_A varZ
+HALT
+
+varX:
+    4
+
+varY:
+    2
+
+varZ:
+    0
+
+```
+
+--------
+
+## Assembly Array Examples
+
+#### J = ARR[I]
+```
+; Get address of Arr at index I
+LOAD_I varARR
+SWAP
+LOAD_A varI
+ADD
+
+; Load value at address.
 SWAP
 LOAD
+
+; Store result in J
 SWAP
-SAVE_A VAR_X
+SAVE_A varJ
+HALT
+
+varI:
+    2
+    
+varJ:
+    0
+    
+varARR:
+    1  ; Index 0
+    2
+    4
+    8  ; Index 3
 ```
 
-### IF(X < Y)
+#### ARR[I] = J
+```
+; Get address of Arr at index I
+LOAD_I varARR
+SWAP
+LOAD_A varI
+ADD
+
+; Load J
+LOAD_A varJ
+
+; Store result in J
+SWAP
+SAVE
+HALT
+
+varI:
+    1
+    
+varJ:
+    16
+    
+varARR:
+    1  ; Index 0
+    2
+    4
+    8  ; Index 3
+```
+
+--------
+
+## Assembly Comparison Examples
+
+#### IF(X < Y)
 
 ```VAR_X``` - Address of variable X.  
 ```VAR_Y``` - Address of variable Y.  
@@ -246,7 +365,7 @@ IF: LOAD_A VAR_X
 END_IF:
 ```
 
-### IF(X <= Y)
+#### IF(X <= Y)
 
 ```VAR_X``` - Address of variable X.  
 ```VAR_Y``` - Address of variable Y.  
@@ -263,7 +382,7 @@ IF: LOAD_A VAR_X
 END_IF:
 ```
 
-### IF(X == Y)
+#### IF(X == Y)
 
 ```VAR_X``` - Address of variable X.  
 ```VAR_Y``` - Address of variable Y.  
@@ -281,7 +400,7 @@ IF: LOAD_A VAR_X
 END_IF:
 ```
 
-### IF(X != y)
+#### IF(X != y)
 
 ```VAR_X``` - Address of variable X.  
 ```VAR_Y``` - Address of variable Y.  
@@ -298,7 +417,7 @@ IF: LOAD_A VAR_X
 END_IF:
 ```
 
-### IF(X >= Y)
+#### IF(X >= Y)
 
 ```VAR_X``` - Address of variable X.  
 ```VAR_Y``` - Address of variable Y.  
@@ -315,7 +434,7 @@ IF: LOAD_A VAR_X
 END_IF:
 ```
 
-### IF(X > Y)
+#### IF(X > Y)
 
 ```VAR_X``` - Address of variable X.  
 ```VAR_Y``` - Address of variable Y.  
@@ -333,22 +452,17 @@ IF: LOAD_A VAR_X
 END_IF:
 ```
 
-### WHILE(X != 0)
+--------
 
-```VAR_X``` - Address of variable X.  
+## Assembly Control Flow Examples
 
-```
-WHILE: LOAD_A VAR_X
-       SWAP
-       JUMP_Z END
+--------
 
-       ; Conditional code here.
+## Assemply Stack Examples
 
-       JUMP_A WHILE
-END_WHILE:
-```
+--------
 
-### PUSH(X)
+#### PUSH(X)
 
 ```VAR_X``` - Address of variable X.  
 ```STK_PTR``` - Address of stack pointer.  
@@ -364,7 +478,7 @@ SUB
 SAVE_A STK_PTR
 ```
 
-### X = PEEK()
+#### X = PEEK()
 
 ```VAR_X``` - Address of variable X.  
 ```STK_PTR``` - Address of stack pointer.  
@@ -380,7 +494,7 @@ SWAP
 SAVE_A VAR_X
 ```
 
-### X = POP()
+#### X = POP()
 
 ```VAR_X``` - Address of variable X.  
 ```STK_PTR``` - Address of stack pointer.  
@@ -397,5 +511,6 @@ SWAP
 SAVE_A VAR_X
 ```
 
----
+--------
+
 # That is All... For Now!!!
