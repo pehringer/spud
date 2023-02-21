@@ -1,5 +1,5 @@
 ---
-# Minimal_Computer
+# SPUD - Simple Processor Unit Design
 
 A very simple computer that resembles modern designs. That is easy use and understand in its entirety.
  - Von Neumann architecture.
