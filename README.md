@@ -1,8 +1,9 @@
 --------
 
-# SPUD - Simple Processor Unit Design
+# SPUD
 
-S.P.U.D. -> Simple Processor Unit Design. A very processor that resembles modern designs. That is easy use and understand in its entirety.
+***SPUD*** -> ***S***imple ***P***rocessor ***U***nit ***D***esign.  
+A very processor that resembles modern designs. That is easy use and understand in its entirety.
  - Von Neumann architecture.
  - Word addressable memory.
  - Memory mapped peripherals.
@@ -286,7 +287,7 @@ varZ:
 
 #### J = ARR[I]
 ```
-; Get address of Arr at index I
+; Get address of Arr at index I.
 LOAD_I varARR
 SWAP
 LOAD_A varI
@@ -296,7 +297,7 @@ ADD
 SWAP
 LOAD
 
-; Store result in J
+; Store value in J.
 SWAP
 SAVE_A varJ
 HALT
@@ -316,16 +317,16 @@ varARR:
 
 #### ARR[I] = J
 ```
-; Get address of Arr at index I
+; Get address of Arr at index I.
 LOAD_I varARR
 SWAP
 LOAD_A varI
 ADD
 
-; Load J
+; Load J's value.
 LOAD_A varJ
 
-; Store result in J
+; Store value at address.
 SWAP
 SAVE
 HALT
