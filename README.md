@@ -22,9 +22,9 @@ A very processor that resembles modern designs. That is easy use and understand 
 [Assembly Code](#assembly-code)  
 - [Assembly Arithmetic Examples](#assembly-arithmetic-examples)  
 - [Assembly Array Examples](#assembly-array-examples)  
-- [Assembly Comparison Examples]()  
+- [Assembly Comparison Examples](#assembly-comparison-examples)  
 - [Assembly Control Flow Examples]()
-- [Assemply Stack Examples]()
+- [Assemply Stack Examples](#assemply-stack-examples)
 
 --------
 
