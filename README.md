@@ -24,7 +24,7 @@ A very processor that resembles modern designs. That is easy use and understand 
 - [## Assembly Array Examples]()  
 - [Assembly Comparison Examples]()  
 - [Assembly Control Flow Examples]()
-- [Assemply Stack Examples]
+- [Assemply Stack Examples]()
 
 --------
 
@@ -146,7 +146,7 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```5```             |```SUB```              |Subtract      |```accumulator_register -= operand_register```
 ```6```             |```SAVE```             |Save Operand  |```memory[operand_register] = accumulator_register```
 ```7 [ADDRESS]```   |```SAVE_A [ADDRESS]``` |Save Address  |```memory[memory[program_counter_register++]] = accumulator_register```
-```8```             |```JUMP```             |Jump          |```program_counter_register = memory[operand_register]```
+```8```             |```JUMP```             |Jump          |```program_counter_register <=> operand_register```
 ```9 [ADDRESS]```   |```JUMP_A [ADDRESS]``` |Jump Any      |```program_counter_register = memory[program_counter]```
 ```10 [ADDRESS]```   |```JUMP_Z [ADDRESS]``` |Jump Zero     |```program_counter_register = accumulator_register == 0 ? memory[program_counter_register] : ++program_counter_register```
 ```13 [ADDRESS]```   |```JUMP_P [ADDRESS]``` |Jump Positive |```program_counter_register = accumulator_register > 0 ? memory[program_counter_register] : ++program_counter_register```
@@ -165,39 +165,40 @@ Machine Representation|Assembly Representation| Name         |Behaviour
 ```3```             |```ADD```              |Add           |```accumulator_register += operand_register```
 ```4```             |```SUB```              |Subtract      |```accumulator_register -= operand_register```
 ```5```             |```SAVE```             |Save          |```memory[operand_register] = accumulator_register```
-```6```             |```JUMP_P```           |Jump Positive |```program_counter_register = accumulator_register > 0 ? operand_register : ++program_counter_register```
-```7```             |```JUMP_N```           |Jump Negative |```program_counter_register = accumulator_register < 0 ? operand_register : ++program_counter_register```
+```6```             |```JUMP_P```           |Jump Positive |```if(accumulator_register > 0) {program_counter_register <=> operand_register}```
+```7```             |```JUMP_N```           |Jump Negative |```if(accumulator_register < 0) {program_counter_register <=> operand_register}```
 
 --------
 
 # Assembly Code
 
-When using the instruction set it is useful to keep in mind how data is moved around and used.
+When using the instruction set it is useful to keep in mind how data is generally moved around and used.
 
-- Values are loaded into the operand and program counter registers.
-- Values are strore from the accumulator register.
+- Values are loaded into the operand register.
+- Values are stored from the accumulator register.
 - Arithmetic operations use the accumulator and operand registers.
 - Result of arithmetic operations are stored in the accumulator register.
 - Values can be swapped between the accumulator and operand registers.
+- Values can be swapped between the program counter and operand registers.
 - Conditional jumps use the accumulator registers as the condition.
 
 Keep the below diagram in mind when using the instruction set.
 
 ```
- _____________________________________________________
-| Memory/Input/Output Unit                            |
-|_____________________________________________________|
-     __             __
-    |  |           |  |                        /\
-   _|  |_         _|  |_                      /  \
-   \    /         \    /                     /_  _\
-    \  /           \  /                       |  |
-     \/             \/                        |__|
- ___________    ___________                ___________
-|Program    |  |Operand    |   /|____|\   |Accumulator|
-|Counter    |  |Register   |  /        \  |Register   |
-|Register   |  |           |  \  ____  /  |           |
-|___________|  |___________|   \|    |/   |___________|
+ _________________________________________________________________
+| Memory/Input/Output Unit                                        |
+|_________________________________________________________________|
+                                ___                         . 
+                               |   |                       / \
+                              _|   |_                     /   \
+                              \     /                    /_   _\
+                               \   /                      |   |
+                                \./                       |___|    
+ ___________                ___________                ___________
+|Program    |   /|____|\   |Operand    |   /|____|\   |Accumulator|
+|Counter    |  /        \  |Register   |  /        \  |Register   |
+|Register   |  \  ____  /  |           |  \  ____  /  |           |
+|___________|   \|    |/   |___________|   \|    |/   |___________|
 ```
 
 --------
