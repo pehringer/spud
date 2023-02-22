@@ -20,8 +20,8 @@ A very processor that resembles modern designs. That is easy use and understand 
 [Instruction Set](#instruction-set)    
   
 [Assembly Code](#assembly-code)  
-- [Assembly Arithmetic Examples]()  
-- [Assembly Array Examples]()  
+- [Assembly Arithmetic Examples](#assembly-arithmetic-examples)  
+- [Assembly Array Examples](#assembly-array-examples)  
 - [Assembly Comparison Examples]()  
 - [Assembly Control Flow Examples]()
 - [Assemply Stack Examples]()
@@ -282,8 +282,6 @@ varZ:
 
 ```
 
---------
-
 ## Assembly Array Examples
 
 #### J = ARR[I]
@@ -345,172 +343,281 @@ varARR:
     8  ; Index 3
 ```
 
---------
-
 ## Assembly Comparison Examples
 
 #### IF(X < Y)
-
-```VAR_X``` - Address of variable X.  
-```VAR_Y``` - Address of variable Y.  
-
 ```
-IF: LOAD_A VAR_X
-    SWAP
-    LOAD_A VAR_Y
-    SUB
-    JUMP_Z END_IF
-    JUMP_P END_IF
+; Compare X and Y.
+LOAD_A varX
+SWAP
+LOAD_A varY
+SUB
+; Branch equal or less than.
+JUMP_Z endIf 
+JUMP_P endIf 
 
-    ; Conditional code here.
+;
+;
+; Conditional code here.
+;
+;
 
-END_IF:
+endIf:
+    HALT
+
+varX:
+    2
+
+varY:
+    4
 ```
 
 #### IF(X <= Y)
-
-```VAR_X``` - Address of variable X.  
-```VAR_Y``` - Address of variable Y.  
-
 ```
-IF: LOAD_A VAR_X
-    SWAP
-    LOAD_A VAR_Y
-    SUB
-    JUMP_P END_IF
+; Compare X and Y.
+LOAD_A varX
+SWAP
+LOAD_A varY
+SUB
+; Branch greater than.
+JUMP_P endIf
 
-    ; Conditional code here.
+;
+;
+; Conditional code here.
+;
+;
 
-END_IF:
+endIf:
+    HALT
+
+varX:
+    2
+
+varY:
+    4
 ```
 
 #### IF(X == Y)
-
-```VAR_X``` - Address of variable X.  
-```VAR_Y``` - Address of variable Y.  
-
 ```
-IF: LOAD_A VAR_X
-    SWAP
-    LOAD_A VAR_Y
-    SUB
-    JUMP_N END_IF
-    JUMP_P END_IF
+; Compare X and Y.
+LOAD_A varX
+SWAP
+LOAD_A varY
+SUB
+; Branch less than or greater than.
+JUMP_N endIf
+JUMP_P endIf
 
-    ; Conditional code here.
+;
+;
+; Conditional code here.
+;
+;
 
-END_IF:
+endIf:
+    HALT
+
+varX:
+    2
+
+varY:
+    2
 ```
 
 #### IF(X != y)
-
-```VAR_X``` - Address of variable X.  
-```VAR_Y``` - Address of variable Y.  
-
 ```
-IF: LOAD_A VAR_X
-    SWAP
-    LOAD_A VAR_Y
-    SUB
-    JUMP_Z END_IF
+; Compare X and Y.
+LOAD_A varX
+SWAP
+LOAD_A varY
+SUB
+; Branch equal to.
+JUMP_Z endIf
 
-    ; Conditional code here.
+;
+;
+; Conditional code here.
+;
+;
 
-END_IF:
+endIf:
+    HALT
+
+varX:
+    2
+
+varY:
+    4
+
 ```
 
 #### IF(X >= Y)
-
-```VAR_X``` - Address of variable X.  
-```VAR_Y``` - Address of variable Y.  
-
 ```
-IF: LOAD_A VAR_X
-    SWAP
-    LOAD_A VAR_Y
-    SUB
-    JUMP_N END_IF
+; Compare X and Y.
+LOAD_A varX
+SWAP
+LOAD_A varY
+SUB
+; Branch less than.
+JUMP_N endIf
 
-    ; Conditional code here.
+;
+;
+; Conditional code here.
+;
+;
 
-END_IF:
+endIf:
+    HALT
+
+varX:
+    4
+
+varY:
+    3
 ```
 
 #### IF(X > Y)
-
-```VAR_X``` - Address of variable X.  
-```VAR_Y``` - Address of variable Y.  
-
 ```
-IF: LOAD_A VAR_X
-    SWAP
-    LOAD_A VAR_Y
-    SUB
-    JUMP_N END_IF
-    JUMP_Z END_IF
+; Compare X and Y.
+LOAD_A varX
+SWAP
+LOAD_A varY
+SUB
+; Branch less than.
+JUMP_N endIf
+JUMP_Z endIf
 
-    ; Conditional code here.
+;
+;
+; Conditional code here.
+;
+;
 
-END_IF:
+endIf:
+    HALT
+
+varX:
+    4
+
+varY:
+    3
 ```
-
---------
 
 ## Assembly Control Flow Examples
 
---------
-
 ## Assemply Stack Examples
 
---------
-
 #### PUSH(X)
-
-```VAR_X``` - Address of variable X.  
-```STK_PTR``` - Address of stack pointer.  
-
 ```
-LOAD_A VAR_X
+; Init stack pointer to top of stack.
+; Stack is empty.
+LOAD_I stackBottom  
 SWAP
-LOAD_A STK_PTR
+SAVE_A stackPointer	
+
+; Load X and store it at the stack pointer.
+LOAD_A varX
+SWAP
+LOAD_A stackPointer
 SAVE
+
+; Move and set stack pointer to next empty element (push).
 SWAP
-LOAD_I 1
+LOAD_I 1  
 SUB
-SAVE_A STK_PTR
+SAVE_A stackPointer
+HALT
+
+varX:
+    4
+
+stackPointer:
+    0
+    
+    0
+    0
+    0
+stackBottom:
+    0
 ```
 
 #### X = PEEK()
-
-```VAR_X``` - Address of variable X.  
-```STK_PTR``` - Address of stack pointer.  
-
 ```
-LOAD_A STK_PTR
+; Init stack pointer to top of stack.
+; Stack has one element with the value 64.
+LOAD_I stackBottom
+SWAP
+LOAD_I 1
+SUB
+SAVE_A stackPointer
+
+; Move stack pointer to top element.
+LOAD_A stackPointer
 SWAP
 LOAD_I 1
 ADD
+
+; Load in the top element.
 SWAP
 LOAD
+
+; Save element to X
 SWAP
-SAVE_A VAR_X
+SAVE_A varX
+HALT
+
+varX:
+    0
+
+stackPointer:
+    0
+
+    0
+    0
+    0
+stackBottom:
+    64
 ```
 
 #### X = POP()
-
-```VAR_X``` - Address of variable X.  
-```STK_PTR``` - Address of stack pointer.  
-
 ```
-LOAD_A STK_PTR
+; Init stack pointer to top of stack.
+; Stack has one element with the value 64.
+LOAD_I stackBottom
+SWAP
+LOAD_I 1
+SUB
+SAVE_A stackPointer
+
+; Move and set stack pointer to top element (pop).
+LOAD_A stackPointer
 SWAP
 LOAD_I 1
 ADD
-SAVE_A STK_PTR
+SAVE_A stackPointer 
+
+; Load in the top element.
 SWAP
 LOAD
+
+; Save element to X
 SWAP
-SAVE_A VAR_X
+SAVE_A varX
+HALT
+
+varX:
+    0
+
+stackPointer:
+    0
+
+    0
+    0
+    0
+stackBottom:
+    64
 ```
 
 --------
