@@ -21,7 +21,7 @@ A very processor that resembles modern designs. That is easy use and understand 
   
 [Assembly Code](#assembly-code)  
 - [Assembly Arithmetic Examples]()  
-- [## Assembly Array Examples]()  
+- [Assembly Array Examples]()  
 - [Assembly Comparison Examples]()  
 - [Assembly Control Flow Examples]()
 - [Assemply Stack Examples]()
