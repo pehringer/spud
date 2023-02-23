@@ -19,13 +19,18 @@ A very processor that resembles modern designs. That is easy to use and understa
 [Instruction Set](#instruction-set)  
   
 [Assembly Code](#assembly-code)  
+- [Assembly Instructions](#assembly-instructions)
+- [Assembly Labels](#assembly-labels)
+- [Assembly Comments](#assembly-comments)
 - [Assembly Arithmetic Examples](#assembly-arithmetic-examples)  
 - [Assembly Array Examples](#assembly-array-examples)  
 - [Assembly Comparison Examples](#assembly-comparison-examples)  
-- [Assembly Control Flow Examples]()  
+- [Assembly Control Flow Examples](#assembly-control-flow-examples)  
 - [Assemply Stack Examples](#assemply-stack-examples)  
 
 [Assembler](#assembler)  
+
+  
 [Simulator](#simulator)  
 
 --------
@@ -205,7 +210,40 @@ Keep the below diagram in mind when using the instruction set.
 |___________|   \|    |/   |___________|   \|    |/   |___________|
 ```
 
---------
+## Assembly Instructions
+
+Assembly instructions used human friendly keywords instead of opcode numbers. There are two types of assembly instruction:
+  
+1) Opcode only instructions:
+   - ```LOAD```
+   - ```SWAP```
+   - ```ADD```
+   - ```SUB```
+   - ```SAVE```
+   - ```JUMP```
+   - ```HALT```
+  
+2) Immediate value instructions:
+   - ```LOAD_I [VALUE]```
+   - ```LAOD_A [ADDRESS]```
+   - ```SAVE_A [ADDRESS]```
+   - ```JUMP_A [ADDRESS]```
+   - ```JUMP_Z [ADDRESS]```
+   - ```JUMP_P [ADDRESS]```
+   - ```JUMP_N [ADDRESS]```
+  
+The following immediate value types are supported:
+- Labels (examples on lines 24 and 28 in ```Spud/assembly_code/echo.ASM```)
+- Base 10 numbers (examples on lines 19 and 21 in ```Spud/assembly_code/echo.ASM```)
+- Characters (examples on lines 10 and 19 in ```Spud/assembly_code/echo.ASM```)
+
+## Assembly Labels
+
+Assembly label are extremely useful. They are simply user defined keywords that repersent an address in memory. They can be used to represent primative variables, see the assembly array examples section. They can also be used for control flow, see the assembly control flow examples section.
+
+## Assembly Comments
+
+Assembly comments behave the same as single line comments in any other programming language. Anything after a ```;``` on a given line is ignored by the assembler.
 
 ## Assembly Arithmetic Examples
 
@@ -626,7 +664,7 @@ stackBottom:
 
 --------
 
-## Assembler
+# Assembler
 
 The assembler is located at ```Spud/assembler/assembler.py```.  
 The assembler takes two filepaths as arguments:  
@@ -639,16 +677,6 @@ For example if you wanted to regenerate the hello world assembly example:
   
 If you get an error about opening the ```c_dll.so``` shared object file run the Makefile at ```Spud/Makefile```.
 
-### Assembly Code Instruction:
-
-The assembly instruction used human friendly keywords instead of opcode numbers. There are two types of assembly instruction:  
-1) Instruction with no immediate values:
-2) Instruction with immediate values
-   - Instruction token is followed by an immediate value on the same line. There are three type of immediate value supported:
-     - Labels
-     - Numbers (base 10)
-     - Characters
-
 --------
 
-## Simulator
+# Simulator
