@@ -100,7 +100,7 @@ A very processor that resembles modern designs. That is easy to use and understa
 
 ### Subtraction Operations
 
-The computer lacks a subtractor unit, so how then does the computer support subtraction operations? The computer simply makes the right operand negative and then adds it to the left operand:  
+The processor lacks subtractor hardware, so how then does the processor support subtraction operations? The processor simply makes the right operand negative and then adds it to the left operand:  
 
 ```left - right  --->  left + (-right)```
 
@@ -115,7 +115,7 @@ So to subtract the computer does the following:
 
 ### Stack Operations
 
-The computer lacks a stack pointer register, so how then does the computer support stack operations? The computer simply stores the stack pointer in memory and loads it in when need. So to push a variable onto the stack the computer does the following:
+The processor lacks a stack pointer register, so how then does the processor support stack operations? The computer simply stores the stack pointer in memory and loads it in when needed. So to push a variable onto the stack the processor does the following:
 
 ```VAR``` - Address of variable.  
 ```STK_PTR``` - Address of stack pointer.  
