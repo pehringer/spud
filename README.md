@@ -675,8 +675,115 @@ For example if you wanted to regenerate the hello world assembly example:
   
 - ```python assembler.py ../assembly_code/hello_world.ASM ../machine_code/hello_world.BIN```  
   
-If you get an error about opening the ```c_dll.so``` shared object file run the Makefile at ```Spud/Makefile```.
+If any errors occur try running the Makefile at ```Spud/Makefile```.
 
 --------
 
 # Simulator
+
+The simulator is located at ```Spud/simulator/simulator```.
+The simulator will run the hello_world.BIN example if no arguments are given:
+  
+- ```./simulator```
+  
+Terminal Output:
+```
+                                    
+Processor___________________________
+                                    
+         13 Data Bus                
+         62 Address Bus             
+         13 Instruction Register    
+         10 Accumulator Register    
+         62 Program Counter Register
+         62 Temporary Register      
+         33 Operand Register        
+                                    
+Memory______________________________
+                                    
+         54 |           3           
+         55 |           7           
+         56 |     1048577           
+         57 |           0           
+         58 |          10           
+         59 |           3           
+         60 |           7           
+         61 |     1048577      
+         62 |          13 <- PC
+         63 |           0      
+         64 |           0      
+         65 |           0      
+         66 |           0      
+         67 |           0      
+         68 |           0      
+         69 |           0      
+         70 |           0           
+                                    
+Input/Output________________________
+                                    
+
+
+
+
+
+Hello World!
+$
+```
+  
+If any errors occur try running the Makefile at ```Spud/Makefile```.
+  
+The simulator supports the following optional arguments:
+- ```program [FILEPATH]``` - Run the .BIN at the given filepath.
+- ```cycle [NUMBER_MILLISECONDS]``` - Make each instruction take the given number of milliseconds to run.
+- ```halt [PROGRAM_COUNTER_NUMBER]``` - Stop the simulator once the program counter equals the given address.
+
+For example if you wanted to execute hello_world.BIN slower, and have it stop after "Hello" has beeen printed:
+  
+- ```./simulator -program ../machine_code/hello_world.BIN -cycle 500 -halt 22```
+  
+Terminal Outut:
+```
+                                    
+Processor___________________________
+                                    
+         22 Data Bus                
+         22 Address Bus             
+          7 Instruction Register    
+        111 Accumulator Register    
+         22 Program Counter Register
+         22 Temporary Register      
+        108 Operand Register        
+                                    
+Memory______________________________
+                                    
+         14 |     1048577           
+         15 |           7           
+         16 |     1048577           
+         17 |           0           
+         18 |         111           
+         19 |           3           
+         20 |           7           
+         21 |     1048577           
+         22 |           0 <- PC
+         23 |          32      
+         24 |           3      
+         25 |           7      
+         26 |     1048577      
+         27 |           0      
+         28 |          87      
+         29 |           3      
+         30 |           7      
+                                    
+Input/Output________________________
+                                    
+
+
+
+
+
+
+Hello$ 
+```
+  
+If any errors occur try running the Makefile at ```Spud/Makefile```.
+  
