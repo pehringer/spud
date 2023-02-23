@@ -16,14 +16,17 @@ A very processor that resembles modern designs. That is easy to use and understa
   
 [Hardware Workarounds](#hardware-workarounds)  
   
-[Instruction Set](#instruction-set)    
+[Instruction Set](#instruction-set)  
   
 [Assembly Code](#assembly-code)  
 - [Assembly Arithmetic Examples](#assembly-arithmetic-examples)  
 - [Assembly Array Examples](#assembly-array-examples)  
 - [Assembly Comparison Examples](#assembly-comparison-examples)  
-- [Assembly Control Flow Examples]()
-- [Assemply Stack Examples](#assemply-stack-examples)
+- [Assembly Control Flow Examples]()  
+- [Assemply Stack Examples](#assemply-stack-examples)  
+
+[Assembler](#assembler)  
+[Simulator](#simulator)  
 
 --------
 
@@ -623,4 +626,29 @@ stackBottom:
 
 --------
 
-# That is All... For Now!!!
+## Assembler
+
+The assembler is located at ```Spud/assembler/assembler.py```.  
+The assembler takes two filepaths as arguments:  
+  
+- ```python assembler.py [INPUT_ASSEMBLY_CODE_FILEPATH] [OUTPUT_BINARY_CODE_FILEPATH]```
+  
+For example if you wanted to regenerate the hello world assembly example:  
+  
+- ```python assembler.py ../assembly_code/hello_world.ASM ../machine_code/hello_world.BIN```  
+  
+If you get an error about opening the ```c_dll.so``` shared object file run the Makefile at ```Spud/Makefile```.
+
+### Assembly Code Instruction:
+
+The assembly instruction used human friendly keywords instead of opcode numbers. There are two types of assembly instruction:  
+1) Instruction with no immediate values:
+2) Instruction with immediate values
+   - Instruction token is followed by an immediate value on the same line. There are three type of immediate value supported:
+     - Labels
+     - Numbers (base 10)
+     - Characters
+
+--------
+
+## Simulator
