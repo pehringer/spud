@@ -149,7 +149,11 @@ if __name__ == "__main__":
 		elif is_numeric(contents):
 			machine_code[number] = get_numeric(contents)
 		elif is_label(contents):
-			machine_code[number] = label_addresses[get_label(contents)]
+			label = get_label(contents)
+			if label not in label_addresses:
+				print("Undefined label used on line %d" % (number + 1))
+				exit(-1)
+			machine_code[number] = label_addresses[label]
 		else:
 			print("Invalid operand %s" % (contents))
 			exit(-1)

@@ -1,4 +1,4 @@
-build: build_exe build_dll
+build: build_exe build_dll build_bins
 
 build_exe: compile_exe link_exe clean_exe
 
@@ -28,3 +28,6 @@ clean_dll:
 	rm binary.o
 	rm simulation.o
 
+build_bins:
+	cd ./assembler; python assembler.py ../assembly_code/hello_world.ASM ../machine_code/hello_world.BIN
+	cd ./assembler; python assembler.py ../assembly_code/echo.ASM ../machine_code/echo.BIN

@@ -86,10 +86,9 @@ void initialize_terminal() {
 
 void main(int argc, char **argv) {
   /******** Default Visualizer Settings ********/
-  const char *program_filepath = "machine_code/hello_world.BIN";
-  struct timespec cycle_time = {0, 25000000};
+  const char *program_filepath = "../machine_code/hello_world.BIN";
+  struct timespec cycle_time = {0, 20000000};
   long halt_line = -1;
-  int use_ui = 0;
   /******** Command Line Options ********/
   if(argc > 1) {
     for(int arg_number = 1; arg_number < argc; arg_number++) {
@@ -99,8 +98,6 @@ void main(int argc, char **argv) {
         cycle_time.tv_nsec = (strtol(argv[++arg_number], NULL, 10)*1000000)/8;
       else if(!strcmp(argv[arg_number], "-halt"))
 	halt_line = strtol(argv[++arg_number], NULL, 10);
-      else if(!strcmp(argv[arg_number], "-ui"))
-        use_ui = 1;
       else {
         printf("Invalid Option: %s\n", argv[arg_number]);
         printf("----------------------------\n");
@@ -118,11 +115,9 @@ void main(int argc, char **argv) {
     exit(2);
   }
   /******** Run and Visualize Simulation ********/
-  if(use_ui)
-    initialize_terminal();
+  initialize_terminal();
   while(simulation_clock_cycle(sim)) {
-    if(use_ui)
-      redraw_terminal(sim);
+    redraw_terminal(sim);
     nanosleep(&cycle_time, 0);
     if((sim->program_counter_register) == halt_line)
       break;
