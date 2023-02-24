@@ -387,7 +387,7 @@ varARR:
 
 ## Assembly Comparison Examples
 
-#### IF(X < Y)
+#### if(X < Y) {}
 ```
 ; Compare X and Y.
 LOAD_A varX
@@ -414,7 +414,7 @@ varY:
     4
 ```
 
-#### IF(X <= Y)
+#### if(X <= Y) {}
 ```
 ; Compare X and Y.
 LOAD_A varX
@@ -440,7 +440,7 @@ varY:
     4
 ```
 
-#### IF(X == Y)
+#### if(X == Y) {}
 ```
 ; Compare X and Y.
 LOAD_A varX
@@ -467,7 +467,7 @@ varY:
     2
 ```
 
-#### IF(X != y)
+#### if (X != y) {}
 ```
 ; Compare X and Y.
 LOAD_A varX
@@ -494,7 +494,7 @@ varY:
 
 ```
 
-#### IF(X >= Y)
+#### if(X >= Y) {}
 ```
 ; Compare X and Y.
 LOAD_A varX
@@ -520,7 +520,7 @@ varY:
     3
 ```
 
-#### IF(X > Y)
+#### if(X > Y) {}
 ```
 ; Compare X and Y.
 LOAD_A varX
@@ -549,9 +549,63 @@ varY:
 
 ## Assembly Control Flow Examples
 
+#### if(X > 0) {} else if(X < 0) {} else {}
+```
+ifPositive:
+    LOAD_A varX
+    SWAP
+    JUMP_Z elseIfNegative
+    JUMP_N elseIfNegative
+    ;
+    ; if code 
+    ;
+    ;
+    JUMP_A endElse
+
+elseIfNegative:
+    JUMP_Z elseZero
+    ;
+    ; else if code
+    ;
+    ;
+    JUMP_A endElse
+
+elseZero:
+    ;
+    ; else code
+    ;
+    ;
+
+endElse:
+    HALT
+
+varX:
+    0
+```
+
+#### while(X-- > 0) {}
+```
+LOAD_A varX 
+SWAP 
+LOAD_I 1 
+while:
+    JUMP_Z endWhile 
+    SUB
+    ;
+    ; while code
+    ;
+    ;
+    JUMP_A while  
+endWhile:
+    HALT 
+
+varX:
+    10
+```
+
 ## Assemply Stack Examples
 
-#### PUSH(X)
+#### push(X)
 ```
 ; Init stack pointer to top of stack.
 ; Stack is empty.
@@ -585,7 +639,7 @@ stackBottom:
     0
 ```
 
-#### X = PEEK()
+#### X = peek()
 ```
 ; Init stack pointer to top of stack.
 ; Stack has one element with the value 64.
@@ -623,7 +677,7 @@ stackBottom:
     64
 ```
 
-#### X = POP()
+#### X = pop()
 ```
 ; Init stack pointer to top of stack.
 ; Stack has one element with the value 64.
