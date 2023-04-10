@@ -61,11 +61,11 @@ A very processor that resembles modern designs. That is easy to use and understa
 |                    |   |        \______|         |
 |            Read Left__ | ___________________     |
 |           Read Right   |         _______   _|_   |
-|                    |   |        /Adder |___/|\   |
-|                    |   |       /       |    |    |
-|                    |   |______|       /     |    |
-|                    |   |      |       \    _|_   |
-|                    |   |       \       |___/ \___|
+|                    |   |        /Adder |___/|\___|
+|                    |   |       /       |    |
+|                    |   |______|       /     |
+|                    |   |      |       \    _|_
+|                    |   |       \       |___/ \___
 |                    |   |        \______|         |
 | Read Program Counter__ | ___________________     |
 |                    |   |    ___________    _|_   |
