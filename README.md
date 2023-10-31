@@ -59,15 +59,16 @@ A very processor that resembles modern designs. That is easy to use and understa
 |                    |   |       / Sign  |_________|
 | Accumulator Negative__ | ______\       |         |
 |                    |   |        \______|         |
-|            Read Left__ | ___________________     |
-|           Read Right   |         _______   _|_   |
-|                    |   |        /Adder |___/|\___|
-|                    |   |       /       |    |
-|                    |   |______|       /     |
-|                    |   |      |       \    _|_
-|                    |   |       \       |___/ \___
-|                    |   |        \______|         |
-|             Carry In________________|            |
+|           Read Right__ | ___________________     |
+|                    |   |         _______   _|_   |
+|                    |   |        /Adder |___/ \___|
+|                    |   |       /       |
+|                    |   |______|       /
+|                    |   |      |       \    ___
+|                    |   |       \       |___/|\___
+|                    |   |        \______|    |    |
+|             Carry In__ | ___________|       |    |
+|            Read Left__ | ___________________|    |
 | Read Program Counter__ | ___________________     |
 |                    |   |    ___________    _|_   |
 |                    |   |___|Program    |___/ \___|
@@ -81,11 +82,13 @@ A very processor that resembles modern designs. That is easy to use and understa
 |      Write Temporary__ | __|           |         |
 |                    |   |   |___________|         |
 |         Read Operand__ | ___________________     |
-|     Read Not Operand   |    ___________    _|_   |
-|                    |   |___|Operand    |___/|\___|
-|                    |   |   |Register   |   _|_   |
-|        Write Operand__ | __|           |___/ \___|
-|____________________|   |   |___________|         |
+|                    |   |    ___________    _|_   |
+|                    |   |___|Operand    |___/ \___|
+|                    |   |   |Register   |   ___   |
+|        Write Operand__ | __|           |___/|\___|
+|                    |   |   |___________|    |    |
+|     Read Not Operand__ | ___________________|    |
+|____________________|   |                         |
                          |                         |
                          |                         |
   ______________________/  Data Bus    Address Bus |
