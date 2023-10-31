@@ -67,6 +67,7 @@ A very processor that resembles modern designs. That is easy to use and understa
 |                    |   |      |       \    _|_
 |                    |   |       \       |___/ \___
 |                    |   |        \______|         |
+|             Carry In________________|            |
 | Read Program Counter__ | ___________________     |
 |                    |   |    ___________    _|_   |
 |                    |   |___|Program    |___/ \___|
