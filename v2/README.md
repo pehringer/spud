@@ -45,13 +45,9 @@ ADDRESS BUS 13-BITS                             |                               
  15 14 13   12 11 10 9 8 7 6 5 4 3 2 1 0
 ```
 
-# Instruction Set
+**NOTE:** Instructions are stored in the IR register.
 
-Fetch/decode behaviour (before each executed instruction):
-```
-IR = memory[IP]
-IP = IP + 1
-```
+# Instruction Set
 
 Name         |Behaviour                |Machine Instruction|Assembly Instruction  
 -------------|-------------------------|-------------------|--------------------
@@ -64,4 +60,49 @@ Jump Positive|if(AC > 0) IP = address  |```101[address]``` |```JP [address]```
 Jump Zero    |if(AC == 0) IP = address |```110[address]``` |```JZ [address]```
 Jump Any     |IP <- address            |```111[address]``` |```JA [address]```
 
+**NOTE:** Only Load, Subtract, Store, and Jump Negative are needed to be turing complete.
 
+# Assembly Labels
+
+Assembly labels are extremely useful. They are simply a user defined keywords that repersent an address in memory.
+They are a useful abstraction that can be used for the following:
++ Control Flow
++ Primitive Variables
++ Immediate Values
+
+### Format
+
+One or more letters or numbers, following by one colon.
+
+### Examples
+
+```
+LOOP:
+```
+```
+varX:
+```
+```
+255:
+```
+
+# Assembly Comments
+
+
+
+Assembly comments are extremely helpful. They are equivalent to line comments in higher level programming languages.
+
+### Format
+
+One semicolon, following by zero or more characters.
+
+### Examples
+```
+;
+```
+```
+;comment
+```
+```
+;    THI5 ;5 4 V41;D C0MM3NT
+```
