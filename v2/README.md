@@ -2,10 +2,9 @@
 
 # Spud -> Simple Processor Unit Design.
 
-A very processor that resembles modern designs. That is easy to use and understand in its entirety.
+A very simple processor that resembles modern designs. That is easy to use and understand in its entirety.
  - Von Neumann architecture.
  - Word addressable memory.
- - Memory mapped peripherals.
  - Accumulator based machine.
 
 --------
@@ -39,19 +38,30 @@ ADDRESS BUS 13-BITS                             |                               
 
 --------
 
-# Instruction Set Architecture
+# Instruction Format
+
+```
+ opcode__   address_____________________ 
+ 15 14 13   12 11 10 9 8 7 6 5 4 3 2 1 0
+```
+
+# Instruction Set
 
 Fetch/decode behaviour (before each executed instruction):
-+ ```IR <- memory[IP]```
-+  ```IP <- IP + 1```
+```
+IR = memory[IP]
+IP = IP + 1
+```
 
-Machine Representation|Assembly Representation| Name         |Behaviour
-----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------------------------
-```000<ADDRESS>```    |```LD <ADDRESS>```     |Load          |```AC <- memory[IR]```
-```001<ADDRESS>```    |```AD <ADDRESS>```     |Add           |```AC <- AC + memory[IR]```
-```010<ADDRESS>```    |```SB <ADDRESS>```     |Subtract      |```AC <- AC - memory[IR]```
-```011<ADDRESS>```    |```ST <ADDRESS>```     |Store         |```memory[IR] <- AC```
-```100<ADDRESS>```    |```JN <ADDRESS>```     |Jump Negative |```if(AC < 0) IP <- IR```
-```101<ADDRESS>```    |```JP <ADDRESS>```     |Jump Positive |```if(AC > 0) IP <- IR```
-```110<ADDRESS>```    |```JZ <ADDRESS>```     |Jump Zero     |```if(AC == 0) IP <- IR```
-```111<ADDRESS>```    |```JA <ADDRESS>```     |Jump Any      |```IP <- IR```
+Name         |Behaviour                |Machine Instruction|Assembly Instruction  
+-------------|-------------------------|-------------------|--------------------
+Load         |AC = memory[address]     |```000[address]``` |```LD [address]```
+Add          |AC = AC + memory[address]|```001[address]``` |```AD [address]```
+Subtract     |AC = AC - memory[address]|```010[address]``` |```SB [address]```
+Store        |memory[address] = AC     |```011[address]``` |```ST [address]```
+Jump Negative|if(AC < 0) IP = address  |```100[address]``` |```JN [address]```
+Jump Positive|if(AC > 0) IP = address  |```101[address]``` |```JP [address]```
+Jump Zero    |if(AC == 0) IP = address |```110[address]``` |```JZ [address]```
+Jump Any     |IP <- address            |```111[address]``` |```JA [address]```
+
+
