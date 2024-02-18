@@ -32,6 +32,7 @@ ADDRESS BUS 13-BITS                             |                               
 
 Machine Representation|Assembly Representation| Name         |Behaviour
 ----------------------|-----------------------|--------------|----------------------------------------------------------------------------------------------------------
+RESERVED              |RESERVED               |RESERVED      |RESERVED
 ```001<ADDRESS>```    |```LD <ADDRESS>```     |LOAD          |```AC <-- memory[IR]```
 ```010<ADDRESS>```    |```AD <ADDRESS>```     |Add           |```AC <-- AC + memory[IR]```
 ```011<ADDRESS>```    |```SB <ADDRESS>```     |Subtract      |```AC <-- AC - memory[IR]```
