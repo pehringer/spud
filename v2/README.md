@@ -1,4 +1,4 @@
---------
+---
 
 # Spud -> Simple Processor Unit Design.
 
@@ -7,7 +7,7 @@ A very simple processor that resembles modern designs. That is easy to use and u
  - Word addressable memory.
  - Accumulator based machine.
 
---------
+---
 
 # Hardware Diagram
 
@@ -36,7 +36,7 @@ ADDRESS BUS 13-BITS                             |                               
  +----------------------+---------------------+--------------------------------------------+
 ```
 
---------
+---
 
 # Instruction Format
 
@@ -46,6 +46,8 @@ ADDRESS BUS 13-BITS                             |                               
 ```
 
 **NOTE:** Instructions are stored in the IR register.
+
+---
 
 # Instruction Set
 
@@ -62,7 +64,11 @@ Jump Any     |IP <- address            |```111[address]``` |```JA [address]```
 
 **NOTE:** Only Load, Subtract, Store, and Jump Negative are needed to be turing complete.
 
+---
+
 # Assembly Labels
+
+One or more letters or numbers, following by one colon.
 
 Assembly labels are extremely useful. They are simply a user defined keywords that repersent an address in memory.
 They are a useful abstraction that can be used for the following:
@@ -70,39 +76,104 @@ They are a useful abstraction that can be used for the following:
 + Primitive Variables
 + Immediate Values
 
-### Format
-
-One or more letters or numbers, following by one colon.
-
-### Examples
-
-```
-LOOP:
-```
-```
-varX:
-```
-```
-255:
-```
+---
 
 # Assembly Comments
 
-
+One semicolon, following by zero or more characters.
 
 Assembly comments are extremely helpful. They are equivalent to line comments in higher level programming languages.
 
-### Format
+---
 
-One semicolon, following by zero or more characters.
+# Assembly Examples
 
-### Examples
+### Arithmetic Examples
+
+#### x += 1  
 ```
-;
+; increment x by 1
+LD varX
+AD val1
+ST varX
+
+; stop execution here
+halt:
+JA halt ;
+
+; immediate value 1
+val1:
+1
+
+; variable x
+varX:
+4
 ```
+
+#### x -= 1  
 ```
-;comment
+; decrement x by 1
+LD varX
+SB val1
+ST varX
+
+; stop execution here
+halt:
+JA halt ;
+
+; immediate value 1
+val1:
+1
+
+; variable x
+varX:
+4
 ```
+
+#### z = x + y
 ```
-;    THI5 ;5 4 V41;D C0MM3NT
+; set z to sum of x and y
+LD varX
+AD valY
+ST varZ
+
+; stop execution here
+halt:
+JA halt ;
+
+; variable x
+varX:
+4
+
+; variable y
+varY:
+8
+
+; variable x
+varZ:
+0
+```
+
+#### Z = X - Y
+```
+; set z to difference of x and y
+LD varX
+AD valY
+ST varZ
+
+; stop execution here
+halt:
+JA halt ;
+
+; variable x
+varX:
+4
+
+; variable y
+varY:
+8
+
+; variable x
+varZ:
+0
 ```
