@@ -99,7 +99,7 @@ ST varX
 
 ; stop execution here
 halt:
-JA halt ;
+JA halt
 
 ; immediate value 1
 val1:
@@ -119,7 +119,7 @@ ST varX
 
 ; stop execution here
 halt:
-JA halt ;
+JA halt
 
 ; immediate value 1
 val1:
@@ -139,7 +139,7 @@ ST varZ
 
 ; stop execution here
 halt:
-JA halt ;
+JA halt
 
 ; variable x
 varX:
@@ -163,7 +163,7 @@ ST varZ
 
 ; stop execution here
 halt:
-JA halt ;
+JA halt
 
 ; variable x
 varX:
@@ -180,15 +180,34 @@ varZ:
 
 ### Assembly Array Examples
 
-#### j = arr[i]
-```
+#### j = a[i]
+``` 
 ; all instructions have fixed addresses
 ; to dynamically address memory self-modifying code is needed
+; steps
 ;   1) calculate address
-;   2) create instruction with opcode and address 
+;   2) create instruction with opcode and address
 ;   3) store instruction
 ;   4) execute instruction
 
+; load ith element of a
+LD ptrA ; step 1)
+AD varI ; step 1)
+AD opLD ; step 2)
+ST load ; step 3)
+load:   ; step 4)
+0       ; step 4)
+
+; set j
+ST varJ
+
+; stop execution here
+halt:
+JA halt
+
+; load opcode
+opLD:
+0
 
 ; variable i
 varI:
@@ -198,12 +217,17 @@ varI:
 varJ:
 0
 
-; variable arr
-varArr:
-1    ; index 0
-2    ; index 1
-4    ; index 2
-8    ; index 4
+; variable a
+idx0:
+1
+idx1:
+2
+idx2:
+4
+idx3:
+8
+ptrA:
+idx0
 ```
 
 #### ARR[i] = j
