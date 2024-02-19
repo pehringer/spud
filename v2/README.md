@@ -182,12 +182,12 @@ varZ:
 
 #### j = arr[i]
 ```
-; all instruction have a fixed address
+; all instructions have fixed addresses
 ; to dynamically address memory self-modifying code is needed
 ;   1) calculate address
 ;   2) create instruction with opcode and address 
-;   3) store new instruction
-;   4) execute new instruction
+;   3) store instruction
+;   4) execute instruction
 
 
 ; variable i
