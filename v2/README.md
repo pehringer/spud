@@ -181,22 +181,20 @@ varZ:
 ### Assembly Array Examples
 
 #### j = a[i]
-``` 
+```
+; load ith element of a
 ; all instructions have fixed addresses
 ; to dynamically address memory self-modifying code is needed
-; steps
-;   1) calculate address
-;   2) create instruction with opcode and address
-;   3) store instruction
-;   4) execute instruction
-
-; load ith element of a
-LD ptrA ; step 1)
-AD varI ; step 1)
-AD opLD ; step 2)
-ST load ; step 3)
-load:   ; step 4)
-0       ; step 4)
+; 1) calculate instruction address
+LD ptrA
+AD varI
+; 2) add instruction opcode
+AD opLD
+; 3) store instruction
+ST load
+; 4) execute instruction
+load:
+0
 
 ; set j
 ST varJ
@@ -218,16 +216,13 @@ varJ:
 0
 
 ; variable a
-idx0:
-1
-idx1:
-2
-idx2:
-4
-idx3:
-8
 ptrA:
 idx0
+idx0:
+1
+2
+4
+8
 ```
 
 #### ARR[i] = j
