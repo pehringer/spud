@@ -149,7 +149,7 @@ varX:
 varY:
 8
 
-; variable x
+; variable z
 varZ:
 0
 ```
@@ -173,7 +173,40 @@ varX:
 varY:
 8
 
-; variable x
+; variable z
 varZ:
 0
+```
+
+### Assembly Array Examples
+
+#### j = arr[i]
+```
+; all instruction have a fixed address
+; to dynamically address memory self-modifying code is needed
+;   1) calculate address
+;   2) create instruction with opcode and address 
+;   3) store new instruction
+;   4) execute new instruction
+
+
+; variable i
+varI:
+2
+
+; variable j
+varJ:
+0
+
+; variable arr
+varArr:
+1    ; index 0
+2    ; index 1
+4    ; index 2
+8    ; index 4
+```
+
+#### ARR[i] = j
+```
+
 ```
