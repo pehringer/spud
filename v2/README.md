@@ -13,27 +13,29 @@ A very simple processor that resembles modern designs. That is easy to use and u
 
 ```
 DATA BUS 16-BITS
-------------------------------------------------+----------------------------------------------+
-ADDRESS BUS 13-BITS                             |                                              |
-----+---------------------+                     |                                              |
-    |                     |                     |                                              |
-    |          +---------------------+---------------------+--------------------+              |
-    |          |          |          |          |          |                    |              |
-    |          |          |          |          |          |        |      |    |   |          |
-+---Q---+  +---Q---+  +---Q---+  +---Q---+  +---Q---+  +---Q---+  +-N----P-+  +-A---B-+        |
-|  AND  |  |  AND  |  |  AND  |  |  AND  |  |  AND  |  |  AND  |  |  SIGN  |  |  XOR  |        |
-+-A---B-+  +-A---B-+  +-A---B-+  +-A---B-+  +-A---B-+  +-A---B-+  +-A------+  +---Q---+        |
-  |   |      |   |      |   |      |   |      |   |      |   |      |             |            |
-  |          |          |          |          |          |          |             |            |
-  +----------+          +----------+          +----------+----------+             |            |
-  |                     |                     |                                   |            |    |
-+-Q----------------+  +-Q----------------+  +-Q----------------+                +-A------+   +-B----C-+
-| [0-12]    13-BIT |  | [0-12]    16-BIT |  | [0-15]    16-BIT |                 \        \ / 16-BIT /
-|        IP        |  |        IR        |  |        AC        |                  \        +        /
-+-D--------------E-+  +-D--------------E-+  +-D -------------E-+                   +-------S-------+
- |               |      |              |      |              |                             |
- |                      |                     |                                            |
- +----------------------+---------------------+--------------------------------------------+
+----------------------------------+-------------------------+
+                                  |                         |
+ADDRESS BUS 13-BITS               |                         |
+--+---------------+               |                         |
+  |               |               |                         |
+  |       +---------------+---------------+-------------+   |
+  |       |       |       |       |       |             |   |
+  |       |       |       |       |       |       |     |   |   |
++-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   |   A---B
+|AND|   |AND|   |AND|   |AND|   |AND|   |AND|   |NOR|   |   |XOR|
+A---B   A---B   A---B   A---B   A---B   A---B   +-A-+   |   +-Q-+
+|   |   |   |   |   |   |   |   |   |   |   |     |     |     |
+|       |       |       |       |       |         |     |     |
++-------+       +-------+       +-------+-----+---+     |     |
+|               |               |                 |     |     |
+[0-12]          [0-12]          [0-15]         [15]     |     |
+|               |               |                 |     |     |   |
+Q-----------+   Q-----------+   Q-----------+         +-A-+   B---C
+|IP  13-BITS|   |IR  16-BITS|   |AC  16-BITS|          \   \ /   /
+D-----------E   D-----------E   D-----------E           +---S---+
+|           |   |           |   |           |               |
+|               |               |                           |
++---------------+---------------+---------------------------+
 ```
 
 ---
@@ -182,21 +184,17 @@ varZ:
 
 #### j = a[i]
 ```
-; load ith element of a
-; all instructions have fixed addresses
-; to dynamically address memory self-modifying code is needed
-; 1) calculate instruction address
+; all instructions have fixed memory addresses
+; dynamic memory addresses requires self-modifying code
+; create and store LD instruction with index address
 LD ptrA
 AD varI
-; 2) add instruction opcode
 AD opLD
-; 3) store instruction
 ST load
-; 4) execute instruction
+
+; set j to ith element of a
 load:
 0
-
-; set j
 ST varJ
 
 ; stop execution here
@@ -205,7 +203,7 @@ JA halt
 
 ; load opcode
 opLD:
-0
+0b0000000000000000
 
 ; variable i
 varI:
@@ -216,16 +214,52 @@ varJ:
 0
 
 ; variable a
-ptrA:
-idx0
-idx0:
+varA:
 1
 2
 4
 8
+ptrA:
+varA
 ```
 
 #### ARR[i] = j
 ```
+; all instructions have fixed memory addresses
+; dynamic memory addresses requires self-modifying code
+; create and store ST instruction with index address
+LD ptrA
+AD varI
+AD opST
+ST stor
 
+; set ith element of a to j
+LD varJ
+stor:
+0
+
+; stop execution here
+halt:
+JA halt
+
+; load opcode
+opST:
+0b0110000000000000
+
+; variable i
+varI:
+2
+
+; variable j
+varJ:
+0
+
+; variable a
+varA:
+1
+2
+4
+8
+ptrA:
+varA
 ```
