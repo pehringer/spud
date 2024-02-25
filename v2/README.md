@@ -12,44 +12,49 @@ A very simple processor that resembles modern designs. That is easy to use and u
 # Hardware Diagram
 
 ```
---DATA_BUS------------------------+-------------------------+
-                                  |                         |
-          +--READ_BUS-----+---------------+-------------+   |
-          |               |       |       |             |   |
---+--ADDRESS_BUS--+       |       |       |      [0]    |   |  [1]
-  |       |       |       |       |       |       |     |   |   |
-+-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   |   A---B
-|AND|   |AND|   |AND|   |AND|   |AND|   |AND|   |NOR|   |   |XOR|
-A---B   A---B   A---B   A---B   A---B   A---B   +-A-+   |   +-Q-+
-|   |   |   |   |   |   |   |   |   |   |   |     |     |     |
-|  [2] [3]  |   |  [4] [5]  |   |  [6] [7]  |     |     |     |
-|           |   |           |   |           |     |     |     |
-+-----+-----+   +-----+-----+   +-----+-----+-----+     |     |
-      |               |               |                 |     |
-      |           [8] |          [9]--+                 |     |  [10]
-      |              \|               |                 |     |   |
-+-----Q-----+   +-----Q-----+   +-----Q-----+         +-A-+   B---C
-|IP  D_LATCH|   |IR  D_LATCH|   |AC  D_LATCH|          \   \ /   /
-D-----------E   D-----------E   D-----------E           +---S---+
-|           |   |           |   |           |               |
-|         [11]  |         [12]  |         [13]              |
-|               |               |                           |
-+--WRITE_BUS----+---------------+---------------------------+
+DATA_BUS ---->  ----------------------------------------+-----------------+
+16-BIT                                                  |                 |
+ADDRESS_BUS ->  --------+---------------+               |                 |
+13-BIT                  |               |               |                 |
+READ_BUS ---->  +---------------+---------------+---------------------+   |
+16-BIT          |       |       |       |       |       |             |   |
+                |       |       |       |       |       |     [12]    |   |  [6]
+                |       |       |       |       |       |       |     |   |   |
+              +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   |   A---B
+              |AND|   |AND|   |AND|   |AND|   |AND|   |AND|   |OR |   |   |XOR|
+              A---B   A---B   A---B   A---B   A---B   A---B   +-A-+   |   +-Q-+
+              |   |   |   |   |   |   |   |   |   |   |   |     |     |     |
+              |  [0] [1]  |   |  [2] [3]  |   |  [4] [5]  |     |     |     |
+              |           |   |           |   |           |     |     |     |
+              +-----+-----+   +-----+-----+   +-----+-----+-----+     |     |
+                    |               |               |                 |     |
+                    |       [13-15] |         [11]--+                 |     |  [7]
+                    |              \|               |                 |     |   |
+              +-----Q-----+   +-----Q-----+   +-----Q-----+         +-A-+   B---C
+              |IP  D_LATCH|   |IR  D_LATCH|   |AC  D_LATCH|          \   \ /   /
+              D-----------E   D-----------E   D-----------E           +---S---+
+              |           |   |           |   |           |               |
+              |         [10]  |          [9]  |          [8]              |
+              |               |               |                           |
+WRITE_BUS ->  +---------------+---------------+---------------------------+
+16-BIT
 
-0:  ZERO
-1:  ~DATA_BUS
-2:  ADDRESS_BUS = IP
-3:  READ_BUS = IP
-4:  ADDRESS_BUS = IR
-5:  READ_BUS = IR
-6:  DATA_BUS = AC
-7:  READ_BUS = AC
-8:  OPCODE
-9:  NEGATIVE 
-10: ++DATA_BUS
-11: IP = WRITE_BUS
-12: IP = WTITE_BUS
-13: AC = WRITE_BUS
+CONTROL_BUS:
+16-BITS
+  [0]      READ_BUS = IP
+  [1]      ADDRESS_BUS = IP
+  [2]      READ_BUS = IR
+  [3]      ADDRESS_BUS = IR
+  [4]      READ_BUS = AC
+  [5]      DATA_BUS = AC
+  [6]      ~DATA_BUS
+  [7]      ++DATA_BUS
+  [8]      AC = WRITE_BUS
+  [9]      IR = WRITE_BUS
+  [10]     IP = WRITE_BUS
+  [11]     AC < 0 
+  [12]     AC != 0
+  [13-15]  OPCODE
 ```
 
 ---
@@ -113,15 +118,12 @@ LD varX
 AD val1
 ST varX
 
-; stop execution here
 halt:
 JA halt
 
-; immediate value 1
 val1:
 1
 
-; variable x
 varX:
 4
 ```
@@ -133,15 +135,12 @@ LD varX
 SB val1
 ST varX
 
-; stop execution here
 halt:
 JA halt
 
-; immediate value 1
 val1:
 1
 
-; variable x
 varX:
 4
 ```
@@ -153,19 +152,15 @@ LD varX
 AD valY
 ST varZ
 
-; stop execution here
 halt:
 JA halt
 
-; variable x
 varX:
 4
 
-; variable y
 varY:
 8
 
-; variable z
 varZ:
 0
 ```
@@ -177,19 +172,15 @@ LD varX
 AD valY
 ST varZ
 
-; stop execution here
 halt:
 JA halt
 
-; variable x
 varX:
 4
 
-; variable y
 varY:
 8
 
-; variable z
 varZ:
 0
 ```
@@ -211,7 +202,6 @@ load:
 0
 ST varJ
 
-; stop execution here
 halt:
 JA halt
 
@@ -219,15 +209,12 @@ JA halt
 opLD:
 0b0000000000000000
 
-; variable i
 varI:
 2
 
-; variable j
 varJ:
 0
 
-; variable a
 varA:
 1
 2
@@ -237,7 +224,7 @@ ptrA:
 varA
 ```
 
-#### ARR[i] = j
+#### a[i] = j
 ```
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
@@ -245,30 +232,26 @@ varA
 LD ptrA
 AD varI
 AD opST
-ST stor
+ST save
 
 ; set ith element of a to j
 LD varJ
-stor:
+save:
 0
 
-; stop execution here
 halt:
 JA halt
 
-; load opcode
+; store opcode
 opST:
 0b0110000000000000
 
-; variable i
 varI:
 2
 
-; variable j
 varJ:
 0
 
-; variable a
 varA:
 1
 2
@@ -277,3 +260,350 @@ varA:
 ptrA:
 varA
 ```
+
+### Assembly Comparison Examples
+
+#### z = x < y
+```
+; compare x to y
+LD varX
+SB varY
+
+; x is less then y
+JZ halt
+JP halt
+LD true
+ST varZ
+
+halt:
+JA halt
+
+true:
+1
+
+varX:
+2
+
+varY:
+4
+
+varZ:
+0
+```
+
+#### z = x <= y
+```
+; compare x to y
+LD varX
+SB varY
+
+; x is less then or equal to y
+JP halt
+LD true
+ST varZ
+
+halt:
+JA halt
+
+true:
+1
+
+varX:
+2
+
+varY:
+4
+
+varZ:
+0
+```
+
+#### z = x == y
+```
+; compare x to y
+LD varX
+SB varY
+
+; x is equal to y
+JN halt
+JP halt
+LD true
+ST varZ
+
+halt:
+JA halt
+
+true:
+1
+
+varX:
+2
+
+varY:
+4
+
+varZ:
+0
+```
+
+#### z = x != y
+```
+; compare x to y
+LD varX
+SB varY
+
+; x is not equal to y
+JZ halt
+LD true
+ST varZ
+
+halt:
+JA halt
+
+true:
+1
+
+varX:
+2
+
+varY:
+4
+
+varZ:
+0
+```
+
+#### z = x >= y
+```
+; compare x to y
+LD varX
+SB varY
+
+; x is greater then or equal to y
+JN halt
+LD true
+ST varZ
+
+halt:
+JA halt
+
+true:
+1
+
+varX:
+2
+
+varY:
+4
+
+varZ:
+0
+```
+
+#### z = x > y
+```
+; compare x to y
+LD varX
+SB varY
+
+; x is greater then y
+JN halt
+JZ halt
+LD true
+ST varZ
+
+halt:
+JA halt
+
+true:
+1
+
+varX:
+2
+
+varY:
+4
+
+varZ:
+0
+```
+
+## Assembly Control Flow Examples
+
+#### if(X > 0) {} else if(X < 0) {} else {}
+```
+if:
+LD varX
+JN elif
+JZ elif
+;
+; ... 
+;
+JA halt
+
+elif:
+JZ else
+;
+; ...
+;
+JA halt
+
+else:
+;
+; ...
+;
+
+halt:
+JA halt
+
+varX:
+2
+```
+
+#### while(X-- > 0) {}
+```
+loop:
+LD varX
+JN halt
+JZ halt
+SB val1
+ST varX
+;
+; ...
+;
+JUMP_A loop
+  
+halt:
+JA halt 
+
+val1:
+1
+
+varX:
+10
+```
+
+## Assemply Stack Examples
+
+#### push(x)
+```
+; all instructions have fixed memory addresses
+; dynamic memory addresses requires self-modifying code
+; create and store ST instruction with index address
+LD ptrS
+AD opST
+ST save:
+
+; set top of stack to x
+LD varX
+save:
+0
+
+; decrement stack pointer by 1
+LD ptrS
+SB val1
+ST ptrS
+
+halt:
+JA halt
+
+opST:
+0b0110000000000000
+
+val1:
+1
+
+varX:
+42
+
+maxS:
+0
+0
+topS:
+0
+21
+ptrS:
+topS
+```
+
+#### x = pop()
+```
+; increment stack pointer by 1
+LD ptrS
+AD val1
+ST ptrS
+
+; all instructions have fixed memory addresses
+; dynamic memory addresses requires self-modifying code
+; create and store LD instruction with index address
+LD ptrS
+AD opLD
+ST load:
+
+; set x to top of stack
+load:
+0
+ST varX
+
+halt:
+JA halt
+
+opLD:
+0b0000000000000000
+
+val1:
+1
+
+varX:
+0
+
+maxS:
+0
+topS:
+0
+42
+21
+ptrS:
+topS
+```
+
+#### x = peek()
+```
+; all instructions have fixed memory addresses
+; dynamic memory addresses requires self-modifying code
+; create and store LD instruction with index address
+LD ptrS
+AD val1
+AD opLD
+ST load:
+
+; set x to top of stack     
+load:
+0
+ST varX
+
+halt:
+JA halt
+
+opLD:
+0b0000000000000000
+
+val1:
+1
+
+varX:
+0
+
+maxS:
+0
+topS:
+0
+42
+21
+ptrS:
+topS
+```
+
+
+
+
