@@ -29,7 +29,10 @@
 #define CONTROL_JA 0xE000
 
 uint16_t simulateAndIc(uint16_t a, bool b) {
-  return b ? a : 0x0000;
+  if(b) {
+    return a;
+  }
+  return 0x0000;
 }
 
 bool simulateOrIc(uint16_t a) {
@@ -37,15 +40,24 @@ bool simulateOrIc(uint16_t a) {
 }
 
 uint16_t simulateXorIc(uint16_t a, bool b) {
-  return b ? ~a : a;
+  if(b) {
+    return ~a;
+  }
+  return a;
 }
 
 uint16_t simulateFullAdderIc(uint16_t a, uint16_t b, bool c) {
-  return c ? a + b + 1 : a + b;
+  if(c) {
+    return a + b + 1;
+  }
+  return a + b;
 }
 
 uint16_t simulateRegisterIC(uint16_t d, bool e, uint16_t q) {
-  return e ? d : q
+  if(e) {
+    return d;
+  }
+  return q;
 }
 
 struct simulationState {
@@ -63,6 +75,16 @@ struct simulationState {
 };
 
 void simulateDataPath(struct simulationState *s) {
+  s->addressBus = 0;
+  s->dataBus = 0;
+  s->readBus = 0;
+  s->writeBus = 0;
+  if(s->controlBus & CONTROL_OUT_0) {
+    s->readBus |= instructionPointer & REGISTER_ADDRESS;
+  }
+  if(s->controlBus & CONTROL_OUT_1) {
+    s->addressBus |= instructionPointer & REGISTER_ADDRESS;
+  }
 }
 
 void simulateControlUnitFetch(struct simulationState *s) {
