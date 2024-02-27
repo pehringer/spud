@@ -12,68 +12,55 @@ A very simple processor that resembles modern designs. That is easy to use and u
 # Hardware Diagram
 
 ```
-DATA_READ   <---  -----[8]
+DATA_READ    <---  ---[8]
 
-DATA_WTITE  <---  -----[5]
+DATA_WTITE   <---  ---[5]
 
-DATA_BUS    <-->  ----------------------------------+----------------+
-(16 BIT)                                            |                |
-                                                    |                |
-ADDRESS_BUS <---  --+---------------+               |                |
-(13 LSB)            |               |               |    READ_BUS    |
-                    |               |               |    (16 BIT)    |
-            +---------------+---------------+--------------------+   |
-            |       |       |       |       |       |            |   |
-            |       |       |       |       |       |     [11]   |   |  [6]
-            |       |       |       |       |       |       |    |   |   |
-          +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+  |   A---B
-          |AND|   |AND|   |AND|   |AND|   |AND|   |AND|   |OR |  |   |XOR|
-          A---B   A---B   A---B   A---B   A---B   A---B   +-A-+  |   +-Q-+
-          |   |   |   |   |   |   |   |   |   |   |   |     |    |     |
-          |  [0]  |  [1]  |  [2]  |  [3]  |  [4]  |  [5]    |    |     |
-          |       |       |       |       |       |         |    |     |
-          +-------+       +-------+       +-------+---------+    |     |
-          |               |               |                      |     |
-          |     [13-15]---+        [12]---+                      |     |  [7]
-          |               |               |                      |     |   |
-    +-----Q-----+   +-----Q-----+   +-----Q-----+              +-A-+   B---C
-    |IP  D_LATCH|   |IR  D_LATCH|   |AC  D_LATCH|               \   \ /   /
-    D-----------E   D-----------E   D-----------E                +---S---+
-    |           |   |           |   |           |                    |
-    |         [10]  |          [9]  |          [8]        WRITE_BUS  |
-    |               |               |                     (16 BIT)   |
-    +---------------+---------------+--------------------------------+
-
-CONTROL_BUS:
-16-BITS
-  [0]      READ_BUS <- IP
-
-  [1]      ADDRESS_BUS <- IP
-
-  [2]      READ_BUS <- IR
-
-  [3]      ADDRESS_BUS <- IR
-
-  [4]      READ_BUS <- AC
-
-  [5]      DATA_BUS <- AC, DATA_WRITE
-
-  [6]      DATA_BUS <- ~DATA_BUS
-
-  [7]      DATA_BUS <- DATA_BUS + 1
-
-  [8]      AC <- WRITE_BUS, DATA_READ
-
-  [9]      IR <- WRITE_BUS
-
-  [10]     IP <- WRITE_BUS
-
-  [11]     AC != 0
- 
-  [12]     AC < 0 (1 MSB)
-
-  [13-15]  OPCODE (3 MSB)
+DATA_BUS     <-->  ----------------------------------+----------------+
+16 BIT                                               |                |
+                                                     |                |
+ADDRESS_BUS  <---  --+---------------+               |                |
+13 LSB               |               |               |    READ_BUS    |
+                     |               |               |    (16 BIT)    |
+             +---------------+---------------+--------------------+   |
+             |       |       |       |       |       |            |   |
+             |       |       |       |       |       |     [11]   |   |  [6]
+             |       |       |       |       |       |       |    |   |   |
+           +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+  |   A---B
+           |AND|   |AND|   |AND|   |AND|   |AND|   |AND|   |OR |  |   |XOR|
+           A---B   A---B   A---B   A---B   A---B   A---B   +-A-+  |   +-Q-+
+           |   |   |   |   |   |   |   |   |   |   |   |     |    |     |
+           |  [0]  |  [1]  |  [2]  |  [3]  |  [4]  |  [5]    |    |     |
+           |       |       |       |       |       |         |    |     |
+           +-------+       +-------+       +-------+---------+    |     |
+           |               |               |                      |     |
+           |     [13-15]---+        [12]---+                      |     |  [7]
+           |               |               |                      |     |   |
+     +-----Q-----+   +-----Q-----+   +-----Q-----+              +-A-+   B---C
+     |IP  D_LATCH|   |IR  D_LATCH|   |AC  D_LATCH|               \   \ /   /
+     D-----------E   D-----------E   D-----------E                +---S---+
+     |           |   |           |   |           |                    |
+     |         [10]  |          [9]  |          [8]        WRITE_BUS  |
+     |               |               |                     (16 BIT)   |
+     +---------------+---------------+--------------------------------+
 ```
+**Control Bus:**
+Bit(s)|Behaviour
+------|--------------------------------------
+0     |```READ_BUS <- IP```
+1     |```ADDRESS_BUS <- IP```
+2     |```READ_BUS <- IR```
+3     |```ADDRESS_BUS <- IR```
+4     |```READ_BUS <- AC```
+5     |```DATA_BUS <- AC```, ```DATA_WRITE```
+6     |```DATA_BUS <- ~DATA_BUS```
+7     |```DATA_BUS <- DATA_BUS + 1```
+8     |```AC <- WRITE_BUS```, ```DATA_READ```
+9     |```IR <- WRITE_BUS```
+10    |```IP <- WRITE_BUS```
+11    |```AC != 0```
+12    |```AC < 0 (1 MSB)```
+13-15 |```OPCODE (3 MSB)```
 
 ---
 
@@ -90,16 +77,16 @@ CONTROL_BUS:
 
 # Instruction Set
 
-Name         |Behaviour                |Machine Instruction|Assembly Instruction
--------------|-------------------------|-------------------|--------------------
-Load         |AC = memory[address]     |```000[address]``` |```LD [address]```
-Add          |AC = AC + memory[address]|```001[address]``` |```AD [address]```
-Subtract     |AC = AC - memory[address]|```010[address]``` |```SB [address]```
-Store        |memory[address] = AC     |```011[address]``` |```ST [address]```
-Jump Negative|if(AC < 0) IP = address  |```100[address]``` |```JN [address]```
-Jump Positive|if(AC > 0) IP = address  |```101[address]``` |```JP [address]```
-Jump Zero    |if(AC == 0) IP = address |```110[address]``` |```JZ [address]```
-Jump Any     |IP <- address            |```111[address]``` |```JA [address]```
+Name         |Behaviour                       |Machine Instruction|Assembly Instruction
+-------------|--------------------------------|-------------------|--------------------
+Load         |```AC <- memory[address]```     |```000[address]``` |```LD [address]```
+Add          |```AC <- AC + memory[address]```|```001[address]``` |```AD [address]```
+Subtract     |```AC <- AC - memory[address]```|```010[address]``` |```SB [address]```
+Store        |```memory[address] <- AC```     |```011[address]``` |```ST [address]```
+Jump Negative|```if(AC < 0) IP <- address```  |```100[address]``` |```JN [address]```
+Jump Positive|```if(AC > 0) IP <- address```  |```101[address]``` |```JP [address]```
+Jump Zero    |```if(AC == 0) IP <- address``` |```110[address]``` |```JZ [address]```
+Jump Any     |```IP <- address```             |```111[address]``` |```JA [address]```
 
 **NOTE:** Only Load, Subtract, Store, and Jump Negative are needed to be turing complete.
 
