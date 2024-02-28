@@ -5,6 +5,7 @@
 #define REGISTER_SIGN 0x8000
 #define REGISTER_OPCODE 0xE000
 #define REGISTER_ADDRESS 0x1FFF
+#define CONTROL_OUT 0x07FF
 #define CONTROL_OUT_0 0x0001
 #define CONTROL_OUT_1 0x0002
 #define CONTROL_OUT_2 0x0004
@@ -16,6 +17,7 @@
 #define CONTROL_OUT_8 0x0100
 #define CONTROL_OUT_9 0x0200
 #define CONTROL_OUT_10 0x0400
+#define CONTROL_IN 0xF800
 #define CONTROL_IN_NON_ZERO 0x0800
 #define CONTROL_IN_SIGN_BIT 0x1000
 #define CONTROL_IN_OPCODE 0xE000
@@ -27,38 +29,6 @@
 #define CONTROL_JP 0xA000
 #define CONTROL_JZ 0xC000
 #define CONTROL_JA 0xE000
-
-uint16_t simulateAndIc(uint16_t a, bool b) {
-  if(b) {
-    return a;
-  }
-  return 0x0000;
-}
-
-bool simulateOrIc(uint16_t a) {
-  return a != 0x0000;
-}
-
-uint16_t simulateXorIc(uint16_t a, bool b) {
-  if(b) {
-    return ~a;
-  }
-  return a;
-}
-
-uint16_t simulateFullAdderIc(uint16_t a, uint16_t b, bool c) {
-  if(c) {
-    return a + b + 1;
-  }
-  return a + b;
-}
-
-uint16_t simulateRegisterIC(uint16_t d, bool e, uint16_t q) {
-  if(e) {
-    return d;
-  }
-  return q;
-}
 
 struct simulationState {
   uint16_t accumulator;
@@ -75,16 +45,43 @@ struct simulationState {
 };
 
 void simulateDataPath(struct simulationState *s) {
-  s->addressBus = 0;
-  s->dataBus = 0;
-  s->readBus = 0;
-  s->writeBus = 0;
-  if(s->controlBus & CONTROL_OUT_0) {
-    s->readBus |= instructionPointer & REGISTER_ADDRESS;
-  }
-  if(s->controlBus & CONTROL_OUT_1) {
-    s->addressBus |= instructionPointer & REGISTER_ADDRESS;
-  }
+  // Control Out
+  s->addressBus = 0x0000;
+  s->dataBus = 0x0000;
+  s->readBus = 0x0000;
+  s->writeBus = 0x0000;
+  // 0
+  s->readBus |= s->instructionPointer & (s->controlBus & CONTROL_OUT_0 ? 0xFFFF : 0x0000);
+  // 1
+  s->addressBus |= s->instructionPointer & (s->controlBus & CONTROL_OUT_1 ? REGISTER_ADDRESS : 0x0000);
+  // 2
+  s->readBus |= s->instructionRegister & (s->controlBus & CONTROL_OUT_2 ? 0xFFFF : 0x0000);
+  // 3
+  s->addressBus |= s->instructionRegister & (s->controlBus & CONTROL_OUT_3 ? REGISTER_ADDRESS : 0x0000);
+  // 4
+  s->readBus |= s->accumulator & (s->controlBus & CONTROL_OUT_4 ? 0xFFFF : 0x0000);
+  // 5
+  s->dataBus |= s->accumulator & (s->controlBus & CONTROL_OUT_5 ? 0xFFFF : 0x0000);
+  s->dataWrite = s->controlBus & CONTROL_OUT_5;
+  // 6
+  s->dataBus ^= s->controlBus & CONTROL_OUT_6 ? 0xFFFF : 0x0000;
+  // 7
+  s->writeBus = s->readBus + s->databus + (s->controlBus & CONTROL_OUT_7 ? 0x0001 : 0x0000);
+  // 8
+  s->accumulator = s->controlBus & CONTROL_OUT_8 ? s->writeBus : s->accumulator;
+  s->dataRead = s->controlBus & CONTROL_OUT_8;
+  // 9
+  s->instructionRegister = s->controlBus & CONTROL_OUT_9 ? s->writeBus : s->instructionRegister;
+  // 10
+  s->instructionPointer = s->controlBus & CONTROL_OUT_10 ? s->writeBus : s->instructionPointer;
+  // Control In
+  s->controlBus &= CONTROL_OUT;
+  // 11
+  s->controlBus |= s->accumulator & 0xFFFF ? CONTROL_IN_NON_ZERO : 0x0000;
+  // 12
+  s->controlBus |= s->accumulator & REGISTER_SIGN ? CONTROL_IN_SIGN_BIT : 0x0000;
+  // 13-15
+  s->controlBus |= s->instructionRegister & CONTROL_IN_OPCODE;
 }
 
 void simulateControlUnitFetch(struct simulationState *s) {
