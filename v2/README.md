@@ -12,9 +12,9 @@ A very simple processor that resembles modern designs. That is easy to use and u
 # Hardware Diagram
 
 ```
-DATA_READ    <---  ---[8]
+DATA_READ    <---  ---[6]
 
-DATA_WTITE   <---  ---[5]
+DATA_WTITE   <---  ---[7]
 
 DATA_BUS     <-->  ----------------------------------+----------------+
 16 BIT                                               |                |
@@ -24,7 +24,7 @@ ADDRESS_BUS  <---  --+---------------+               |                |
                      |               |               |    (16 BIT)    |
              +---------------+---------------+--------------------+   |
              |       |       |       |       |       |            |   |
-             |       |       |       |       |       |     [11]   |   |  [6]
+             |       |       |       |       |       |     [13]   |   |  [8]
              |       |       |       |       |       |       |    |   |   |
            +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+   +-Q-+  |   A---B
            |AND|   |AND|   |AND|   |AND|   |AND|   |AND|   |OR |  |   |XOR|
@@ -34,13 +34,13 @@ ADDRESS_BUS  <---  --+---------------+               |                |
            |       |       |       |       |       |         |    |     | (16 BIT)
            +-------+       +-------+       +-------+---------+    |     |
            |               |               |                      |     |
-           |     [13-15]---+        [12]---+                      |     |  [7]
+           |     [15-17]---+        [14]---+                      |     |  [9]
            |               |               |                      |     |   |
      +-----Q-----+   +-----Q-----+   +-----Q-----+              +-A-+   B---C
      |IP  D_LATCH|   |IR  D_LATCH|   |AC  D_LATCH|               \   \ /   /
      D-----------E   D-----------E   D-----------E                +---S---+
      |           |   |           |   |           |                    |
-     |         [10]  |          [9]  |          [8]        WRITE_BUS  |
+     |         [12]  |         [11]  |         [10]        WRITE_BUS  |
      |               |               |                     (16 BIT)   |
      +---------------+---------------+--------------------------------+
 ```
@@ -52,15 +52,17 @@ Bit(s)|Behaviour
 2     |```READ_BUS <- IR```
 3     |```ADDRESS_BUS <- IR```
 4     |```READ_BUS <- AC```
-5     |```DATA_BUS <- AC```, ```DATA_WRITE```
-6     |```DATA_BUS <- ~DATA_BUS```
-7     |```DATA_BUS <- DATA_BUS + 1```
-8     |```AC <- WRITE_BUS```, ```DATA_READ```
-9     |```IR <- WRITE_BUS```
-10    |```IP <- WRITE_BUS```
-11    |```AC != 0```
-12    |```AC < 0 (1 MSB)```
-13-15 |```OPCODE (3 MSB)```
+5     |```DATA_BUS <- AC```
+6     |```DATA_READ```
+7     |```DATA_WRITE```
+8     |```DATA_BUS <- ~DATA_BUS```
+9     |```DATA_BUS <- DATA_BUS + 1```
+10    |```AC <- WRITE_BUS```
+11    |```IR <- WRITE_BUS```
+12    |```IP <- WRITE_BUS```
+13    |```AC != 0```
+14    |```AC < 0 (1 MSB)```
+15-17 |```OPCODE (3 MSB)```
 
 ---
 
