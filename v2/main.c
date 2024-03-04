@@ -20,9 +20,15 @@ struct state {
   char writeBus[DATA_WIDTH];
 };
 
+void ZeroBus(char *q, int width) {
+  for(int i = 0; i < width; i++) {
+    q[i] = 0;
+  }
+}
+
 void AndLogic(const char *a, char b, char *q, int width) {
   for(int i = 0; i < width; i++) {
-    q[i] = a[i] + b == 2;
+    q[i] += a[i] + b == 2;
   }
 }
 
@@ -87,20 +93,82 @@ void ControlUnitDecode(char *c) {
 
 void ControlUnitExecute(char *c) {
   if(!c[15] && !c[16] && !c[17]) {
+    c[0] = 0;
+    c[1] = 0;
+    c[2] = 0;
+    c[3] = 1;
+    c[4] = 0;
+    c[5] = 0;
+    c[6] = 1;
+    c[7] = 0;
+    c[8] = 0;
+    c[9] = 0;
+    c[10] = 1;
+    c[11] = 0;
+    c[12] = 0;
   }
   if(!c[15] && !c[16] && c[17]) {
+    c[0] = 0;
+    c[1] = 0;
+    c[2] = 0;
+    c[3] = 1;
+    c[4] = 1;
+    c[5] = 0;
+    c[6] = 1;
+    c[7] = 0;
+    c[8] = 0;
+    c[9] = 0;
+    c[10] = 1;
+    c[11] = 0;
+    c[12] = 0;
   }
   if(!c[15] && c[16] && !c[17]) {
+    c[0] = 0;
+    c[1] = 0;
+    c[2] = 0;
+    c[3] = 1;
+    c[4] = 1;
+    c[5] = 0;
+    c[6] = 1;
+    c[7] = 0;
+    c[8] = 1;
+    c[9] = 1;
+    c[10] = 1;
+    c[11] = 0;
+    c[12] = 0;
   }
   if(!c[15] && c[16] && c[17]) {
+    c[0] = 0;
+    c[1] = 0;
+    c[2] = 0;
+    c[3] = 1;
+    c[4] = 0;
+    c[5] = 1;
+    c[6] = 0;
+    c[7] = 1;
+    c[8] = 0;
+    c[9] = 0;
+    c[10] = 0;
+    c[11] = 0;
+    c[12] = 0;
   }
-  if(c[15] && !c[16] && !c[17] && c[14]) { //JN
-  }
-  if(c[15] && !c[16] && c[17]) && !c[14] && c[13]{ //JP
-  }
-  if(c[15] && c[16] && !c[17] && !c[13]) { //JZ
-  }
-  if(c[15] && c[16] && c[17]) { //JA
+  if((c[15] && !c[16] && !c[17] && c[14]) ||
+    (c[15] && !c[16] && c[17] && !c[14] && c[13]) ||
+    (c[15] && c[16] && !c[17] && !c[13]) ||
+    (c[15] && c[16] && c[17])) {
+    c[0] = 0;
+    c[1] = 0;
+    c[2] = 1;
+    c[3] = 0;
+    c[4] = 0;
+    c[5] = 0;
+    c[6] = 0;
+    c[7] = 0;
+    c[8] = 0;
+    c[9] = 0;
+    c[10] = 0;
+    c[11] = 0;
+    c[12] = 1;
   }
 }
 
@@ -110,7 +178,7 @@ void MemoryUnit(struct state *s) {
     a += s->addressBus[i] * v;
   }
   for(int i = 0; i < DATA_WIDTH && s->dataRead; i++) {
-    s->dataBus[i] = s->memory[a][i];
+    s->dataBus[i] += s->memory[a][i];
   }
   for(int i = 0; i < DATA_WIDTH && s->dataWrite; i++) {
     s->memory[a][i] = s->dataBus[i];
@@ -118,6 +186,9 @@ void MemoryUnit(struct state *s) {
 }
 
 void DataPath(struct state *s) {
+  ZeroBus(s->dataBus, DATA_WIDTH);
+  ZeroBus(s->addressBus, ADDRESS_WIDTH);
+  ZeroBus(s->readBus, DATA_WIDTH);
   AndLogic(s->instructionPointer, s->controlBus[0], s->readBus, ADDRESS_WIDTH);
   AndLogic(s->instructionPointer, s->controlBus[1], s->addressBus, ADDRESS_WIDTH);
   AndLogic(s->instructionRegister, s->controlBus[2], s->readBus, ADDRESS_WIDTH);
@@ -139,16 +210,33 @@ void DataPath(struct state *s) {
   s->controlBus[17] = s->instructionRegister[DATA_WIDTH - 1];
 }
 
-void main() {
-  char a[4] = {1, 0, 1, 0};
-  char b[4] = {1, 0, 0, 0};
-  char c[4] = {0, 0, 0, 0};
-  char q[4] = {0, 0, 0, 0};
-  XorLogic(a, b[0], q);
-  for(int i  = 0; i < 4; i++) {
-    printf(" %d,", !!q[i]);
+void ProcessorUnit(struct state *s) {
+  ControlUnitFetch(s->controlBus);
+  DataPath(s);
+  ControlUnitDecode(s->controlBus);
+  DataPath(s);
+  ControlUnitExecute(s->controlBus);
+  DataPath(s);
+}
+
+void SetArray(int d, char *q, int width) {
+   for(int i = 0; i < width; i++) {
+     q[i] = (d >> i) & 0x0001;
+   }
+}
+
+void PrintArray(char *q, int width) {
+  for(int i = width - 1; i >= 0; i--) {
+    printf(" %d,", q[i]);
   }
   printf("\n");
+}
+
+void main() {
+  struct state s;
+
+  SetArray(0xE000, s.memory[0], DATA_WIDTH);
+  PrintArray(s.memory[0], DATA_WIDTH);
 }
 
 
