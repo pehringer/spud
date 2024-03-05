@@ -92,82 +92,48 @@ void ControlUnitDecode(char *c) {
 }
 
 void ControlUnitExecute(char *c) {
-  if(!c[15] && !c[16] && !c[17]) {
-    c[0] = 0;
-    c[1] = 0;
-    c[2] = 0;
+  c[0] = 0;
+  c[1] = 0;
+  c[2] = 0;
+  c[3] = 0;
+  c[4] = 0;
+  c[5] = 0;
+  c[6] = 0;
+  c[7] = 0;
+  c[8] = 0;
+  c[9] = 0;
+  c[10] = 0;
+  c[11] = 0;
+  c[12] = 0;
+  if(!c[17] && !c[16] && !c[15]) {
     c[3] = 1;
-    c[4] = 0;
-    c[5] = 0;
     c[6] = 1;
-    c[7] = 0;
-    c[8] = 0;
-    c[9] = 0;
     c[10] = 1;
-    c[11] = 0;
-    c[12] = 0;
   }
-  if(!c[15] && !c[16] && c[17]) {
-    c[0] = 0;
-    c[1] = 0;
-    c[2] = 0;
+  if(!c[17] && !c[16] && c[15]) {
     c[3] = 1;
     c[4] = 1;
-    c[5] = 0;
     c[6] = 1;
-    c[7] = 0;
-    c[8] = 0;
-    c[9] = 0;
     c[10] = 1;
-    c[11] = 0;
-    c[12] = 0;
   }
-  if(!c[15] && c[16] && !c[17]) {
-    c[0] = 0;
-    c[1] = 0;
-    c[2] = 0;
+  if(!c[17] && c[16] && !c[15]) {
     c[3] = 1;
     c[4] = 1;
-    c[5] = 0;
     c[6] = 1;
-    c[7] = 0;
     c[8] = 1;
     c[9] = 1;
     c[10] = 1;
-    c[11] = 0;
-    c[12] = 0;
   }
-  if(!c[15] && c[16] && c[17]) {
-    c[0] = 0;
-    c[1] = 0;
-    c[2] = 0;
+  if(!c[17] && c[16] && c[15]) {
     c[3] = 1;
-    c[4] = 0;
     c[5] = 1;
-    c[6] = 0;
     c[7] = 1;
-    c[8] = 0;
-    c[9] = 0;
-    c[10] = 0;
-    c[11] = 0;
-    c[12] = 0;
   }
-  if((c[15] && !c[16] && !c[17] && c[14]) ||
-    (c[15] && !c[16] && c[17] && !c[14] && c[13]) ||
-    (c[15] && c[16] && !c[17] && !c[13]) ||
-    (c[15] && c[16] && c[17])) {
-    c[0] = 0;
-    c[1] = 0;
+  if( (c[17] && !c[16] && !c[15] && c[14]) ||
+      (c[17] && !c[16] && c[15] && !c[14] && c[13]) ||
+      (c[17] && c[16] && !c[15] && !c[13]) ||
+      (c[17] && c[16] && c[15]) ) {
     c[2] = 1;
-    c[3] = 0;
-    c[4] = 0;
-    c[5] = 0;
-    c[6] = 0;
-    c[7] = 0;
-    c[8] = 0;
-    c[9] = 0;
-    c[10] = 0;
-    c[11] = 0;
     c[12] = 1;
   }
 }
@@ -219,12 +185,6 @@ void ProcessorUnit(struct state *s) {
   DataPath(s);
 }
 
-void SetArray(int d, char *q, int width) {
-   for(int i = 0; i < width; i++) {
-     q[i] = (d >> i) & 0x0001;
-   }
-}
-
 void PrintArray(char *q, int width) {
   for(int i = width - 1; i >= 0; i--) {
     printf(" %d,", q[i]);
@@ -232,11 +192,69 @@ void PrintArray(char *q, int width) {
   printf("\n");
 }
 
+void PrintProcessor(struct state *s) {
+  printf("Processor State:\n");
+  printf("AC:\n");
+  PrintArray(s->accumulator, DATA_WIDTH);
+  printf("IP:\n");
+  PrintArray(s->instructionPointer, ADDRESS_WIDTH);
+  printf("IR:\n");
+  PrintArray(s->instructionRegister, DATA_WIDTH);
+  printf("\n");
+  printf("CB:\n");
+  PrintArray(s->controlBus, 18);
+  printf("RB:\n");
+  PrintArray(s->readBus, DATA_WIDTH);
+  printf("WB:\n");
+  PrintArray(s->writeBus, DATA_WIDTH);
+  printf("\n");
+}
+
+void SetArray(int d, char *q, int width) {
+   for(int i = 0; i < width; i++) {
+     q[i] = (d >> i) & 0x0001;
+   }
+}
+
 void main() {
   struct state s;
+  SetArray(0x0002, s.instructionPointer, DATA_WIDTH);
 
-  SetArray(0xE000, s.memory[0], DATA_WIDTH);
+  SetArray(0x0000, s.memory[0], DATA_WIDTH);
+  SetArray(0x0003, s.memory[1], DATA_WIDTH);
+
+  SetArray(0x0001, s.memory[2], DATA_WIDTH);
+  SetArray(0x2001, s.memory[3], DATA_WIDTH);
+  SetArray(0x6000, s.memory[4], DATA_WIDTH);
+  SetArray(0x8005, s.memory[5], DATA_WIDTH);
+  SetArray(0xA006, s.memory[6], DATA_WIDTH);
+  SetArray(0xC007, s.memory[7], DATA_WIDTH);
+  SetArray(0xE008, s.memory[8], DATA_WIDTH);
+
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+  ProcessorUnit(&s);
+
+  PrintProcessor(&s);
+
   PrintArray(s.memory[0], DATA_WIDTH);
+  PrintArray(s.memory[1], DATA_WIDTH);
+  PrintArray(s.memory[2], DATA_WIDTH);
+  PrintArray(s.memory[3], DATA_WIDTH);
+  PrintArray(s.memory[4], DATA_WIDTH);
+  PrintArray(s.memory[5], DATA_WIDTH);
+  PrintArray(s.memory[6], DATA_WIDTH);
+  PrintArray(s.memory[7], DATA_WIDTH);
+  PrintArray(s.memory[8], DATA_WIDTH);
 }
 
 
