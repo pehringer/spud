@@ -64,6 +64,9 @@ Bit(s)|Behaviour
 14    |```AC < 0 (1 MSB)```
 15-17 |```OPCODE (3 MSB)```
 
+**NOTE:** Bits ```0-12``` are control unit outputs.
+**NOTE:** Bits ```13-17``` are control unit inputs.
+
 ---
 
 # Instruction Format
