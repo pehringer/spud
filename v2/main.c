@@ -218,32 +218,32 @@ void SetArray(int d, char *q, int width) {
 
 void main() {
   struct state s;
-  SetArray(0x0002, s.instructionPointer, DATA_WIDTH);
 
-  SetArray(0x0000, s.memory[0], DATA_WIDTH);
-  SetArray(0x0003, s.memory[1], DATA_WIDTH);
+  // power of 2 program
+  SetArray(0x0005, s.instructionPointer, DATA_WIDTH);
 
-  SetArray(0x0001, s.memory[2], DATA_WIDTH);
-  SetArray(0x2001, s.memory[3], DATA_WIDTH);
-  SetArray(0x6000, s.memory[4], DATA_WIDTH);
-  SetArray(0x8005, s.memory[5], DATA_WIDTH);
-  SetArray(0xA006, s.memory[6], DATA_WIDTH);
-  SetArray(0xC007, s.memory[7], DATA_WIDTH);
-  SetArray(0xE008, s.memory[8], DATA_WIDTH);
+  SetArray(0x4008, s.memory[0], DATA_WIDTH); // do {
+  SetArray(0x6009, s.memory[1], DATA_WIDTH); // i -= 1
 
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
-  ProcessorUnit(&s);
+  SetArray(0x000A, s.memory[2], DATA_WIDTH); // v += v
+  SetArray(0x200A, s.memory[3], DATA_WIDTH); //
+  SetArray(0x600A, s.memory[4], DATA_WIDTH); //
 
+  SetArray(0x0009, s.memory[5], DATA_WIDTH); //
+  SetArray(0xA000, s.memory[6], DATA_WIDTH); // } while i > 0
+
+  SetArray(0xE007, s.memory[7], DATA_WIDTH); // halt
+
+  SetArray(0x0001, s.memory[8], DATA_WIDTH);  // val 1
+  SetArray(0x0006, s.memory[9], DATA_WIDTH);  // i = 6
+  SetArray(0x0001, s.memory[10], DATA_WIDTH); // v = 1
+
+  // run program
+  for(int i = 0; i < 256; i++) {
+    ProcessorUnit(&s);
+  }
+
+  // print results
   PrintProcessor(&s);
 
   PrintArray(s.memory[0], DATA_WIDTH);
@@ -255,6 +255,8 @@ void main() {
   PrintArray(s.memory[6], DATA_WIDTH);
   PrintArray(s.memory[7], DATA_WIDTH);
   PrintArray(s.memory[8], DATA_WIDTH);
+  PrintArray(s.memory[9], DATA_WIDTH);
+  PrintArray(s.memory[10], DATA_WIDTH);
 }
 
 
