@@ -13,13 +13,13 @@ A very simple processor that resembles modern designs. That is easy to use and u
 
 ```
 ______________________________________
-|            M E M O R Y             | 
+|            m e m o r y             | 
 |____________________________________|
              |          |
   _____ADDRESS          DATA________________
   |   ______ | ________ | __________     __|__
 __|___|__  __|___|__  __|___|__    |     \___/--[~]
-|  I P  |  |  I R  |  |  A C  |  __|__   __|__
+|  i p  |  |  i r  |  |  a c  |  __|__   __|__
 |_______|  |_______|  |_______|  \    \_/    /__[++]  
     |          |          |       \_________/   
     |__________|__________|____________|
@@ -34,23 +34,27 @@ __|___|__  __|___|__  __|___|__    |     \___/--[~]
  15 14 13   12 11 10 9 8 7 6 5 4 3 2 1 0
 ```
 
-**NOTE:** Instructions are stored in the IR register.
-
 ---
 
 # Instruction Set
 
+### Fetch/Decode Behaviour
+
+```ir <- memory[ip]```  
+```ip <- ip + 1 ```  
+
+### Execute Behaviour
+
 Name         |Behaviour                       |Machine Instruction|Assembly Instruction
 -------------|--------------------------------|-------------------|--------------------
-Load         |```ac <- memory[address]```     |```000[address]``` |```LO [address]```
-Add          |```ac <- ac + memory[address]```|```001[address]``` |```AD [address]```
-Negate       |```ac <- -memory[address]```    |```010[address]``` |```NE [address]```
-Subtract     |```AC <- AC - memory[address]```|```011[address]``` |```SU [address]```
-Store        |```memory[address] <- AC```     |```100[address]``` |```ST [address]```
-Jump Negative|```if(AC < 0) IP <- address```  |```101[address]``` |```JN [address]```
-Jump Any     |```IP <- address```             |```110[address]``` |```JA [address]```
-
-**NOTE:** Only Load, Subtract, Store, and Jump Negative are needed to be turing complete.
+Load Positive|```ac <- +memory[address]```    |```000[address]``` |```LP [address]```
+Load Negative|```ac <- -memory[address]```    |```001[address]``` |```LN [address]```
+Load Add     |```ac <- ac + memory[address]```|```010[address]``` |```LA [address]```
+Load Subtract|```ac <- ac - memory[address]```|```011[address]``` |```LS [address]```
+Save         |```memory[address] <- ac```     |```100[address]``` |```S  [address]```
+Jump Negative|```if(AC < 0) ip <- address```  |```101[address]``` |```JN [address]```
+Jump Any     |```ip <- address```             |```110[address]``` |```JA [address]```
+Halt         |```ip <- ip - 1```              |```111[ n / a ]``` |```H           ```
 
 ---
 
@@ -81,12 +85,10 @@ Assembly comments are extremely helpful. They are equivalent to line comments in
 #### x += 1  
 ```
 ; increment x by 1
-LD varX
-AD val1
-ST varX
-
-halt:
-JA halt
+LP varX
+LA val1
+S  varX
+H
 
 val1:
 1
@@ -98,12 +100,10 @@ varX:
 #### x -= 1  
 ```
 ; decrement x by 1
-LD varX
-SB val1
-ST varX
-
-halt:
-JA halt
+LP varX
+LS val1
+S  varX
+H
 
 val1:
 1
@@ -115,12 +115,10 @@ varX:
 #### z = x + y
 ```
 ; set z to sum of x and y
-LD varX
-AD valY
-ST varZ
-
-halt:
-JA halt
+LP varX
+LA valY
+S  varZ
+H
 
 varX:
 4
@@ -135,12 +133,10 @@ varZ:
 #### Z = X - Y
 ```
 ; set z to difference of x and y
-LD varX
-AD valY
-ST varZ
-
-halt:
-JA halt
+LP varX
+LS valY
+S  varZ
+H
 
 varX:
 4
@@ -159,21 +155,20 @@ varZ:
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
 ; create and store LD instruction with index address
-LD ptrA
-AD varI
-AD opLD
-ST load
+LP ptrA
+LA varI
+LA opLP
+S  load
 
 ; set j to ith element of a
 load:
 0
-ST varJ
+S  varJ
 
-halt:
-JA halt
+H
 
 ; load opcode
-opLD:
+opLP:
 0b0000000000000000
 
 varI:
@@ -196,21 +191,20 @@ varA
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
 ; create and store ST instruction with index address
-LD ptrA
-AD varI
-AD opST
-ST save
+LP ptrA
+LA varI
+LA opS
+S  save
 
 ; set ith element of a to j
-LD varJ
+LP varJ
 save:
 0
 
-halt:
-JA halt
+H
 
 ; store opcode
-opST:
+opS:
 0b0110000000000000
 
 varI:
@@ -232,21 +226,18 @@ varA
 
 #### z = x < y
 ```
-; compare x to y
-LD varX
-SB varY
-
 ; x is less then y
-JZ halt
-JP halt
-LD true
-ST varZ
+LP varX
+LS varY
+JN halt
+LP false
+S  varZ
 
 halt:
-JA halt
+H
 
-true:
-1
+false:
+0
 
 varX:
 2
@@ -255,22 +246,20 @@ varY:
 4
 
 varZ:
-0
+1
 ```
 
 #### z = x <= y
 ```
-; compare x to y
-LD varX
-SB varY
-
 ; x is less then or equal to y
-JP halt
-LD true
-ST varZ
+LP varY
+LS varX
+JN halt
+LP true
+S  varZ
 
 halt:
-JA halt
+H
 
 true:
 1
@@ -285,20 +274,20 @@ varZ:
 0
 ```
 
-#### z = x == y
+#### z = x == y //HERHEHRHEHREHRHEHRHEHRHEHREHHREH
 ```
-; compare x to y
-LD varX
-SB varY
-
 ; x is equal to y
+LP varX
+LS varY
 JN halt
-JP halt
-LD true
-ST varZ
+LP varY
+LS varX
+JN halt
+LP true
+S  varZ
 
 halt:
-JA halt
+H
 
 true:
 1
@@ -315,20 +304,21 @@ varZ:
 
 #### z = x != y
 ```
-; compare x to y
-LD varX
-SB varY
-
 ; x is not equal to y
-JZ halt
-LD true
-ST varZ
+LP varX
+LS varY
+JN halt
+LP varY
+LS varX
+JN halt
+LP false
+S  varZ
 
 halt:
-JA halt
+H
 
-true:
-1
+false:
+0
 
 varX:
 2
@@ -337,22 +327,20 @@ varY:
 4
 
 varZ:
-0
+1
 ```
 
 #### z = x >= y
 ```
-; compare x to y
-LD varX
-SB varY
-
 ; x is greater then or equal to y
+LP varX
+LS varY
 JN halt
-LD true
-ST varZ
+LP true
+S  varZ
 
 halt:
-JA halt
+H
 
 true:
 1
@@ -369,21 +357,18 @@ varZ:
 
 #### z = x > y
 ```
-; compare x to y
-LD varX
-SB varY
-
 ; x is greater then y
+LP varY
+LS varX
 JN halt
-JZ halt
-LD true
-ST varZ
+LP false
+S  varZ
 
 halt:
-JA halt
+H
 
-true:
-1
+false:
+0
 
 varX:
 2
@@ -392,36 +377,32 @@ varY:
 4
 
 varZ:
-0
+1
 ```
 
 ## Assembly Control Flow Examples
 
-#### if(X > 0) {} else if(X < 0) {} else {}
+#### if(X > 0) {x = 1} else if(X < 0) {x = -1}
 ```
-if:
-LD varX
+; compare x to 0
+LN varX
+JN if
+LP varX
 JN elif
-JZ elif
-;
-; ... 
-;
-JA halt
+H
+
+if:
+LP var1
+S  varX
+H
 
 elif:
-JZ else
-;
-; ...
-;
-JA halt
+LN var1
+S  varX
+H
 
-else:
-;
-; ...
-;
-
-halt:
-JA halt
+var1:
+1
 
 varX:
 2

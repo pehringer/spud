@@ -67,19 +67,19 @@ void ProcessorUnit(struct Simulation *s) {
   }
   // Execute.
   if(op == 0) {
-    // LOAD: ac <- memory[address]
+    // Load Positive: ac <- +memory[address]
     Datapath(s->ac, 0, Memory(s, s->ir), 0, 0);
   } else if(op == 1) {
-    // Add: ac <- ac + memory[address]
-    Datapath(s->ac, s->ac, Memory(s, s->ir), 0, 0);
-  } else if(op == 2) {
-    // Negate: ac <- -memory[address]
+    // Load Negative: ac <- -memory[address]
     Datapath(s->ac, 0, Memory(s, s->ir), 1, 1);
-  } else if(op == 3) {
-    // Subtract: ac <- ac - memory[address]
+  } else if(op == 2) {
+    // Load Add: ac <- ac + memory[address]
+    Datapath(s->ac, s->ac, Memory(s, s->ir), 0, 0);
+  }  else if(op == 3) {
+    // Load Subtract: ac <- ac - memory[address]
     Datapath(s->ac, s->ac, Memory(s, s->ir), 1, 1);
   } else if(op == 4) {
-    // Store: memory[address] <- ac
+    // Save: memory[address] <- ac
     Datapath(Memory(s, s->ir), s->ac, 0, 0, 0);
   } else if(op == 5 && sb) {
     // Jump Negative: if(ac < 0) IP <- address
@@ -87,6 +87,9 @@ void ProcessorUnit(struct Simulation *s) {
   } else if(op == 6) {
     // Jump Any: IP <- address
     Datapath(s->ip, s->ir, 0, 0, 0);
+  } else if(op == 7) {
+    // Halt: IP <- IP - 1
+    Datapath(s->ip, s->ip, 0, 1, 0);
   }
 }
 
@@ -122,19 +125,31 @@ void PrintProcessor(struct Simulation *s) {
 
 
 void main() {
+  // LP 0x0000
+  // LN 0x2000
+  // LA 0x4000
+  // LS 0x6000
+  // S  0x8000
+  // JN 0xA000
+  // JA 0xC000
+  // H  0xE000
   struct Simulation s;
-  SetArray(0x0008, s.ip);
-  SetArray(0x0001, s.memory[0]);  // DATA val
-  SetArray(0x0001, s.memory[1]);  // DATA 1
-  SetArray(0x0004, s.memory[2]);  // DATA pow
-  SetArray(0x4001, s.memory[3]);  // SU 1
-  SetArray(0x6002, s.memory[4]);  // ST pow
-  SetArray(0x0000, s.memory[5]);  // LO val
-  SetArray(0x2000, s.memory[6]);  // AD val
-  SetArray(0x6000, s.memory[7]);  // ST val
-  SetArray(0x0002, s.memory[8]);  // LO pow
-  SetArray(0xA003, s.memory[9]);  // JP pos
-  SetArray(0xE00A, s.memory[10]); // JA hlt
+  SetArray(0x200C, s.memory[0]);
+  SetArray(0xA005, s.memory[1]);
+  SetArray(0x000C, s.memory[2]);
+  SetArray(0xA008, s.memory[3]);
+  SetArray(0xE000, s.memory[4]);
+  SetArray(0x000B, s.memory[5]);
+  SetArray(0x0000, s.memory[6]);
+  SetArray(0x0000, s.memory[7]);
+  SetArray(0x0000, s.memory[8]);
+  SetArray(0x0000, s.memory[9]);
+  SetArray(0x0000, s.memory[10]);
+  SetArray(0x0001, s.memory[11]);
+  SetArray(0x0002, s.memory[12]);
+  SetArray(0x0000, s.memory[13]);
+  SetArray(0x0000, s.memory[14]);
+  SetArray(0x0000, s.memory[15]);
 
   for(int i = 0; i < 32; i++) {
     ProcessorUnit(&s);
@@ -153,17 +168,9 @@ void main() {
   PrintArray(s.memory[8]);
   PrintArray(s.memory[9]);
   PrintArray(s.memory[10]);
+  PrintArray(s.memory[11]);
+  PrintArray(s.memory[12]);
+  PrintArray(s.memory[13]);
+  PrintArray(s.memory[14]);
+  PrintArray(s.memory[15]);
 }
-
-/*
-  SetArray(0x0002, s.ip);
-  SetArray(0x0000, s.memory[0]); // DATA 0
-  SetArray(0x0003, s.memory[1]); // DATA 3
-  SetArray(0x0000, s.memory[2]); // LD 3
-  SetArray(0x4001, s.memory[3]); // SU 3 MOD-TO-TEST
-  SetArray(0x6000, s.memory[4]); // ST 3
-  SetArray(0x8005, s.memory[5]); // JN hlt
-  SetArray(0xA006, s.memory[6]); // JP hlt
-  SetArray(0xC007, s.memory[7]); // JZ hlt
-  SetArray(0xE008, s.memory[8]); // JA hlt
-*/
