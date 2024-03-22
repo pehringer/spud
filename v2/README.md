@@ -389,16 +389,18 @@ LN varX
 JN if
 LP varX
 JN elif
-H
+JA else
 
 if:
 LP var1
 S  varX
-H
+JA else
 
 elif:
 LN var1
 S  varX
+
+else:
 H
 
 var1:
@@ -408,21 +410,17 @@ varX:
 2
 ```
 
-#### while(X-- > 0) {}
+#### while(X-- > 0)
 ```
+JA chec
 loop:
-LD varX
-JN halt
-JZ halt
-SB val1
-ST varX
-;
-; ...
-;
-JUMP_A loop
-  
-halt:
-JA halt 
+LP varX
+LS val1
+S  varX
+chec:
+LN varX
+JN loop
+H 
 
 val1:
 1
