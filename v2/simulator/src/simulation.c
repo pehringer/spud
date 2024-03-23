@@ -1,15 +1,20 @@
 #include <stdio.h>
 
-
 #define DATA_SIZE 16
 #define ADDRESS_SPACE 8192
 
+#define END_OF_INPUT '\n'
+#define EMPTY 0
+#define INPUT_ADDRESS 8190
+#define OUTPUT_ADDRESS 8191
 
 struct Simulation {
   char ac[DATA_SIZE];
   char ip[DATA_SIZE];
   char ir[DATA_SIZE];
   char memory[ADDRESS_SPACE][DATA_SIZE];
+  char iu[DATA_SIZE];
+  char ou[DATA_SIZE];
 };
 
 
@@ -41,6 +46,12 @@ char* Memory(struct Simulation *s, char *src) {
     if(src[i]) {
       idx += v;
     }
+  }
+  if(idx == INPUT_ADDRESS) {
+	return &s->pi[0]
+  }
+  if(idx == OUTPUT_ADDRESS) {
+	return &s->po[0]
   }
   return &s->memory[idx][0];
 }
@@ -94,9 +105,64 @@ void ProcessorUnit(struct Simulation *s) {
 }
 
 
+void InputUnit() {
+  // Get register.
+  char val = 0
+  for(int i = 0, v = 1; i < DATA_SIZE && i < sizeof(char); i++; v += v) {
+    if(s->pi[i]) {
+	val += v;
+    }
+  }
+  // No character, get next character.
+  if(!val) {
+    val = getc(stdin);
+  }
+  // Set register.
+  for(int i = 0; i < DATA_SIZE && i < sizeof(char); i++) {
+    if(val >> i & 0x1) {
+	s->pi[i]++;
+    }
+  }
+}
+
+
+void OutputUnit() {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void SetArray(int d, char *q) {
    for(int i = 0; i < DATA_SIZE; i++) {
-     q[i] = (d >> i) & 0x0001;
+     q[i] = (d >> i) & 0x1;
    }
 }
 
