@@ -134,22 +134,24 @@ void main() {
   // JA 0xC000
   // H  0xE000
   struct Simulation s;
-  SetArray(0x200C, s.memory[0]);
-  SetArray(0xA005, s.memory[1]);
-  SetArray(0x000C, s.memory[2]);
-  SetArray(0xA008, s.memory[3]);
-  SetArray(0xC00A, s.memory[4]);
-  SetArray(0x000B, s.memory[5]);
-  SetArray(0x800D, s.memory[6]);
-  SetArray(0xC00A, s.memory[7]);
-  SetArray(0x200B, s.memory[8]);
-  SetArray(0x800D, s.memory[9]);
-  SetArray(0xE000, s.memory[10]);
-  SetArray(0x0001, s.memory[11]);
-  SetArray(0x0002, s.memory[12]);
+  SetArray(0x0010, s.memory[0]);
+  SetArray(0x4009, s.memory[1]);
+  SetArray(0x8004, s.memory[2]);
+  SetArray(0x000B, s.memory[3]);
+  SetArray(0x0000, s.memory[4]); //save
+  SetArray(0x0010, s.memory[5]);
+  SetArray(0x600A, s.memory[6]);
+  SetArray(0x8010, s.memory[7]);
+  SetArray(0xE000, s.memory[8]);
+  SetArray(0x8000, s.memory[9]); //opST
+  SetArray(0x0001, s.memory[10]);//val1
+  SetArray(0x002A, s.memory[11]);//varX
+  SetArray(0x0000, s.memory[12]);
   SetArray(0x0000, s.memory[13]);
-  SetArray(0x0000, s.memory[14]);
-  SetArray(0x0000, s.memory[15]);
+  SetArray(0x0000, s.memory[14]);//topS
+  SetArray(0x0015, s.memory[15]);
+  SetArray(0x000E, s.memory[16]);//ptrS
+  SetArray(0x0000, s.memory[17]);
 
   for(int i = 0; i < 32; i++) {
     ProcessorUnit(&s);
@@ -173,4 +175,6 @@ void main() {
   PrintArray(s.memory[13]);
   PrintArray(s.memory[14]);
   PrintArray(s.memory[15]);
+  PrintArray(s.memory[16]);
+  PrintArray(s.memory[17]);
 }

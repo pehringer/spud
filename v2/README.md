@@ -410,7 +410,7 @@ varX:
 2
 ```
 
-#### while(X-- > 0)
+#### while(X > 0) {x--}
 ```
 JA chec
 loop:
@@ -420,7 +420,7 @@ S  varX
 chec:
 LN varX
 JN loop
-H 
+H
 
 val1:
 1
@@ -436,25 +436,23 @@ varX:
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
 ; create and store ST instruction with index address
-LD ptrS
-AD opST
-ST save:
+LP ptrS
+LA opS
+S  save:
 
 ; set top of stack to x
-LD varX
+LP varX
 save:
 0
 
 ; decrement stack pointer by 1
-LD ptrS
-SB val1
-ST ptrS
+LP ptrS
+LS val1
+S  ptrS
+H
 
-halt:
-JA halt
-
-opST:
-0b0110000000000000
+opS:
+0b1000000000000000
 
 val1:
 1
@@ -475,26 +473,24 @@ topS
 #### x = pop()
 ```
 ; increment stack pointer by 1
-LD ptrS
-AD val1
-ST ptrS
+LP ptrS
+LA val1
+S  ptrS
 
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
 ; create and store LD instruction with index address
-LD ptrS
-AD opLD
-ST load:
+LP ptrS
+LA opLP
+S  load:
 
 ; set x to top of stack
 load:
 0
-ST varX
+S  varX
+H
 
-halt:
-JA halt
-
-opLD:
+opLP:
 0b0000000000000000
 
 val1:
@@ -518,20 +514,18 @@ topS
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
 ; create and store LD instruction with index address
-LD ptrS
-AD val1
-AD opLD
-ST load:
+LP ptrS
+LA val1
+LA opLP
+S  load:
 
 ; set x to top of stack     
 load:
 0
-ST varX
+S  varX
+H
 
-halt:
-JA halt
-
-opLD:
+opLP:
 0b0000000000000000
 
 val1:
