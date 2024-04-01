@@ -15,14 +15,15 @@ A very simple processor that resembles modern designs. That is easy to use and u
 ______________________________________
 |            m e m o r y             | 
 |____________________________________|
-             |          |
-  _____ADDRESS          DATA________________
-  |   ______ | ________ | __________     __|__
-__|___|__  __|___|__  __|___|__    |     \___/--[~]
-|  i p  |  |  i r  |  |  a c  |  __|__   __|__
-|_______|  |_______|  |_______|  \    \_/    /__[++]  
-    |          |          |       \_________/   
-    |__________|__________|____________|
+             |         |
+  _____ADDRESS         DATA________________________
+  |   ______ | _______ | __________________       |
+  |   |      |   |     |  |  _______      |     __|__
+__|___|__  __|___|__  _|__|__|_  __|__    |     \___/--[~]
+|  i p  |  |  i r  |  |  a c  |  \___/  __|__   __|__
+|_______|  |_______|  |_______|    |    \    \_/    /__[++]  
+    |          |          |      [-/+]   \____+____/   
+    |__________|__________|___________________|
 
 ```
 ---
@@ -44,7 +45,6 @@ __|___|__  __|___|__  __|___|__    |     \___/--[~]
 ```ip <- ip + 1 ```  
 
 ### Execute Behaviour
-
 Name         |Behaviour                       |Machine Instruction|Assembly Instruction
 -------------|--------------------------------|-------------------|--------------------
 Load Positive|```ac <- +memory[address]```    |```000[address]``` |```LP [address]```
@@ -55,6 +55,18 @@ Save         |```memory[address] <- ac```     |```100[address]``` |```S  [addres
 Jump Negative|```if(AC < 0) ip <- address```  |```101[address]``` |```JN [address]```
 Jump Any     |```ip <- address```             |```110[address]``` |```JA [address]```
 Halt         |```ip <- ip - 1```              |```111[ n / a ]``` |```H           ```
+
+### Execute Behaviour
+Behaviour                      |Machine Instruction|Assembly Instruction
+-------------------------------|-------------------|--------------------
+```ac = memory[address]```     |```000[address]``` |```GET [address]```
+```memory[address] = ac```     |```001[address]``` |```SET [address]```
+```ac = ac + memory[address]```|```010[address]``` |```ADD [address]```
+```ac = ac - memory[address]```|```011[address]``` |```SUB [address]```
+```ip = address```             |```100[address]``` |```ANY [address]```
+```if(AC < 0) ip = address```  |```101[address]``` |```NEG [address]```
+```if(AC > 0) ip = address```  |```110[address]``` |```POS [address]```
+```if(AC == 0) ip = address``` |```111[address]``` |```ZER [address]```
 
 ---
 
@@ -85,10 +97,12 @@ Assembly comments are extremely helpful. They are equivalent to line comments in
 #### x += 1  
 ```
 ; increment x by 1
-LP varX
-LA val1
-S  varX
-H
+GET varX
+ADD val1
+SET varX
+
+halt:
+ANY halt
 
 val1:
 1
@@ -100,10 +114,12 @@ varX:
 #### x -= 1  
 ```
 ; decrement x by 1
-LP varX
-LS val1
-S  varX
-H
+GET varX
+SUB val1
+SET varX
+
+halt:
+ANY halt
 
 val1:
 1
@@ -115,10 +131,12 @@ varX:
 #### z = x + y
 ```
 ; set z to sum of x and y
-LP varX
-LA valY
-S  varZ
-H
+GET varX
+ADD valY
+SET varZ
+
+halt:
+ANY halt
 
 varX:
 4
@@ -133,10 +151,12 @@ varZ:
 #### Z = X - Y
 ```
 ; set z to difference of x and y
-LP varX
-LS valY
-S  varZ
-H
+GET varX
+ADD valY
+SET  varZ
+
+halt:
+ANY halt
 
 varX:
 4
@@ -155,17 +175,18 @@ varZ:
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
 ; create and store LD instruction with index address
-LP ptrA
-LA varI
-LA opLP
-S  load
+GET ptrA
+ADD varI
+ADD opLP
+SET load
 
 ; set j to ith element of a
 load:
 0
-S  varJ
+SET varJ
 
-H
+halt:
+ANY halt
 
 ; load opcode
 opLP:
@@ -191,17 +212,18 @@ varA
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
 ; create and store ST instruction with index address
-LP ptrA
-LA varI
-LA opS
-S  save
+GET ptrA
+ADD varI
+ADD opS
+SET save
 
 ; set ith element of a to j
-LP varJ
+GET varJ
 save:
 0
 
-H
+halt:
+ANY halt
 
 ; store opcode
 opS:
@@ -227,16 +249,16 @@ varA
 #### z = x < y
 ```
 ; x is less then y
-LP varX
-LS varY
-JN halt
-LP false
-S  varZ
+GET varX
+SUB varY
+NEG halt
+GET fals
+SET varZ
 
 halt:
-H
+ANY halt
 
-false:
+fals:
 0
 
 varX:
@@ -252,14 +274,14 @@ varZ:
 #### z = x <= y
 ```
 ; x is less then or equal to y
-LP varY
-LS varX
-JN halt
-LP true
-S  varZ
+GET varY
+SUB varX
+NEG halt
+GET true
+SET varZ
 
 halt:
-H
+ANY halt
 
 true:
 1
@@ -274,20 +296,20 @@ varZ:
 0
 ```
 
-#### z = x == y //HERHEHRHEHREHRHEHRHEHRHEHREHHREH
+#### z = x == y
 ```
 ; x is equal to y
-LP varX
-LS varY
-JN halt
-LP varY
-LS varX
-JN halt
-LP true
-S  varZ
+GET varX
+SUB varY
+NEG halt
+GET varY
+SUB varX
+NEG halt
+GET true
+SET varZ
 
 halt:
-H
+ANY halt
 
 true:
 1
@@ -305,19 +327,19 @@ varZ:
 #### z = x != y
 ```
 ; x is not equal to y
-LP varX
-LS varY
-JN halt
-LP varY
-LS varX
-JN halt
-LP false
-S  varZ
+GET varX
+SUB varY
+NEG halt
+GET varY
+SUB varX
+NEG halt
+GET fals
+SET varZ
 
 halt:
-H
+ANY halt
 
-false:
+fals:
 0
 
 varX:
@@ -333,14 +355,14 @@ varZ:
 #### z = x >= y
 ```
 ; x is greater then or equal to y
-LP varX
-LS varY
-JN halt
-LP true
-S  varZ
+GET varX
+SUB varY
+NEG halt
+GET true
+SET varZ
 
 halt:
-H
+ANY halt
 
 true:
 1
@@ -358,16 +380,16 @@ varZ:
 #### z = x > y
 ```
 ; x is greater then y
-LP varY
-LS varX
-JN halt
-LP false
-S  varZ
+GET varY
+SUB varX
+NEG halt
+GET fals
+SET varZ
 
 halt:
-H
+ANY halt
 
-false:
+fals:
 0
 
 varX:
