@@ -45,18 +45,7 @@ __|___|__  __|___|__  _|__|__|_  __|__    |     \___/--[~]
 ```ip <- ip + 1 ```  
 
 ### Execute Behaviour
-Name         |Behaviour                       |Machine Instruction|Assembly Instruction
--------------|--------------------------------|-------------------|--------------------
-Load Positive|```ac <- +memory[address]```    |```000[address]``` |```LP [address]```
-Load Negative|```ac <- -memory[address]```    |```001[address]``` |```LN [address]```
-Load Add     |```ac <- ac + memory[address]```|```010[address]``` |```LA [address]```
-Load Subtract|```ac <- ac - memory[address]```|```011[address]``` |```LS [address]```
-Save         |```memory[address] <- ac```     |```100[address]``` |```S  [address]```
-Jump Negative|```if(AC < 0) ip <- address```  |```101[address]``` |```JN [address]```
-Jump Any     |```ip <- address```             |```110[address]``` |```JA [address]```
-Halt         |```ip <- ip - 1```              |```111[ n / a ]``` |```H           ```
 
-### Execute Behaviour
 Behaviour                      |Machine Instruction|Assembly Instruction
 -------------------------------|-------------------|--------------------
 ```ac = memory[address]```     |```000[address]``` |```GET [address]```
@@ -96,75 +85,75 @@ Assembly comments are extremely helpful. They are equivalent to line comments in
 
 #### x += 1  
 ```
-; increment x by 1
-GET varX
-ADD val1
-SET varX
+; increment one
+GET var_x
+ADD num_1
+SET var_x
 
 halt:
 ANY halt
 
-val1:
+num_1:
 1
 
-varX:
+var_x:
 4
 ```
 
 #### x -= 1  
 ```
-; decrement x by 1
-GET varX
-SUB val1
-SET varX
+; decrement one
+GET var_x
+SUB num_1
+SET var_x
 
 halt:
 ANY halt
 
-val1:
+num_1:
 1
 
-varX:
+var_x:
 4
 ```
 
 #### z = x + y
 ```
-; set z to sum of x and y
-GET varX
-ADD valY
-SET varZ
+; add values
+GET var_x
+ADD var_y
+SET var_z
 
 halt:
 ANY halt
 
-varX:
+var_x:
 4
 
-varY:
+var_y:
 8
 
-varZ:
+var_z:
 0
 ```
 
-#### Z = X - Y
+#### z = x - y
 ```
-; set z to difference of x and y
-GET varX
-ADD valY
-SET  varZ
+; subtract values
+GET var_x
+ADD var_y
+SET var_z
 
 halt:
 ANY halt
 
-varX:
+var_x:
 4
 
-varY:
+var_y:
 8
 
-varZ:
+var_z:
 0
 ```
 
@@ -174,284 +163,334 @@ varZ:
 ```
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
-; create and store LD instruction with index address
-GET ptrA
-ADD varI
-ADD opLP
-SET load
-
-; set j to ith element of a
-load:
+; create and store GET instruction with index address
+GET ptr_a
+ADD var_i
+ADD get_op
+SET idx_a
+idx_a:
 0
-SET varJ
+SET var_j
 
 halt:
 ANY halt
 
-; load opcode
-opLP:
-0b0000000000000000
+get_op:
+000000000000000000
 
-varI:
+var_i:
 2
 
-varJ:
+var_j:
 0
 
-varA:
+var_a:
 1
 2
 4
 8
-ptrA:
-varA
+
+ptr_a:
+var_a
 ```
 
 #### a[i] = j
 ```
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
-; create and store ST instruction with index address
-GET ptrA
-ADD varI
-ADD opS
-SET save
-
-; set ith element of a to j
-GET varJ
-save:
+; create and store SET instruction with index address
+GET ptr_a
+ADD var_i
+ADD set_op
+SET idx_a
+GET var_j
+idx_a:
 0
 
 halt:
 ANY halt
 
-; store opcode
-opS:
+set_op:
 0b0110000000000000
 
-varI:
+var_i:
 2
 
-varJ:
+var_j:
 0
 
-varA:
+var_a:
 1
 2
 4
 8
-ptrA:
-varA
+
+ptr_a:
+var_a
 ```
 
 ### Assembly Comparison Examples
 
 #### z = x < y
 ```
-; x is less then y
-GET varX
-SUB varY
+; set true
+GET num_1
+SET var_z
+
+; check false
+GET var_x
+SUB var_y
 NEG halt
-GET fals
-SET varZ
+GET num_0
+SET var_z
 
 halt:
 ANY halt
 
-fals:
+num_0:
 0
 
-varX:
+num_1:
+1
+
+var_x:
 2
 
-varY:
+var_y:
 4
 
-varZ:
-1
+var_z:
+0
 ```
 
 #### z = x <= y
 ```
-; x is less then or equal to y
-GET varY
-SUB varX
-NEG halt
-GET true
-SET varZ
+; set false
+GET num_0
+SET var_z
+
+; check true
+GET var_x
+SUB var_y
+POS halt
+GET num_1
+SET var_z
 
 halt:
 ANY halt
 
-true:
+num_0:
+0
+
+num_1:
 1
 
-varX:
+var_x:
 2
 
-varY:
+var_y:
 4
 
-varZ:
+var_z:
 0
 ```
 
 #### z = x == y
 ```
-; x is equal to y
-GET varX
-SUB varY
-NEG halt
-GET varY
-SUB varX
-NEG halt
-GET true
-SET varZ
+; set true
+GET num_1
+SET var_z
+
+; check false
+GET var_x
+SUB var_y
+ZER halt
+GET num_0
+SET var_z
 
 halt:
 ANY halt
 
-true:
+num_0:
+0
+
+num_1:
 1
 
-varX:
+var_x:
 2
 
-varY:
+var_y:
 4
 
-varZ:
+var_z:
 0
 ```
 
 #### z = x != y
 ```
-; x is not equal to y
-GET varX
-SUB varY
-NEG halt
-GET varY
-SUB varX
-NEG halt
-GET fals
-SET varZ
+; set false
+GET num_0
+SET var_z
+
+; check true
+GET var_x
+SUB var_y
+ZER halt
+GET num_1
+SET var_z
 
 halt:
 ANY halt
 
-fals:
+num_0:
 0
 
-varX:
+num_1:
+1
+
+var_x:
 2
 
-varY:
+var_y:
 4
 
-varZ:
-1
+var_z:
+0
 ```
 
 #### z = x >= y
 ```
-; x is greater then or equal to y
-GET varX
-SUB varY
+; set false
+GET num_0
+SET var_z
+
+; check_true
+GET var_x
+SUB var_y
 NEG halt
-GET true
-SET varZ
+GET num_1
+SET var_z
 
 halt:
 ANY halt
 
-true:
+num_0:
+0
+
+num_1:
 1
 
-varX:
+var_x:
 2
 
-varY:
+var_y:
 4
 
-varZ:
+var_z:
 0
 ```
 
 #### z = x > y
 ```
-; x is greater then y
-GET varY
-SUB varX
-NEG halt
-GET fals
-SET varZ
+; set true
+GET num_1
+SET var_z
+
+; check false
+GET var_x
+SUB var_y
+POS halt
+GET num_0
+SET var_z
 
 halt:
 ANY halt
 
-fals:
+num_0:
 0
 
-varX:
+num_1:
+1
+
+var_x:
 2
 
-varY:
+var_y:
 4
 
-varZ:
+var_z:
+0
+```
+
+### Bitwise Examples
+
+#### z = x & y
+```
+; Copy values
+
+; Bit 15
+
+; Bit 14
+
+; Bit 13
+
+; Bit 12
+
+; Bit 11
+
+; Bit 10
+
+; Bit 9
+
+; Bit 8
+
+; Bit 7
+
+; Bit 6
+
+; Bit 5
+
+; Bit 4
+
+; Bit 3
+
+; Bit 2
+
+; Bit 1
+
+; Bit 0
+
+
+halt:
+ANY halt
+
+num_0:
+0
+
+num_1:
 1
+
+bit_x:
+0
+
+bit_y:
+0
+
+bit_z:
+0
+
+var_x:
+7
+
+var_y:
+5
+
+var_z:
+0
 ```
 
-## Assembly Control Flow Examples
-
-#### if(X > 0) {x = 1} else if(X < 0) {x = -1}
-```
-; compare x to 0
-LN varX
-JN if
-LP varX
-JN elif
-JA else
-
-if:
-LP var1
-S  varX
-JA else
-
-elif:
-LN var1
-S  varX
-
-else:
-H
-
-var1:
-1
-
-varX:
-2
-```
-
-#### while(X > 0) {x--}
-```
-JA chec
-loop:
-LP varX
-LS val1
-S  varX
-chec:
-LN varX
-JN loop
-H
-
-val1:
-1
-
-varX:
-10
-```
-
-## Assemply Stack Examples
+### Assemply Stack Examples
 
 #### push(x)
 ```
