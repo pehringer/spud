@@ -120,14 +120,14 @@ void ProcessorUnit(struct Simulation *s) {
 }
 
 
-void SimulateCycle(struct Simulation *s) {
+void CycleSimulation(struct Simulation *s) {
   InputUnit(s);
   OutputUnit(s);
   ProcessorUnit(s);
 }
 
 
-void LoadSimulation(struct Simulation *s, FILE *bin) {
+void InitializeSimulation(struct Simulation *s, FILE *bin) {
   for(int i = 0; i < DATA_SIZE && i < 8; i++) {
     s->ac[i] = 0;
     s->ip[i] = 0;
@@ -142,6 +142,7 @@ void LoadSimulation(struct Simulation *s, FILE *bin) {
       mem++;
     }
   }
+  *mem = 0;
 }
 
 /*
