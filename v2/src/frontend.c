@@ -3,23 +3,26 @@
 
 void DrawBits(char *bits, int count) {
   while(count--) {
-    printf("%d ", bits[count]);
+    printf("%d", bits[count]);
+    if(count % 4 == 0) {
+      printf(" ");
+    }
   }
 }
 
 
 void DrawRegisters(struct Simulation *s) {
-  printf("\nAccumulator:                       \n");
+  printf("    \nAccumulator:         \n");
   DrawBits(s->ac, DATA_SIZE);
-  printf("\nInstruction Pointer:               \n");
+  printf("    \nInstruction Pointer: \n");
   DrawBits(s->ip, DATA_SIZE-3);
-  printf("\nInstruction Register:              \n");
+  printf("    \nInstruction Register:\n");
   DrawBits(s->ir, DATA_SIZE);
 }
 
 
 void DrawMemory(struct Simulation *s) {
-  printf("\n                                   \n");
+  printf("\n                        \n");
   long ip = 0;
   for(int i = 0; i < DATA_SIZE-3; i++) {
     if(s->ip[i]) {
@@ -28,7 +31,7 @@ void DrawMemory(struct Simulation *s) {
   }
   for(long line = ip - 8; line < ip + 9; line++) {
     if(line < 0) {
-      printf("                                   \n");
+      printf("                        \n");
       continue;
     }
     DrawBits(s->memory[line], DATA_SIZE);
@@ -37,7 +40,7 @@ void DrawMemory(struct Simulation *s) {
     else
       printf("   \n");
   }
-  printf("                                   \n");
+  printf("                        \n");
 }
 
 

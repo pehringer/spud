@@ -6,8 +6,8 @@
 #include <stdio.h>
 
 
-#define MINIMUM_LINES 40
-#define MINIMUM_COLUMNS 40
+#define MINIMUM_LINES 32
+#define MINIMUM_COLUMNS 32
 
 
 void InitializeTerminal(int lines);
