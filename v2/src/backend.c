@@ -84,12 +84,7 @@ char Opcode(struct Simulation *s) {
 
 char Sign(struct Simulation *s) {
   if(s->ac[DATA_SIZE-1]) {
-    return -1;
-  }
-  for(int i = 0; i < DATA_SIZE-1; i++) {
-    if(s->ac[i]) {
-      return 1;
-    }
+    return 1;
   }
   return 0;
 }
@@ -110,11 +105,7 @@ void ProcessorUnit(struct Simulation *s) {
     Datapath(s->ac, s->ac, Memory(s, s->ir), 1, 1);
   } else if(opcode == 4) {
     Datapath(s->ip, s->ir, 0, 0, 0);
-  } else if(opcode == 5 && sign < 0) {
-    Datapath(s->ip, s->ir, 0, 0, 0);
-  } else if(opcode == 6 && sign > 0) {
-    Datapath(s->ip, s->ir, 0, 0, 0);
-  } else if(opcode == 7 && sign == 0) {
+  } else if(opcode == 5 && sign) {
     Datapath(s->ip, s->ir, 0, 0, 0);
   }
 }
@@ -145,14 +136,3 @@ void InitializeSimulation(struct Simulation *s, FILE *bin) {
   *mem = 0;
 }
 
-/*
-void main() {
-  FILE *fil = fopen("echo.bin", "r");
-  struct Simulation s;
-  LoadSimulation(&s, fil);
-  fclose(fil);
-  for(int i = 0; i < 128; i++) {
-    SimulateCycle(&s);
-  }
-}
-*/

@@ -1,18 +1,16 @@
-0 1 0 1   0 0 0 0   0 0 0 0   0 0 0 0   Prompt for input.
+0 0 0 1   0 0 0 0   0 0 0 0   0 0 0 0   Prompt for input / get next inputed char.
 0 1 1 1   1 1 1 1   1 1 1 1   1 1 0 0
-  
+
 0 1 1 1   1 1 1 1   1 1 1 1   1 0 0 0   Print inputed char.
 1 1 1 1   1 1 1 1   1 1 1 1   1 1 0 0
 
-1 0 0 1   0 0 0 0   0 0 0 0   0 1 1 0   Compare inputed char to newline.
+1 0 0 1   0 0 0 0   0 0 0 0   0 0 0 0   Compare inputed char to newline.
+0 1 1 1   1 1 1 1   1 1 1 1   1 1 1 0
 
-1 0 1 0   0 0 0 0   0 0 0 0   0 1 1 1   Halt if inputed char is newline.
+0 0 0 0   0 0 0 0   0 0 0 0   0 1 0 1   Loop if inputed char is newline. 
 
-0 1 0 1   0 0 0 0   0 0 0 0   0 0 0 0   Get next inputed char.
-0 1 1 1   1 1 1 1   1 1 1 1   1 1 0 0
+1 1 1 0   0 0 0 0   0 0 0 0   0 0 0 1   halt.
 
-0 1 0 0   0 0 0 0   0 0 0 0   0 0 0 1   Loop.
-
-0 1 0 1   0 0 0 0   0 0 0 0   0 0 0 0   Newline value. 
 0 0 0 0   0 0 0 0   0 0 0 0   0 0 0 0   Zero value.
+0 1 0 1   0 0 0 0   0 0 0 0   0 0 0 0   Newline value. 
 

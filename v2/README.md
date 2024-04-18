@@ -15,15 +15,16 @@ A very simple processor that resembles modern designs. That is easy to use and u
 ______________________________________
 |            m e m o r y             | 
 |____________________________________|
-             |         |
-  _____ADDRESS         DATA________________________
-  |   ______ | _______ | __________________     __|__
-  |   |      |   |     |  |  _______      |     \___/--[~]
-__|___|__  __|___|__  _|__|__|_  __|__  __|__   __|__
-|  i p  |  |  i r  |  |  a c  |  \___/  \    \_/    /__[++]
-|_______|  |_______|  |_______|    |     \____+____/  
-    |          |          |      [-/+]        |   
-    |__________|__________|___________________|
+             |          |
+  _____ADDRESS          DATA________________
+  |          |          |                  |
+  |   ______ | ________ | __________     __|__
+  |   |      |   |      |   |      |     \___/--[~]
+__|___|__  __|___|__  __|___|__  __|__   __|__
+|  i p  |  |  i r  |  |  a c  |  \    \_/    /__[++]
+|_______|  |_______|  |_______|   \____+____/  
+    |          |          |            |   
+    |__________|__________|____________|
 
 ```
 ---
@@ -54,8 +55,6 @@ Behaviour                      |Machine Instruction|Assembly Instruction
 ```ac = ac - memory[address]```|```011[address]``` |```SUB [address]```
 ```ip = address```             |```100[address]``` |```ANY [address]```
 ```if(AC < 0) ip = address```  |```101[address]``` |```NEG [address]```
-```if(AC > 0) ip = address```  |```110[address]``` |```POS [address]```
-```if(AC == 0) ip = address``` |```111[address]``` |```ZER [address]```
 
 ---
 
@@ -157,6 +156,206 @@ var_z:
 0
 ```
 
+### Assembly Comparison Examples
+
+#### z = x < y
+```
+; set true
+GET num_1
+SET var_z
+
+; check false
+GET var_x
+SUB var_y
+NEG halt
+GET num_0
+SET var_z
+
+halt:
+ANY halt
+
+num_0:
+0
+
+num_1:
+1
+
+var_x:
+2
+
+var_y:
+4
+
+var_z:
+0
+```
+
+#### z = x > y
+```
+; set true
+GET num_1
+SET var_z
+
+; check false
+GET var_y
+SUB var_x
+NEG halt
+GET num_0
+SET var_z
+
+halt:
+ANY halt
+
+num_0:
+0
+
+num_1:
+1
+
+var_x:
+2
+
+var_y:
+4
+
+var_z:
+0
+```
+
+#### z = x <= y
+```
+; set false
+GET num_0
+SET var_z
+
+; check true
+GET var_y
+SUB var_x
+NEG halt
+GET num_1
+SET var_z
+
+halt:
+ANY halt
+
+num_0:
+0
+
+num_1:
+1
+
+var_x:
+2
+
+var_y:
+4
+
+var_z:
+0
+```
+
+#### z = x >= y
+```
+; set false
+GET num_0
+SET var_z
+
+; check true
+GET var_x
+SUB var_y
+NEG halt
+GET num_1
+SET var_z
+
+halt:
+ANY halt
+
+num_0:
+0
+
+num_1:
+1
+
+var_x:
+2
+
+var_y:
+4
+
+var_z:
+0
+```
+
+#### z = x != y
+```
+; set true
+GET num_1
+SET var_z
+
+; check false
+GET var_x
+SUB var_y
+NEG halt
+GET var_y
+SUB var_x
+NEG halt
+GET num_0
+SET var_z
+
+halt:
+ANY halt
+
+num_0:
+0
+
+num_1:
+1
+
+var_x:
+2
+
+var_y:
+4
+
+var_z:
+0
+```
+
+#### z = x == y
+```
+; set false
+GET num_0
+SET var_z
+
+; check true
+GET var_x
+SUB var_y
+NEG halt
+GET var_y
+SUB var_x
+NEG halt
+GET num_1
+SET var_z
+
+halt:
+ANY halt
+
+num_0:
+0
+
+num_1:
+1
+
+var_x:
+2
+
+var_y:
+4
+
+var_z:
+0
+```
+
 ### Assembly Array Examples
 
 #### j = a[i]
@@ -211,7 +410,7 @@ halt:
 ANY halt
 
 set_op:
-0b0110000000000000
+0b0010000000000000
 
 var_i:
 2
@@ -229,345 +428,86 @@ ptr_a:
 var_a
 ```
 
-### Assembly Comparison Examples
-
-#### z = x < y
-```
-; set true
-GET num_1
-SET var_z
-
-; check false
-GET var_x
-SUB var_y
-NEG halt
-GET num_0
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
-```
-
-#### z = x <= y
-```
-; set false
-GET num_0
-SET var_z
-
-; check true
-GET var_x
-SUB var_y
-POS halt
-GET num_1
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
-```
-
-#### z = x == y
-```
-; set true
-GET num_1
-SET var_z
-
-; check false
-GET var_x
-SUB var_y
-ZER halt
-GET num_0
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
-```
-
-#### z = x != y
-```
-; set false
-GET num_0
-SET var_z
-
-; check true
-GET var_x
-SUB var_y
-ZER halt
-GET num_1
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
-```
-
-#### z = x >= y
-```
-; set false
-GET num_0
-SET var_z
-
-; check_true
-GET var_x
-SUB var_y
-NEG halt
-GET num_1
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
-```
-
-#### z = x > y
-```
-; set true
-GET num_1
-SET var_z
-
-; check false
-GET var_x
-SUB var_y
-POS halt
-GET num_0
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
-```
-
-### Bitwise Examples
-
-#### z = x & y
-```
-; Copy values
-
-; Bit 15
-
-; Bit 14
-
-; Bit 13
-
-; Bit 12
-
-; Bit 11
-
-; Bit 10
-
-; Bit 9
-
-; Bit 8
-
-; Bit 7
-
-; Bit 6
-
-; Bit 5
-
-; Bit 4
-
-; Bit 3
-
-; Bit 2
-
-; Bit 1
-
-; Bit 0
-
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-bit_x:
-0
-
-bit_y:
-0
-
-bit_z:
-0
-
-var_x:
-7
-
-var_y:
-5
-
-var_z:
-0
-```
-
 ### Assemply Stack Examples
 
 #### push(x)
 ```
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
-; create and store ST instruction with index address
-LP ptrS
-LA opS
-S  save:
-
-; set top of stack to x
-LP varX
+; create and store SET instruction with stack address
+GET ptr_s
+ADD set_op
+SET save
+GET var_x
 save:
 0
 
 ; decrement stack pointer by 1
-LP ptrS
-LS val1
-S  ptrS
-H
+GET ptr_s
+SUB num_1
+SET ptr_s
 
-opS:
-0b1000000000000000
+halt:
+ANY halt
 
-val1:
+set_op:
+0b0010000000000000
+
+num_1:
 1
 
-varX:
+var_x:
 42
 
-maxS:
+stack:
 0
 0
-topS:
+top_s:
 0
 21
-ptrS:
-topS
+
+ptr_s:
+top_s
 ```
 
 #### x = pop()
 ```
 ; increment stack pointer by 1
-LP ptrS
-LA val1
-S  ptrS
+GET ptr_s
+ADD num_1
+SET ptr_s
 
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
-; create and store LD instruction with index address
-LP ptrS
-LA opLP
-S  load:
-
-; set x to top of stack
+; create and store GET instruction with stack address
+GET ptr_s
+ADD get_op
+SET load
 load:
 0
-S  varX
-H
+SET var_x
 
-opLP:
+halt:
+ANY halt
+
+get_op:
 0b0000000000000000
 
-val1:
+num_1:
 1
 
-varX:
+var_x:
 0
 
-maxS:
+stack:
 0
-topS:
+top_s:
 0
 42
 21
-ptrS:
-topS
+
+ptr_s:
+top_s
 ```
 
 #### x = peek()
@@ -575,34 +515,35 @@ topS
 ; all instructions have fixed memory addresses
 ; dynamic memory addresses requires self-modifying code
 ; create and store LD instruction with index address
-LP ptrS
-LA val1
-LA opLP
-S  load:
-
-; set x to top of stack     
+GET ptr_s
+ADD num_1
+ADD get_op
+SET load     
 load:
 0
-S  varX
-H
+SET var_x
 
-opLP:
+halt:
+ANY halt
+
+get_op:
 0b0000000000000000
 
-val1:
+num_1:
 1
 
-varX:
+var_x:
 0
 
-maxS:
+stack:
 0
-topS:
+top_s:
 0
 42
 21
-ptrS:
-topS
+
+ptr_s:
+top_s
 ```
 
 
