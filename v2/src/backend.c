@@ -82,15 +82,20 @@ void ProcessorUnit(struct Simulation *s) {
   }
   if(opcode == 0) {
     Datapath(s->ac, 0, Memory(s, s->ir), 0, 0);
-  } else if(opcode == 1) {
+  }
+  if(opcode == 1) {
     Datapath(Memory(s, s->ir), s->ac, 0, 0, 0);
-  } else if(opcode == 2) {
+  }
+  if(opcode == 2) {
     Datapath(s->ac, s->ac, Memory(s, s->ir), 0, 0);
-  } else if(opcode == 3) {
+  }
+  if(opcode == 3) {
     Datapath(s->ac, s->ac, Memory(s, s->ir), 1, 1);
-  } else if(opcode == 4) {
+  }
+  if(opcode == 4) {
     Datapath(s->ip, s->ir, 0, 0, 0);
-  } else if(opcode == 5 && s->ac[DATA_SIZE-1]) {
+  }
+  if(opcode == 5 && s->ac[DATA_SIZE-1]) {
     Datapath(s->ip, s->ir, 0, 0, 0);
   }
 }
