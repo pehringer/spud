@@ -1,9 +1,10 @@
 from sys import argv
 
 ESC_CHARS = set(["'\\s'", "'\\n'", "'\\t'", "'\\0'"])
-LAB_CHARS = set("_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+APH_CHARS = set("_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+SIN_CHARS = set("-+")
 BIN_DIGITS = set("01")
-DEC_DIGITS = set("-+0123456789")
+DEC_DIGITS = set("0123456789")
 HEX_DIGITS = set("0123456789abcdefABCDEF")
 OPS_ABBREV = set(["GET", "SET", "ADD", "SUB", "ANY", "NEG"])
 
@@ -15,50 +16,92 @@ OUTPUT_ADDRESS = 8191
 
 
 def is_empty(word):
-	return not word
+	if word:
+		return False
+	return True
 
 
 def is_comment(word):
-	return word[0] == ";"
+	if not len(word) >= 1:
+		return False
+	if not word[0] == ";":
+		return False
+	return True
 
 
 def is_definition(word):
-	return not word[0].isnumeric() and set(word[:-1]).issubset(LAB_CHARS) and word[-1] == ":"
+	if not len(word) >= 2:
+		return False
+	if not set(word[0]).issubset(APH_CHARS):
+		return False
+	if not word[-1] == ":":
+		return False
+	if not set(word[:-1]).issubset(APH_CHARS.union(DEC_DIGITS)):
+		return False
+	if set([word[:-1]]).issubset(OPS_ABBREV):
+		return False
+	return True
 
 
 def is_instruction(word):
-	return set([word]).issubset(OPS_ABBREV)
+	if not len(word) == 3:
+		return False
+	if not set([word]).issubset(OPS_ABBREV):
+		return False
+	return True
 
 
 def is_reference(word):
-	return not word[0].isnumeric() and not set([word]).issubset(OPS_ABBREV) and set(word).issubset(LAB_CHARS)
+	if not len(word) >= 1:
+		return False
+	if not set(word[0]).issubset(APH_CHARS):
+		return False
+	if not set(word).issubset(APH_CHARS.union(DEC_DIGITS)):
+		return False
+	if set([word]).issubset(OPS_ABBREV):
+		return False
+	return True
 
 
 def is_binary(word):
-	return word[:2] == "0b" and set(word[2:]).issubset(BIN_DIGITS)
-
+	if not len(word) >= 3:
+		return False
+	if not word[:2] == "0b":
+		return False
+	if not set(word[2:]).issubset(BIN_DIGITS):
+		return False
+	return True
 
 def is_decimal(word):
-	return set(word).issubset(DEC_DIGITS)
+	if not len(word) >= 1:
+		return False
+	if set(word).issubset(SIN_CHARS):
+		return False
+	if not set(word[0]).issubset(SIN_CHARS.union(DEC_DIGITS)):
+		return False
+	if not set(word[1:]).issubset(DEC_DIGITS):
+		return False
+	return True
 
 
 def is_hexadecimal(word):
-	return word[:2] == "0x" and set(word[2:]).issubset(HEX_DIGITS)
+	if not len(word) >= 3:
+		return False
+	if not word[:2] == "0x":
+		return False
+	if not set(word[2:]).issubset(HEX_DIGITS):
+		return False
+	return True
 
 
 def is_character(word):
-	return set(word).issubset(ESC_CHARS) or (len(word) == 3 and word[0] == "'" and word[2] == "'")
-
-
-def bits(num):
-	bits = []
-	for i in range(DATA_SIZE):
-		if num % 2 == 1:
-			bits.append("1")
-		if num % 2 == 0:
-			bits.append("0")
-		num //= 2
-	return bits
+	if not len(word) == 3 and not set(word).issubset(ESC_CHARS):
+		return False
+	if not word[0] == "'":
+		return False
+	if not word[-1] == "'":
+		return False
+	return True
 
 
 def get_definition(word):
@@ -80,6 +123,17 @@ def get_instruction(word):
 		return ["1", "0", "1"]
 	print("Invalid instruction: %s" % (word))
 	exit(-1)
+
+
+def bits(num):
+	bits = []
+	for i in range(DATA_SIZE):
+		if num % 2 == 1:
+			bits.append("1")
+		if num % 2 == 0:
+			bits.append("0")
+		num //= 2
+	return bits
 
 
 def get_reference(label_lookup, label):
