@@ -2,9 +2,10 @@
 
 
 void DrawBits(char *bits, int count) {
-  while(count--) {
-    printf("%d", bits[count]);
-    if(count % 4 == 0) {
+  //while(count--) {
+  for(int i = 0; i < count; i++) {
+    printf("%d", bits[i]);
+    if(i % 4 == 3) {
       printf(" ");
     }
   }
@@ -12,11 +13,11 @@ void DrawBits(char *bits, int count) {
 
 
 void DrawRegisters(struct Simulation *s) {
-  printf("    \nAccumulator:         \n");
+  printf("     \nAccumulator:          \n");
   DrawBits(s->ac, DATA_SIZE);
-  printf("    \nInstruction Pointer: \n");
+  printf("     \nInstruction Pointer: \n");
   DrawBits(s->ip, DATA_SIZE-3);
-  printf("    \nInstruction Register:\n");
+  printf("     \nInstruction Register:\n");
   DrawBits(s->ir, DATA_SIZE);
 }
 
