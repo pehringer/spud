@@ -1,16 +1,12 @@
 ---
-
-# Spud -> Simple Processor Unit Design.
-
+# Spud -> Simple Processor Unit Design
 A very simple processor that resembles modern designs. That is easy to use and understand in its entirety.
  - Von Neumann architecture.
  - Word addressable memory.
  - Accumulator based machine.
 
 ---
-
 # Hardware Diagram
-
 ```
 ______________________________________
 |            m e m o r y             | 
@@ -27,54 +23,25 @@ __|___|__  __|___|__  __|___|__  __|__   __|__
     |__________|__________|____________|
 
 ```
----
-
-# Instruction Format
-
-```
- opcode__   address_____________________ 
- 15 14 13   12 11 10 9 8 7 6 5 4 3 2 1 0
-```
 
 ---
-
 # Instruction Set
-
-### Fetch/Decode Behaviour
-
-```ir <- memory[ip]```  
-```ip <- ip + 1 ```  
-
-### Execute Behaviour
-
 Behaviour                      |Machine Instruction|Assembly Instruction
 -------------------------------|-------------------|--------------------
-```ac = memory[address]```     |```000[address]``` |```GET [address]```
-```memory[address] = ac```     |```001[address]``` |```SET [address]```
-```ac = ac + memory[address]```|```010[address]``` |```ADD [address]```
-```ac = ac - memory[address]```|```011[address]``` |```SUB [address]```
-```ip = address```             |```100[address]``` |```ANY [address]```
-```if(AC < 0) ip = address```  |```101[address]``` |```NEG [address]```
+```ac = memory[ADDRESS]```     |```[ADDRESS]000``` |```get [LABEL]```
+```memory[ADDRESS] = ac```     |```[ADDRESS]100``` |```set [LABEL]```
+```ac = ac + memory[ADDRESS]```|```[ADDRESS]010``` |```add [LABEL]```
+```ac = ac - memory[ADDRESS]```|```[ADDRESS]110``` |```sub [LABEL]```
+```ip = ADDRESS```             |```[ADDRESS]001``` |```any [LABEL]```
+```if(AC < 0) ip = ADDRESS```  |```[ADDRESS]101``` |```neg [LABEL]```
 
 ---
-
-# Assembly Labels
-
-One or more letters or numbers, following by one colon.
-
-Assembly labels are extremely useful. They are simply a user defined keywords that repersent an address in memory.
-They are a useful abstraction that can be used for the following:
-+ Control Flow
-+ Primitive Variables
-+ Immediate Values
+# Machine Code Format
+Backus-Naur form:
 
 ---
-
-# Assembly Comments
-
-One semicolon, following by zero or more characters.
-
-Assembly comments are extremely helpful. They are equivalent to line comments in higher level programming languages.
+# Assembly Code Format:
+Backus-Naur form:
 
 ---
 
