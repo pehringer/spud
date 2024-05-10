@@ -1,11 +1,8 @@
----
-# Spud -> Simple Processor Unit Design
+# Spud - Simple Processor Unit Design
 A very simple processor that resembles modern designs. That is easy to use and understand in its entirety.
  - Von Neumann architecture.
  - Word addressable memory.
  - Accumulator based machine.
-
----
 # Hardware Diagram
 ```
 ______________________________________
@@ -23,8 +20,6 @@ __|___|__  __|___|__  __|___|__  __|__   __|__
     |__________|__________|____________|
 
 ```
-
----
 # Instruction Set
 Behaviour                      |Machine Instruction|Assembly Instruction
 -------------------------------|-------------------|--------------------
@@ -34,21 +29,20 @@ Behaviour                      |Machine Instruction|Assembly Instruction
 ```ac = ac - memory[ADDRESS]```|```[ADDRESS]110``` |```sub [LABEL]```
 ```ip = ADDRESS```             |```[ADDRESS]001``` |```any [LABEL]```
 ```if(AC < 0) ip = ADDRESS```  |```[ADDRESS]101``` |```neg [LABEL]```
-
----
 # Machine Code Format
 Backus-Naur form:
-
----
+```
+<bit>         ::= "0" | "1"
+<octal>       ::= <bit> <bit> <bit>
+<opcode>      ::= <octal>
+<operand>     ::= <bit> <octal> <octal> <octal> <octal> 
+<immediate>   ::= <bit> <octal> <octal> <octal> <octal> <octal> 
+<instruction> ::= <operand> <opcode>
+```
 # Assembly Code Format:
 Backus-Naur form:
-
----
-
 # Assembly Examples
-
 ### Arithmetic Examples
-
 #### x += 1  
 ```
 ; increment one
@@ -65,7 +59,6 @@ num_1:
 var_x:
 4
 ```
-
 #### x -= 1  
 ```
 ; decrement one
@@ -82,7 +75,6 @@ num_1:
 var_x:
 4
 ```
-
 #### z = x + y
 ```
 ; add values
@@ -102,7 +94,6 @@ var_y:
 var_z:
 0
 ```
-
 #### z = x - y
 ```
 ; subtract values
@@ -122,9 +113,7 @@ var_y:
 var_z:
 0
 ```
-
 ### Assembly Comparison Examples
-
 #### z = x < y
 ```
 ; set true
@@ -156,7 +145,6 @@ var_y:
 var_z:
 0
 ```
-
 #### z = x > y
 ```
 ; set true
@@ -188,7 +176,6 @@ var_y:
 var_z:
 0
 ```
-
 #### z = x <= y
 ```
 ; set false
@@ -220,7 +207,6 @@ var_y:
 var_z:
 0
 ```
-
 #### z = x >= y
 ```
 ; set false
@@ -252,7 +238,6 @@ var_y:
 var_z:
 0
 ```
-
 #### z = x != y
 ```
 ; set true
@@ -287,7 +272,6 @@ var_y:
 var_z:
 0
 ```
-
 #### z = x == y
 ```
 ; set false
@@ -322,9 +306,7 @@ var_y:
 var_z:
 0
 ```
-
 ### Assembly Array Examples
-
 #### j = a[i]
 ```
 ; all instructions have fixed memory addresses
@@ -359,7 +341,6 @@ var_a:
 ptr_a:
 var_a
 ```
-
 #### a[i] = j
 ```
 ; all instructions have fixed memory addresses
@@ -394,9 +375,7 @@ var_a:
 ptr_a:
 var_a
 ```
-
 ### Assemply Stack Examples
-
 #### push(x)
 ```
 ; all instructions have fixed memory addresses
@@ -436,7 +415,6 @@ top_s:
 ptr_s:
 top_s
 ```
-
 #### x = pop()
 ```
 ; increment stack pointer by 1
@@ -476,7 +454,6 @@ top_s:
 ptr_s:
 top_s
 ```
-
 #### x = peek()
 ```
 ; all instructions have fixed memory addresses
