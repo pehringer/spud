@@ -29,8 +29,8 @@ Behaviour                      |Machine Instruction|Assembly Instruction
 ```ac = ac - memory[ADDRESS]```|```[ADDRESS]110``` |```sub [LABEL]```
 ```ip = ADDRESS```             |```[ADDRESS]001``` |```any [LABEL]```
 ```if(AC < 0) ip = ADDRESS```  |```[ADDRESS]101``` |```neg [LABEL]```
-# Machine Code Format
-Backus-Naur form:
+# Machine Code Syntax
+[Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
 <bit> ::= “0” | “1”
 <nibble> ::= <bit><bit><bit><bit>
@@ -41,8 +41,8 @@ Backus-Naur form:
 <word> ::= <instruction> | <immediate>
 <code> ::= <word><code> | <word>     
 ```
-# Assembly Code Format:
-Backus-Naur form:
+# Assembly Code Syntax
+[Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
 <space> ::= “\s”<space> | “\s”
 <bit> ::= “0” | “1”
@@ -62,78 +62,79 @@ Backus-Naur form:
 <line> ::= <space><instruction>"\n" | <space><immediate>"\n" | <label>”\n” | “\n”
 <code> ::= <line><code> | <line>
 ```
-# Assembly Examples
+# Assembly Code Examples
 ### Arithmetic Examples
-#### x += 1  
+---
 ```
-; increment one
-GET var_x
-ADD num_1
-SET var_x
-
-halt:
-ANY halt
-
-num_1:
+int X = 4;
+X++;
+```  
+```
+     get X
+     add 1
+     set X
+HALT
+     any HALT
 1
-
-var_x:
-4
+     hex 1
+X
+     hex 4
 ```
-#### x -= 1  
+---
 ```
-; decrement one
-GET var_x
-SUB num_1
-SET var_x
-
-halt:
-ANY halt
-
-num_1:
+int X = 4;
+X--;
+```  
+```
+     get X
+     sub 1
+     set X
+HALT
+     any HALT
 1
-
-var_x:
-4
+     hex 1
+X
+     hex 4
 ```
-#### z = x + y
+---
 ```
-; add values
-GET var_x
-ADD var_y
-SET var_z
-
-halt:
-ANY halt
-
-var_x:
-4
-
-var_y:
-8
-
-var_z:
-0
+int X = 4;
+int Y = 8;
+int Z = X + Y;
 ```
-#### z = x - y
 ```
-; subtract values
-GET var_x
-ADD var_y
-SET var_z
-
-halt:
-ANY halt
-
-var_x:
-4
-
-var_y:
-8
-
-var_z:
-0
+     get X
+     add Y
+     set Z
+HALT
+     any HALT
+X
+     hex 4
+Y
+     hex 8
+Z
+     hex 0
 ```
+---
+```
+int X = 4;
+int Y = 8;
+int Z = X - Y;
+```
+```
+     get X
+     sub Y
+     set Z
+HALT
+     any HALT
+X
+     hex 4
+Y
+     hex 8
+Z
+     hex 0
+```
+---
 ### Assembly Comparison Examples
 #### z = x < y
 ```
