@@ -32,27 +32,36 @@ Behaviour                      |Machine Instruction|Assembly Instruction
 # Machine Code Format
 Backus-Naur form:
 ```
-<bit> ::= “0”|“1”
-
+<bit> ::= “0” | “1”
 <nibble> ::= <bit><bit><bit><bit>
-
 <address> ::= <nibble><nibble><nibble><bit>
-
 <immediate> ::= <nibble><nibble><nibble><nibble>
-
-<instruction> ::= <address>”000” |
-                  <address>”100” |
-                  <address>”010” |
-                  <address>”110” |
-                  <address>”001” |
-                  <address>”101”
-
-<word> ::= <immediate> | <instruction>
-
+<instruction> ::= <address>”000” | <address>”100” | <address>”010” |
+                  <address>”110” | <address>”001” | <address>”101”
+<word> ::= <instruction> | <immediate>
 <code> ::= <word><code> | <word>     
 ```
 # Assembly Code Format:
 Backus-Naur form:
+```
+<space> ::= “\s”<space> | “\s”
+<bit> ::= “0” | “1”
+<binary> ::= <bit><binary> | <bit>
+<hex> ::= “0” | "1" | "2" | "3" | "4" | "5" | "6" | "7" |
+          "8" | “9” | “A” | "B" | "C" | "D" | "E" | “F”
+<hexadecimal> ::= <hex><hexadecimal> | <hex>
+<text> ::= “0” | "1" | "2" | "3" | "4" | "5" | "6" | "7" |
+           "8" | “9” | “A” | "B" | "C" | "D" | "E" | “F” |
+           "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" |
+           "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" |
+           "W" | "X" | "Y" | "Z" |  "_"
+<lable> ::= <text><label> | <text>
+<immediate> ::= ”bin”<space><binary> | “hex”<space><hexadecimal> | “lab”<space><label>
+<instruction> ::= “get”<space><label> | “set”<space><label> | “add”<space><label> |
+                  “sub”<space><label> | “any”<space><label> | “neg”<space><label>
+<line> ::= <space><instruction>"\n" | <space><immediate>"\n" | <label>”\n” | “\n”
+<code> ::= <line><code> | <line>
+```
 # Assembly Examples
 ### Arithmetic Examples
 #### x += 1  
