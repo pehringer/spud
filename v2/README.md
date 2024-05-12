@@ -32,12 +32,24 @@ Behaviour                      |Machine Instruction|Assembly Instruction
 # Machine Code Format
 Backus-Naur form:
 ```
-<bit>         ::= "0" | "1"
-<octal>       ::= <bit> <bit> <bit>
-<opcode>      ::= <octal>
-<operand>     ::= <bit> <octal> <octal> <octal> <octal> 
-<immediate>   ::= <bit> <octal> <octal> <octal> <octal> <octal> 
-<instruction> ::= <operand> <opcode>
+<bit> ::= “0”|“1”
+
+<nibble> ::= <bit><bit><bit><bit>
+
+<address> ::= <nibble><nibble><nibble><bit>
+
+<immediate> ::= <nibble><nibble><nibble><nibble>
+
+<instruction> ::= <address>”000” |
+                  <address>”100” |
+                  <address>”010” |
+                  <address>”110” |
+                  <address>”001” |
+                  <address>”101”
+
+<word> ::= <immediate> | <instruction>
+
+<code> ::= <word><code> | <word>     
 ```
 # Assembly Code Format:
 Backus-Naur form:
