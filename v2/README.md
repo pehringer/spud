@@ -21,14 +21,14 @@ __|___|__  __|___|__  __|___|__  __|__   __|__
 
 ```
 # Instruction Set
-Behaviour                      |Machine Instruction|Assembly Instruction
--------------------------------|-------------------|--------------------
-```ac = memory[ADDRESS]```     |```[ADDRESS]000``` |```get [LABEL]```
-```memory[ADDRESS] = ac```     |```[ADDRESS]100``` |```set [LABEL]```
-```ac = ac + memory[ADDRESS]```|```[ADDRESS]010``` |```add [LABEL]```
-```ac = ac - memory[ADDRESS]```|```[ADDRESS]110``` |```sub [LABEL]```
-```ip = ADDRESS```             |```[ADDRESS]001``` |```any [LABEL]```
-```if(AC < 0) ip = ADDRESS```  |```[ADDRESS]101``` |```neg [LABEL]```
+Behaviour                       |Machine Instruction|Assembly Instruction
+--------------------------------|-------------------|--------------------
+```ac = memory[ADDRESS];```     |```[ADDRESS]000``` |```get [LABEL]```
+```memory[ADDRESS] = ac;```     |```[ADDRESS]100``` |```set [LABEL]```
+```ac = ac + memory[ADDRESS];```|```[ADDRESS]010``` |```add [LABEL]```
+```ac = ac - memory[ADDRESS];```|```[ADDRESS]110``` |```sub [LABEL]```
+```ip = ADDRESS;```             |```[ADDRESS]001``` |```any [LABEL]```
+```if(AC < 0) ip = ADDRESS;```  |```[ADDRESS]101``` |```neg [LABEL]```
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
@@ -62,7 +62,6 @@ Behaviour                      |Machine Instruction|Assembly Instruction
 <program> ::= <expression> | <code><space><expression>
 ```
 # Assembly Code Examples
-### Arithmetic Examples
 ---
 ```
 int X = 4;
@@ -138,8 +137,11 @@ Z
      num 0
 ```
 ---
-### Assembly Comparison Examples
-#### z = x < y
+```
+int X = 2;
+int Y = 4;
+int Z = X < Y;
+```
 ```
 START
      get TRUE
@@ -162,236 +164,215 @@ Y
 Z
      num 0
 ```
-#### z = x > y
+---
 ```
-; set true
-GET num_1
-SET var_z
-
-; check false
-GET var_y
-SUB var_x
-NEG halt
-GET num_0
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
+int X = 2;
+int Y = 4;
+int Z = X > Y;
 ```
-#### z = x <= y
 ```
-; set false
-GET num_0
-SET var_z
-
-; check true
-GET var_y
-SUB var_x
-NEG halt
-GET num_1
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
+START
+     get TRUE
+     set Z
+     get Y
+     sub X
+     neg END
+     get FALSE
+     set Z
+END
+     any END
+FALSE
+     num 0
+TRUE
+     num 1
+X
+     num 2
+Y
+     num 4
+Z
+     num 0
 ```
-#### z = x >= y
+---
 ```
-; set false
-GET num_0
-SET var_z
-
-; check true
-GET var_x
-SUB var_y
-NEG halt
-GET num_1
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
+int X = 2;
+int Y = 4;
+int Z = X <= Y;
 ```
-#### z = x != y
 ```
-; set true
-GET num_1
-SET var_z
-
-; check false
-GET var_x
-SUB var_y
-NEG halt
-GET var_y
-SUB var_x
-NEG halt
-GET num_0
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
+START
+     get FALSE
+     set Z
+     get Y
+     sub X
+     neg END
+     get TRUE
+     set Z
+END
+     any END
+FALSE
+     num 0
+TRUE
+     num 1
+X
+     num 2
+Y
+     num 4
+Z
+     num 0
 ```
-#### z = x == y
+---
 ```
-; set false
-GET num_0
-SET var_z
-
-; check true
-GET var_x
-SUB var_y
-NEG halt
-GET var_y
-SUB var_x
-NEG halt
-GET num_1
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
+int X = 2;
+int Y = 4;
+int Z = X >= Y;
 ```
-### Assembly Array Examples
-#### j = a[i]
 ```
-; all instructions have fixed memory addresses
-; dynamic memory addresses requires self-modifying code
-; create and store GET instruction with index address
-GET ptr_a
-ADD var_i
-ADD get_op
-SET idx_a
-idx_a:
-0
-SET var_j
-
-halt:
-ANY halt
-
-get_op:
-000000000000000000
-
-var_i:
-2
-
-var_j:
-0
-
-var_a:
-1
-2
-4
-8
-
-ptr_a:
-var_a
+START
+     get FALSE
+     set Z
+     get X
+     sub Y
+     neg END
+     get TRUE
+     set Z
+END
+     any END
+FALSE
+     num 0
+TRUE
+     num 1
+X
+     num 2
+Y
+     num 4
+Z
+     num 0
 ```
-#### a[i] = j
+---
 ```
-; all instructions have fixed memory addresses
-; dynamic memory addresses requires self-modifying code
-; create and store SET instruction with index address
-GET ptr_a
-ADD var_i
-ADD set_op
-SET idx_a
-GET var_j
-idx_a:
-0
-
-halt:
-ANY halt
-
-set_op:
-0b0010000000000000
-
-var_i:
-2
-
-var_j:
-0
-
-var_a:
-1
-2
-4
-8
-
-ptr_a:
-var_a
+int X = 2;
+int Y = 4;
+int Z = X != Y;
 ```
+```
+START
+     get num_1
+     set var_z
+     get var_x
+     sub var_y
+     neg halt
+     get var_y
+     sub var_x
+     neg halt
+     get num_0
+     set var_z
+END
+     any END
+FALSE
+     num 0
+TRUE
+     num 1
+X
+     num 2
+Y
+     num 4
+Z
+     num 0
+```
+---
+```
+int X = 2;
+int Y = 4;
+int Z = X == Y;
+```
+```
+START
+     get num_0
+     set var_z
+     get var_x
+     sub var_y
+     neg halt
+     get var_y
+     sub var_x
+     neg halt
+     get num_1
+     set var_z
+END
+     any END
+FALSE
+     num 0
+TRUE
+     num 1
+X
+     num 2
+Y
+     num 4
+Z
+     num 0
+```
+---
+```
+int A[4] = {1, 2, 4, 8};
+int I = 2;
+int J = A[I];
+```
+```
+START
+      get OPCODE
+      add A
+      add I
+      set INDEX
+INDEX
+      num 0
+      set J
+END
+      any END
+OPCODE
+      num 0
+I
+      num 2
+J
+      num 0
+ARRAY
+      num 1
+      num 2
+      num 4
+      num 8
+A
+      lab ARRAY
+```
+---
+```
+int A[4] = {1, 2, 4, 8};
+int I = 2;
+int A[I] = J;
+```
+```
+START
+      get OPCODE
+      add A
+      add I
+      set INDEX
+      get J
+INDEX
+      num 0
+END
+      any END
+OPCODE
+      num 8192
+I
+      num 2
+J
+      num 0
+ARRAY
+      num 1
+      num 2
+      num 4
+      num 8
+A
+      lab ARRAY
+```
+---
 ### Assemply Stack Examples
 #### push(x)
 ```
