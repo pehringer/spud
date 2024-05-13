@@ -36,31 +36,30 @@ Behaviour                      |Machine Instruction|Assembly Instruction
 <nibble> ::= <bit><bit><bit><bit>
 <address> ::= <nibble><nibble><nibble><bit>
 <immediate> ::= <nibble><nibble><nibble><nibble>
-<instruction> ::= <address>”000” | <address>”100” | <address>”010” |
-                  <address>”110” | <address>”001” | <address>”101”
-<word> ::= <instruction> | <immediate>
-<code> ::= <word><code> | <word>     
+<instruction> ::= <address>”000” | <address>”100” |
+                  <address>”010” | <address>”110” |
+                  <address>”001” | <address>”101”
+<expression> ::= <instruction> | <immediate>
+<program> ::= <expression> | <program><expression>     
 ```
 # Assembly Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
-<space> ::= “\s”<space> | “\s”
-<bit> ::= “0” | “1”
-<binary> ::= <bit><binary> | <bit>
-<hex> ::= “0” | "1" | "2" | "3" | "4" | "5" | "6" | "7" |
-          "8" | “9” | “A” | "B" | "C" | "D" | "E" | “F”
-<hexadecimal> ::= <hex><hexadecimal> | <hex>
-<text> ::= “0” | "1" | "2" | "3" | "4" | "5" | "6" | "7" |
-           "8" | “9” | “A” | "B" | "C" | "D" | "E" | “F” |
-           "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" |
-           "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" |
-           "W" | "X" | "Y" | "Z" |  "_"
-<lable> ::= <text><label> | <text>
-<immediate> ::= ”bin”<space><binary> | “hex”<space><hexadecimal> | “lab”<space><label>
-<instruction> ::= “get”<space><label> | “set”<space><label> | “add”<space><label> |
-                  “sub”<space><label> | “any”<space><label> | “neg”<space><label>
-<line> ::= <space><instruction>"\n" | <space><immediate>"\n" | <label>”\n” | “\n”
-<code> ::= <line><code> | <line>
+<letter> ::= "_" | "A" | "B" | "C" | "D" | "E" | "F" | "G" |
+             "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" |
+             "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" |
+             "X" | "Y" | "Z"
+<digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" |
+            "8" | "9"
+<space> ::= "\n" | "\s" | <space>"\n" | <space>"\s" 
+<label> ::= <letter> | <label><letter>
+<number> ::= <digit> | <number><digit>
+<immediate> ::= "lab"<space><label> | "num"<space><number>
+<instruction> ::= "get"<space><label> | "set"<space><label> |
+                  "add"<space><label> | "sub"<space><label> |
+                  "any"<space><label> | "neg"<space><label>
+<expression> ::= <instruction> | <immediate> | <label>
+<program> ::= <expression> | <code><space><expression>
 ```
 # Assembly Code Examples
 ### Arithmetic Examples
@@ -70,15 +69,16 @@ int X = 4;
 X++;
 ```  
 ```
+START
      get X
-     add 1
+     add ONE
      set X
-HALT
-     any HALT
-1
-     hex 1
+END
+     any END
+ONE
+     num 1
 X
-     hex 4
+     num 4
 ```
 ---
 ```
@@ -86,15 +86,16 @@ int X = 4;
 X--;
 ```  
 ```
+START
      get X
      sub 1
      set X
-HALT
-     any HALT
-1
-     hex 1
+END
+     any END
+ONE
+     num 1
 X
-     hex 4
+     num 4
 ```
 ---
 ```
@@ -103,17 +104,18 @@ int Y = 8;
 int Z = X + Y;
 ```
 ```
+START
      get X
      add Y
      set Z
-HALT
-     any HALT
+END
+     any END
 X
-     hex 4
+     num 4
 Y
-     hex 8
+     num 8
 Z
-     hex 0
+     num 0
 ```
 ---
 ```
@@ -122,50 +124,43 @@ int Y = 8;
 int Z = X - Y;
 ```
 ```
+START
      get X
      sub Y
      set Z
-HALT
-     any HALT
+END
+     any END
 X
-     hex 4
+     num 4
 Y
-     hex 8
+     num 8
 Z
-     hex 0
+     num 0
 ```
 ---
 ### Assembly Comparison Examples
 #### z = x < y
 ```
-; set true
-GET num_1
-SET var_z
-
-; check false
-GET var_x
-SUB var_y
-NEG halt
-GET num_0
-SET var_z
-
-halt:
-ANY halt
-
-num_0:
-0
-
-num_1:
-1
-
-var_x:
-2
-
-var_y:
-4
-
-var_z:
-0
+START
+     get TRUE
+     set Z
+     get X
+     sub Y
+     neg END
+     get FALSE
+     set Z
+END
+     any END
+FALSE
+     num 0
+TRUE
+     num 1
+X
+     num 2
+Y
+     num 4
+Z
+     num 0
 ```
 #### z = x > y
 ```
