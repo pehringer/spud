@@ -42,10 +42,11 @@ Behaviour                       |Machine Instruction|Assembly Instruction
 # Assembly Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
-<letter> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "_"
+<escape> ::= "\n" | "\s" | "\t"
+<upper> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "_"
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-<ws> ::= "\n"<ws> | "\t"<ws> | "\s"<ws> | "\n" | "\t" | "\s"
-<label> ::= <letter><label> | <letter>
+<ws> ::= <escape><ws> | <escape>
+<label> ::= <upper><label> | <upper>
 <number> ::= <digit><number> | <digit>
 <immediate> ::= "lab"<ws><label> | "num"<ws><number>
 <instruction> ::= "get"<ws><label> | "set"<ws><label> | "add"<ws><label> | "sub"<ws><label> | "any"<ws><label> | "neg"<ws><label>
