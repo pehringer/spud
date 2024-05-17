@@ -60,6 +60,45 @@ For example if you wanted to regenerate the hello world assembly example:
 ```python asm.py spud_asm/hello_world.asm spud_bin/hello_world.bin```  
   
 If any errors occur try running the Makefile.  
+# Simulator
+The simulator will run the spud_bin/hello_world.bin if no arguments are given:  
+```./simulator```  
+  
+Terminal Output:
+```
+     
+Accumulator:             
+0101 0000 0000 0000      
+Instruction Pointer: 
+0101 1000 0000 0     
+Instruction Register:
+0101 1000 0000 0001     
+                        
+0010 0100 0000 0000     
+1111 1111 1111 1100     
+1010 0100 0000 0000     
+1111 1111 1111 1100     
+0110 0100 0000 0000     
+1111 1111 1111 1100     
+1110 0100 0000 0000    
+1111 1111 1111 1100    
+0101 1000 0000 0001  <-
+0001 0110 0000 0000    
+1010 0110 0000 0000    
+0011 0110 0000 0000    
+0011 0110 0000 0000    
+1111 0110 0000 0000    
+0011 0100 0000 0000    
+0000 0100 0000 0000    
+1110 1110 0000 0000     
+
+
+
+
+hello, world
+
+```
+If any errors occur try running the Makefile
 # Assembly Code Examples
 ---
 ```
