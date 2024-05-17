@@ -1,16 +1,16 @@
-build: build_exe
+build: build_bin
 
-build_exe: compile_exe link_exe clean_exe
+build_bin: compile_bin link_bin clean_bin
 
-compile_exe:
+compile_bin:
 	gcc -I ./include ./src/backend.c -c
 	gcc -I ./include ./src/frontend.c -c
 	gcc -I .//include ./src/simulator.c -c
 
-link_exe:
-	gcc backend.o frontend.o simulator.o -o sim
+link_bin:
+	gcc backend.o frontend.o simulator.o -o sim.bin
 
-clean_exe:
+clean_bin:
 	rm backend.o
 	rm frontend.o
 	rm simulator.o

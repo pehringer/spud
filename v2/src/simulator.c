@@ -19,7 +19,7 @@ void main(int argc, char **argv) {
     printf("Minimum window size (%dX%d).\n", MINIMUM_LINES, MINIMUM_COLUMNS);
     exit(1);
   }
-  const char *filepath = "sim_bin/echo.bin";
+  const char *filepath = "spud_bin/hello_world.bin";
   struct timespec cycleTime = {0, 999999999};
   long cycleCount = 32;
   for(int argi = 1; argi < argc; argi++) {
