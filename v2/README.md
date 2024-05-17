@@ -52,6 +52,14 @@ Behaviour                       |Machine Instruction|Assembly Instruction
 <instruction> ::= "get"<ws><label> | "set"<ws><label> | "add"<ws><label> | "sub"<ws><label> | "any"<ws><label> | "neg"<ws><label>
 <code> ::= <instruction><ws><code> | <immediate><ws><code> | <label><ws><code> | ""
 ```
+# Assembler
+The assembler takes two filepaths as arguments:  
+```python asm.py [INPUT_ASSEMBLY_FILEPATH] [OUTPUT_BINARY_FILEPATH]```  
+  
+For example if you wanted to regenerate the hello world assembly example:  
+```python asm.py spud_asm/hello_world.asm spud_bin/hello_world.bin```  
+  
+If any errors occur try running the Makefile.  
 # Assembly Code Examples
 ---
 ```
