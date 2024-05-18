@@ -57,11 +57,11 @@ The assembler takes two filepaths as arguments:
 ```python asm.py [INPUT_ASSEMBLY_FILEPATH] [OUTPUT_BINARY_FILEPATH]```  
   
 For example if you wanted to regenerate the hello world assembly example:  
-```python asm.py spud_asm/hello_world.asm spud_bin/hello_world.bin```  
+```python asm.py example_asm/hello_world.asm example_bin/hello_world.bin```  
   
 If any errors occur try running the Makefile.  
 # Simulator
-The simulator will run the spud_bin/hello_world.bin if no arguments are given:  
+The simulator will run the example_bin/hello_world.bin if no arguments are given:  
 ```./simulator```  
   
 Terminal Output:
@@ -106,7 +106,7 @@ The simulator supports the following optional arguments:
 - ```cycle_count [NUMBER_CYCLES]``` - Make the simulator run the given number of cycles before halting.
   
 For example if you wanted to execute hello world 4x faster and have it stop after "hello" has beeen printed:  
-```./sim.bin -filepath spud_bin/hello_world.bin -cycle_time 250 -cycle_count 11```
+```./sim.bin -filepath exmaple_bin/hello_world.bin -cycle_time 250 -cycle_count 11```
 # Assembly Code Examples
 ---
 ```
