@@ -21,7 +21,7 @@ void main(int argc, char **argv) {
   }
   const char *filepath = "example_bin/hello_world.bin";
   struct timespec cycleTime = {0, 999999999};
-  long cycleCount = 32;
+  long cycleCount = 69;
   for(int argi = 1; argi < argc; argi++) {
     if(!strcmp(argv[argi], "-filepath")) {
       filepath = argv[++argi];
