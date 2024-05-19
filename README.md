@@ -27,7 +27,7 @@ Fetch/Decode Behaviour  |
 
 ***Note: ADDRESS = ir[0:13]***
   
-Execute Behaviour               |Machine Instruction|Assembly Instruction
+Execute Behaviour               |Binary             |Assembly
 --------------------------------|-------------------|--------------------
 ```ac = memory[ADDRESS]```      |```[ADDRESS]000``` |```get [LABEL]```
 ```memory[ADDRESS] = ac```      |```[ADDRESS]100``` |```set [LABEL]```
