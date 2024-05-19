@@ -99,7 +99,7 @@ hello, world
 
 ```
 If any errors occur try running the Makefile  
-
+  
 The simulator supports the following optional arguments:
 - ```filepath [PATH_TO_BINARY]``` - Run the .bin at the given filepath.
 - ```cycle_time [NUMBER_MILLISECONDS]``` - Make the simulator take the given number of milliseconds per cycle.
@@ -115,10 +115,9 @@ There are two memory mapped peripherals:
 These peripherals are used to read / print characters to standard in/out (terminal).
   
 ***Input Unit***: set memory address ```8190``` to zero value, memory address ```8190``` will then be set to ascii value of the next character from stdin.
-
-
+  
 ***Output Unit***: set memory address ```8191``` to ascii value of next character for stdout, memory address ```8191``` will then be set to zero value.
-
+  
 See ```example_asm/echo.asm``` for an example of how to use the the input and output units.
 # Assembly Code Examples
 ---
