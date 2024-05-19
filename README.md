@@ -19,6 +19,10 @@ __|___|__  __|___|__  __|___|__  __|__   __|__
     |          |          |            |   
     |__________|__________|____________|
 
+ip = instruction pointer
+ir = instruction register
+ac = accumulator
+
 ```
 # Instruction Set
 Fetch/Decode Behaviour  |
