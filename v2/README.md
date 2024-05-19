@@ -42,10 +42,10 @@ Behaviour                       |Machine Instruction|Assembly Instruction
 # Assembly Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
-<escape> ::= "\n" | "\s" | "\t"
+<space> ::= "\n" | "\s" | "\t"
 <upper> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "_"
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-<ws> ::= <escape><ws> | <escape>
+<ws> ::= <space><ws> | <space>
 <label> ::= <upper><label> | <upper>
 <number> ::= <digit><number> | <digit>
 <immediate> ::= "lab"<ws><label> | "num"<ws><number>
