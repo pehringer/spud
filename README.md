@@ -21,14 +21,18 @@ __|___|__  __|___|__  __|___|__  __|__   __|__
 
 ```
 # Instruction Set
-Behaviour                       |Machine Instruction|Assembly Instruction
+Fetch/Decode Behaviour  |
+------------------------|
+```ir = memory[ip++]``` |
+  
+Execute Behaviour               |Machine Instruction|Assembly Instruction
 --------------------------------|-------------------|--------------------
-```ac = memory[ADDRESS];```     |```[ADDRESS]000``` |```get [LABEL]```
-```memory[ADDRESS] = ac;```     |```[ADDRESS]100``` |```set [LABEL]```
-```ac = ac + memory[ADDRESS];```|```[ADDRESS]010``` |```add [LABEL]```
-```ac = ac - memory[ADDRESS];```|```[ADDRESS]110``` |```sub [LABEL]```
-```ip = ADDRESS;```             |```[ADDRESS]001``` |```any [LABEL]```
-```if(AC < 0) ip = ADDRESS;```  |```[ADDRESS]101``` |```neg [LABEL]```
+```ac = memory[ir[0:13]]```     |```[ADDRESS]000``` |```get [LABEL]```
+```memory[ir[0:13]] = ac```     |```[ADDRESS]100``` |```set [LABEL]```
+```ac = ac + memory[ir[0:13]]```|```[ADDRESS]010``` |```add [LABEL]```
+```ac = ac - memory[ir[0:13]]```|```[ADDRESS]110``` |```sub [LABEL]```
+```ip = ir[0:13]```             |```[ADDRESS]001``` |```any [LABEL]```
+```if(AC < 0) ip = ir[0:13]```  |```[ADDRESS]101``` |```neg [LABEL]```
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
