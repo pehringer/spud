@@ -107,6 +107,19 @@ The simulator supports the following optional arguments:
   
 For example if you wanted to execute hello world 4x faster and have it stop after "hello" has beeen printed:  
 ```./sim.bin -filepath exmaple_bin/hello_world.bin -cycle_time 250 -cycle_count 11```
+# Peripherals
+There are two memory mapped peripherals:
+- Input Unit, address ```8190``` (assembly label ```GETC```)
+- Output Unit, address ```8191``` (assembly label ```PUTC```)
+  
+These peripherals are used to read / print characters to standard in/out (terminal).
+  
+***Input Unit***: set memory address ```8190``` to zero value, memory address ```8190``` will then be set to ascii value of the next character from stdin.
+
+
+***Output Unit***: set memory address ```8191``` to ascii value of next character for stdout, memory address ```8191``` will then be set to zero value.
+
+See ```example_asm/echo.asm``` for an example of how to use the the input and output units.
 # Assembly Code Examples
 ---
 ```
