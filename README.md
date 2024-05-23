@@ -1,4 +1,4 @@
-# Spud - Simple Processor Unit Design
+# spud - Simple Processor Unit Design
 A very simple processor that resembles modern designs. That is easy to use and understand in its entirety.
  - Von Neumann architecture.
  - Word addressable memory.
