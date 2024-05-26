@@ -323,8 +323,12 @@ Z     num 0
 ```
 int A[4] = {1, 2, 4, 8};
 int I = 2;
-int J = A[I];
+int J = 0;
+J = A[I];
 ```
+All instructions have fixed memory addresses.
+Dynamic memory addresses requires self-modifying code.
+Create and store get instruction with array index address (INDEX).
 ```
 START  get OPCODE
        add A
@@ -346,8 +350,12 @@ A      lab ARRAY
 ```
 int A[4] = {1, 2, 4, 8};
 int I = 2;
-int A[I] = J;
+int J = 0;
+A[I] = J;
 ```
+All instructions have fixed memory addresses.
+Dynamic memory addresses requires self-modifying code.
+Create and store set instruction with array index address (INDEX).
 ```
 START  get OPCODE
        add A
@@ -370,6 +378,9 @@ A      lab ARRAY
 int X = 42;
 push(X);
 ```
+All instructions have fixed memory addresses.
+Dynamic memory addresses requires self-modifying code.
+Create and store set instruction with stack address (PUSH).
 ```
 START  GET OPCODE
        ADD S
@@ -393,6 +404,9 @@ S      lab TOP
 ```
 int X = pop();
 ```
+All instructions have fixed memory addresses.
+Dynamic memory addresses requires self-modifying code.
+Create and store get instruction with stack address (POP).
 ```
 START  get S
        add ONE
@@ -416,6 +430,9 @@ S      lab TOP
 ```
 int X = peek();
 ```
+All instructions have fixed memory addresses.
+Dynamic memory addresses requires self-modifying code.
+Create and store get instruction with stack address (PEEK).
 ```
 START  get OPCODE
        add S
