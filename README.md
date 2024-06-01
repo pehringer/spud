@@ -1,35 +1,11 @@
 # spud - Simple Processor Unit Design
-A very simple processor that resembles modern designs. That is easy to use and understand in its entirety.
+A very simple processor that resembles modern designs.
+That is easy to use and understand in its entirety.
  - Von Neumann architecture.
  - Word addressable memory.
  - Accumulator based machine.
-# Interesting workarounds:
-# Hardware Workarounds
 
-### Subtraction
-
-The processor lacks hardware to subtract numbers. To get around this the processor negates one of the numbers first then performs an addition:
-```
-number - number  ==  number + (-number)
-```  
-To get the twos compliment of a binary number (negate a number):
-1) First, bitwise not the number (use a XOR gate on the numbers adder input).
-2) Second, increment the number by one (use the adders carry input).
-```
-  X       Y
-  |       |
-  |     __|__
-  |     \xor/_______subtract
-__|__   __|__   |
-\    \_/    /___|
- \__adder__/  
-      |
-    X - Y
-```
-
-### The Stack
-The processor lacks a stack pointer register, To get around this the processor stores the stack pointer in memory and loads it in when needed. So to push a variable onto the stack the processor does the following:
-
+[Hardware Diagram](#hardware-diagram)
 # Hardware Diagram
 ```
 ______________________________________
@@ -156,6 +132,38 @@ These peripherals are used to read / print characters to standard in/out (termin
 ***Output Unit***: set memory address ```8191``` to ascii value of next character for stdout, memory address ```8191``` will then be set to zero value.
   
 See ```example_asm/echo.asm``` for an example of how to use the the input and output units.
+# Interesting Workarounds
+### Subtraction
+The processor lacks subtraction hardware.
+The workaround is to negate one of the numbers then add them together.
+```
+number - number  ==  number + (-number)
+```  
+To negate a binary number (two's complement):
+1) Bitwise not the number (XOR one of the adders inputs).
+2) Increment the number by one (use adders carry-in input).
+### Dynamic Addresses
+The instruction set only contains operations with fixed addresses.
+The workaround is to use self modifying code:
+1) Load opcode value, for example set opcode == 001 == 8192
+2) Add address to opcode.
+3) Store result in memory.
+4) Execute memory location
+
+For example peeking the stack
+```
+              get GET_OPCODE
+              add STACK_POINTER
+              set PEEK_STACK
+PEEK_STACK    num 0
+HALT          any HALT
+GET_OPCODE    num 0
+STACK_POINTER num 42
+```
+### The Stack
+The processor lacks a stack pointer register.
+The workaround is to store the stack pointer in memory.
+And to use self modifying code to create instructions to load from and store to it.
 # Assembly Code Examples
 ---
 ```
