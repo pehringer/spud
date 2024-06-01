@@ -3,6 +3,33 @@ A very simple processor that resembles modern designs. That is easy to use and u
  - Von Neumann architecture.
  - Word addressable memory.
  - Accumulator based machine.
+# Interesting workarounds:
+# Hardware Workarounds
+
+### Subtraction
+
+The processor lacks hardware to subtract numbers. To get around this the processor negates one of the numbers first then performs an addition:
+```
+number - number  ==  number + (-number)
+```  
+To get the twos compliment of a binary number (negate a number):
+1) First, bitwise not the number (use a XOR gate on the numbers adder input).
+2) Second, increment the number by one (use the adders carry input).
+```
+  X       Y
+  |       |
+  |     __|__
+  |     \xor/_______subtract
+__|__   __|__   |
+\    \_/    /___|
+ \__adder__/  
+      |
+    X - Y
+```
+
+### The Stack
+The processor lacks a stack pointer register, To get around this the processor stores the stack pointer in memory and loads it in when needed. So to push a variable onto the stack the processor does the following:
+
 # Hardware Diagram
 ```
 ______________________________________
@@ -12,10 +39,10 @@ ______________________________________
   _____ADDRESS          DATA________________
   |          |          |                  |
   |   ______ | ________ | __________     __|__
-  |   |      |   |      |   |      |     \___/--[~]
+  |   |      |   |      |   |      |     \xor/__[~]
 __|___|__  __|___|__  __|___|__  __|__   __|__
 |  i p  |  |  i r  |  |  a c  |  \    \_/    /__[++]
-|_______|  |_______|  |_______|   \____+____/  
+|_______|  |_______|  |_______|   \__adder__/  
     |          |          |            |   
     |__________|__________|____________|
 
