@@ -4,8 +4,16 @@ That is easy to use and understand in its entirety.
  - Von Neumann architecture.
  - Word addressable memory.
  - Accumulator based machine.
-
-[Hardware Diagram](#hardware-diagram)
+### Contents
+- [Hardware Diagram](#hardware-diagram)
+- [Instruction Set](#instruction-set)
+- [Machine Code Syntax](#machine-code-syntax)
+- [Assembly Code Syntax](#assembly-code-syntax)
+- [Assembler](#assembler)
+- [Simulator](#simulator)
+- [Peripherals](#peripherals)
+- [Interesting Workarounds](#interesting-workarounds)
+- [Assembly Code Examples](#assembly-code-examples)
 # Hardware Diagram
 ```
 ______________________________________
@@ -68,14 +76,14 @@ Execute Behaviour               |Binary             |Assembly
 # Assembler
 The assembler takes two filepaths as arguments:  
 ```python asm.py [INPUT_ASSEMBLY_FILEPATH] [OUTPUT_BINARY_FILEPATH]```  
-  
+
 For example if you wanted to regenerate the hello world assembly example:  
-```python asm.py examples/asm/hello_world.asm examples/bin/hello_world.bin```  
-  
+```python asm.py examples/asm/hello_world.asm examples/bin/hello_world.bin```
+
 If any errors occur try running the Makefile.  
 # Simulator
 The simulator will run the examples/bin/hello_world.bin if no arguments are given:  
-```./sim.bin```  
+```./sim.bin```
   
 Terminal Output:
 ```
@@ -111,26 +119,26 @@ Instruction Register:
 hello, world
 
 ```
-If any errors occur try running the Makefile  
-  
+If any errors occur try running the Makefile
+
 The simulator supports the following optional arguments:
 - ```filepath [PATH_TO_BINARY]``` - Run the .bin at the given filepath.
 - ```cycle_time [NUMBER_MILLISECONDS]``` - Make the simulator take the given number of milliseconds per cycle.
 - ```cycle_count [NUMBER_CYCLES]``` - Make the simulator run the given number of cycles before halting.
-  
+
 For example if you wanted to execute hello world 4x faster and have it stop after "hello" has beeen printed:  
 ```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 250 -cycle_count 27```
 # Peripherals
 There are two memory mapped peripherals:
 - Input Unit, address ```8190``` (assembly label ```GETC```)
 - Output Unit, address ```8191``` (assembly label ```PUTC```)
-  
+
 These peripherals are used to read / print characters to standard in/out (terminal).
-  
+
 ***Input Unit***: set memory address ```8190``` to zero value, memory address ```8190``` will then be set to ascii value of the next character from stdin.
-  
+
 ***Output Unit***: set memory address ```8191``` to ascii value of next character for stdout, memory address ```8191``` will then be set to zero value.
-  
+
 See ```example_asm/echo.asm``` for an example of how to use the the input and output units.
 # Interesting Workarounds
 ### Subtraction
