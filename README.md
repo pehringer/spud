@@ -40,8 +40,9 @@ Fetch/Decode Behaviour  |
 ------------------------|
 ```ir = memory[ip++]``` |
 
-***Note: ADDRESS = ir[0:13]***
-  
+***Note: instruction address is the 13 least significant bits of ir (instruction register).***  
+***Note: instruction opcode is the 3 most significant bits of ir (instruction register).***  
+
 Execute Behaviour               |Binary             |Assembly
 --------------------------------|-------------------|--------------------
 ```ac = memory[ADDRESS]```      |```[ADDRESS]000``` |```get [LABEL]```
@@ -85,7 +86,8 @@ If any errors occur try running the Makefile.
 The simulator will run the examples/bin/hello_world.bin if no arguments are given:  
 ```./sim.bin```
   
-Terminal Output:
+Terminal Output:  
+***Note: bits are printed least to most significant, e.g 011 == 6***
 ```
      
 Accumulator:             
