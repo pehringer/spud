@@ -51,7 +51,7 @@ def bits(num):
 
 def get_label(table, word):
 	if not word in table:
-		print("Undefined label: %s" % (words))
+		print("Undefined label: %s" % (word))
 		exit(-1)
 	return bits(table[word])
 
