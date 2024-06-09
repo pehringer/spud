@@ -8,22 +8,15 @@ MAIN_LOP get TOKEN_BUFFER_END
          sub TOKEN_BUFFER
          neg HALT
          get TOKEN_BUFFER
-         set SAME_STRING_ARG
-         get STRING_HALT
-         set SAME_STRING_ARH
-         get MAIN_SS
-         any SAME_STRING_CAL
-MAIN_SS  lab MAIN_S
-MAIN_S   neg HALT
-         get TOKEN_BUFFER
          set PRINT_STRING_ARG
          get MAIN_PP
          any PRINT_STRING_CAL
 MAIN_PP  lab MAIN_P
-MAIN_P   add INCREMENT_ONE
-         set TOKEN_BUFFER
+MAIN_P   set TOKEN_BUFFER
+         add OPCODE_SET
+         set MAIN_LFE
          get CHAR_LINE_FEED
-         set PUTC
+MAIN_LFE num 0
          any MAIN_LOP
 
 
@@ -55,41 +48,6 @@ PRINT_STRING_IDX num 0
                  sub OPCODE_GET
 PRINT_STRING_RET num 0
 
-
-
-SAME_STRING_ARG num 0
-SAME_STRING_ARH num 0
-SAME_STRING_CAL add OPCODE_ANY
-                set SAME_STRING_RET
-                get OPCODE_GET
-                add SAME_STRING_ARG
-                set SAME_STRING_IDX
-                get OPCODE_GET
-                add SAME_STRING_ARH
-                set SAME_STRING_IDY
-SAME_STRING_IDX num 0
-                set SAME_STRING_ARG
-                get SAME_STRING_IDX
-                add INCREMENT_ONE
-                set SAME_STRING_IDX
-SAME_STRING_IDY num 0
-                set SAME_STRING_ARH
-                get SAME_STRING_IDY
-                add INCREMENT_ONE
-                set SAME_STRING_IDY
-                get SAME_STRING_ARG
-                sub SAME_STRING_ARH
-                neg SAME_STRING_FAL
-                get SAME_STRING_ARH
-                sub SAME_STRING_ARG
-                neg SAME_STRING_FAL
-                get CHAR_NULL
-                sub SAME_STRING_ARG
-                neg SAME_STRING_IDX
-                get BOOLEAN_TRUE
-                any SAME_STRING_RET
-SAME_STRING_FAL get BOOLEAN_FALSE
-SAME_STRING_RET num 0
 
 
 
@@ -229,13 +187,6 @@ CHAR_LINE_FEED num 10
 CHAR_SPACE     num 32
 CHAR_PERIOD    num 46
 
-
-STRING_HALT lab ARRAY_HALT
-ARRAY_HALT num 72
-           num 65
-           num 76
-           num 84
-           num 0
 
 
 TOKEN_BUFFER      lab TOKEN_BUFFER_START
