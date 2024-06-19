@@ -155,20 +155,28 @@ To negate a binary number (two's complement):
 ### Dynamic Addresses
 The instruction set only contains operations with fixed addresses.
 The workaround is to use self modifying code:
-1) Load opcode value, for example set opcode == 001 == 8192
-2) Add address to opcode.
-3) Store result in memory.
-4) Execute memory location
+1) Get opcode (set opcode -> 001 -> 8192).
+2) Add address.
+3) Set memory location.
+4) Execute memory location.
 
-For example peeking the stack
+For example setting an array element.
 ```
-              get GET_OPCODE
-              add STACK_POINTER
-              set PEEK_STACK
-PEEK_STACK    num 0
-HALT          any HALT
-GET_OPCODE    num 0
-STACK_POINTER num 42
+START  get OPCODE
+       add A
+       add I
+       set INDEX
+       get J
+INDEX  num 0
+END    any END
+OPCODE num 8192
+I      num 2
+J      num 0
+A_I    num 1
+A_II   num 2
+A_III  num 4
+A_IV   num 8
+A      lab A_I
 ```
 ### The Stack
 The processor lacks a stack pointer register.
@@ -385,11 +393,11 @@ END    any END
 OPCODE num 0
 I      num 2
 J      num 0
-ARRAY  num 1
-       num 2
-       num 4
-       num 8
-A      lab ARRAY
+A_I    num 1
+A_II   num 2
+A_III  num 4
+A_IV   num 8
+A      lab A_I
 ```
 ---
 ```
@@ -412,88 +420,11 @@ END    any END
 OPCODE num 8192
 I      num 2
 J      num 0
-ARRAY  num 1
-       num 2
-       num 4
-       num 8
-A      lab ARRAY
-```
----
-```
-int X = 42;
-push(X);
-```
-All instructions have fixed memory addresses.
-Dynamic memory addresses requires self-modifying code.
-Create and store set instruction with stack address (PUSH).
-```
-START  GET OPCODE
-       ADD S
-       SET PUSH
-       GET X
-PUSH   num 0
-       get S
-       sub ONE
-       SET S
-END    any END
-OPCODE num 8192
-ONE    num 1
-X      num 42
-STACK  num 0
-       num 0
-TOP    num 0
-       num 21
-S      lab TOP
-```
----
-```
-int X = pop();
-```
-All instructions have fixed memory addresses.
-Dynamic memory addresses requires self-modifying code.
-Create and store get instruction with stack address (POP).
-```
-START  get S
-       add ONE
-       set S
-       get OPCODE
-       add S
-       set POP
-POP    num 0
-       set X
-END    any END
-OPCODE num 0
-ONE    num 1
-X      num 0
-STACK  num 0
-TOP    num 0
-       num 42
-       num 21
-S      lab TOP
-```
----
-```
-int X = peek();
-```
-All instructions have fixed memory addresses.
-Dynamic memory addresses requires self-modifying code.
-Create and store get instruction with stack address (PEEK).
-```
-START  get OPCODE
-       add S
-       add ONE
-       set PEEK     
-PEEK   num 0
-       set X
-END    any END
-OPCODE num 0
-ONE    num 1
-X      num 0
-STACK  num 0
-TOP    num 0
-       num 42
-       num 21
-S      lab TOP
+A_I    num 1
+A_II   num 2
+A_III  num 4
+A_IV   num 8
+A      lab A_I
 ```
 ---
 
