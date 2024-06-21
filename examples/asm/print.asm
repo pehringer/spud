@@ -93,43 +93,94 @@ SAME_STRING_RET num 0
 
 
 
-IS_DELIMITOR_ARG num 0
-IS_DELIMITOR_CAL add OPCODE_ANY
-                 set IS_DELIMITOR_RET
-                 get IS_DELIMITOR_ARG
-                 sub CHAR_TAB
-                 neg IS_DELIMITOR_SPA
-                 get CHAR_LINE_FEED
-                 sub IS_DELIMITOR_ARG
-                 neg IS_DELIMITOR_SPA
-                 any IS_DELIMITOR_TRU
-IS_DELIMITOR_SPA get IS_DELIMITOR_ARG
-                 sub CHAR_SPACE
-                 neg IS_DELIMITOR_FAL
-                 get CHAR_SPACE
-                 sub IS_DELIMITOR_ARG
-                 neg IS_DELIMITOR_FAL
-IS_DELIMITOR_TRU get BOOLEAN_TRUE
-                 any IS_DELIMITOR_RET
-IS_DELIMITOR_FAL get BOOLEAN_FALSE
-IS_DELIMITOR_RET num 0
+IS_DIGIT_ARG num 0
+IS_DIGIT_CAL add OPCODE_ANY
+             set IS_DIGIT_RET
+             get IS_DIGIT_ARG
+             sub CHAR_ZERO
+             neg IS_DIGIT_FAL
+             get CHAR_NINE
+             sub IS_DIGIT_ARG
+             neg IS_DIGIT_FAL
+             get BOOLEAN_TRUE
+             any IS_DIGIT_RET
+IS_DIGIT_FAL get BOOLEAN_FALSE
+IS_DIGIT_RET num 0
+
+
+
+IS_NUMBER_ARG num 0
+IS_NUMBER_CAL
+IS_NUMBER_RET num 0
+
+
+
+IS_UPPER_ARG num 0
+IS_UPPER_CAL add OPCODE_ANY
+             set IS_UPPER_RET
+             get IS_UPPER_ARG
+             sub CHAR_UPPER_A
+             neg IS_UPPER_UND
+             get CHAR_UPPER_Z
+             sub IS_UPPER_ARG
+             neg IS_UPPER_UND
+             any IS_UPPER_TRU
+IS_UPPER_UND get IS_UPPER_ARG
+             sub CHAR_UNDERSCORE
+             neg IS_UPPER_FAL
+             get CHAR_UNDERSCORE
+             sub IS_UPPER_ARG
+             neg IS_UPPER_FAL
+IS_UPPER_TRU get BOOLEAN_TRUE
+             any IS_UPPER_RET
+IS_UPPER_FAL get BOOLEAN_FALSE
+IS_UPPER_RET num 0
+
+
+
+IS_LABEL_ARG num 0
+IS_LABEL_CAL
+IS_LABEL_RET num 0
+
+
+
+IS_SPACE_ARG num 0
+IS_SPACE_CAL add OPCODE_ANY
+             set IS_SPACE_RET
+             get IS_SPACE_ARG
+             sub CHAR_TAB
+             neg IS_SPACE_SPA
+             get CHAR_LINE_FEED
+             sub IS_SPACE_ARG
+             neg IS_SPACE_SPA
+             any IS_SPACE_TRU
+IS_SPACE_SPA get IS_SPACE_ARG
+             sub CHAR_SPACE
+             neg IS_SPACE_FAL
+             get CHAR_SPACE
+             sub IS_SPACE_ARG
+             neg IS_SPACE_FAL
+IS_SPACE_TRU get BOOLEAN_TRUE
+             any IS_SPACE_RET
+IS_SPACE_FAL get BOOLEAN_FALSE
+IS_SPACE_RET num 0
 
 
 
 
-IS_TERMINATOR_ARG num 0
-IS_TERMINATOR_CAL add OPCODE_ANY
-                  set IS_TERMINATOR_RET
-                  get IS_TERMINATOR_ARG
-                  sub CHAR_PERIOD
-                  neg IS_TERMINATOR_FAL
-                  get CHAR_PERIOD
-                  sub IS_TERMINATOR_ARG
-                  neg IS_TERMINATOR_FAL
-                  get BOOLEAN_TRUE
-                  any IS_TERMINATOR_RET
-IS_TERMINATOR_FAL get BOOLEAN_FALSE
-IS_TERMINATOR_RET num 0
+IS_PERIOD_ARG num 0
+IS_PERIOD_CAL add OPCODE_ANY
+              set IS_PERIOD_RET
+              get IS_PERIOD_ARG
+              sub CHAR_PERIOD
+              neg IS_PERIOD_FAL
+              get CHAR_PERIOD
+              sub IS_PERIOD_ARG
+              neg IS_PERIOD_FAL
+              get BOOLEAN_TRUE
+              any IS_PERIOD_RET
+IS_PERIOD_FAL get BOOLEAN_FALSE
+IS_PERIOD_RET num 0
 
 
 
@@ -137,14 +188,14 @@ IS_TERMINATOR_RET num 0
 NEXT_INPUT_CAL add OPCODE_ANY
                set NEXT_INPUT_RET
 NEXT_INPUT_CMP get GETC
-               set IS_DELIMITOR_ARG
-               set IS_TERMINATOR_ARG
+               set IS_SPACE_ARG
+               set IS_PERIOD_ARG
                get NEXT_INPUT_DD
-               any IS_DELIMITOR_CAL
+               any IS_SPACE_CAL
 NEXT_INPUT_DD  lab NEXT_INPUT_D
 NEXT_INPUT_D   neg NEXT_INPUT_INC
                get NEXT_INPUT_TT
-               any IS_TERMINATOR_CAL
+               any IS_PERIOD_CAL
 NEXT_INPUT_TT  lab NEXT_INPUT_T
 NEXT_INPUT_T   neg NEXT_INPUT_FAL
                get BOOLEAN_TRUE
@@ -165,14 +216,14 @@ COPY_INPUT_CAL add OPCODE_ANY
                add COPY_INPUT_ARG
                set COPY_INPUT_IDX
 COPY_INPUT_CMP get GETC
-               set IS_DELIMITOR_ARG
-               set IS_TERMINATOR_ARG
+               set IS_SPACE_ARG
+               set IS_PERIOD_ARG
                get COPY_INPUT_DD
-               any IS_DELIMITOR_CAL
+               any IS_SPACE_CAL
 COPY_INPUT_DD  lab COPY_INPUT_D
 COPY_INPUT_D   neg COPY_INPUT_END
                get COPY_INPUT_TT
-               any IS_TERMINATOR_CAL
+               any IS_PERIOD_CAL
 COPY_INPUT_TT  lab COPY_INPUT_T
 COPY_INPUT_T   neg COPY_INPUT_END
                get GETC
@@ -217,27 +268,32 @@ READ_INPUT_RET num 0
 
 
 
-OPCODE_GET     num 0
-OPCODE_SET     num 8192
-OPCODE_ANY     num 32768
-INCREMENT_ONE  num 1
-BOOLEAN_FALSE  num 0
-BOOLEAN_TRUE   num 65535
-CHAR_NULL      num 0
-CHAR_TAB       num 9
-CHAR_LINE_FEED num 10
-CHAR_SPACE     num 32
-CHAR_PERIOD    num 46
+OPCODE_GET      num 0
+OPCODE_SET      num 8192
+OPCODE_ANY      num 32768
+INCREMENT_ONE   num 1
+BOOLEAN_FALSE   num 0
+BOOLEAN_TRUE    num 65535
+CHAR_NULL       num 0
+CHAR_TAB        num 9
+CHAR_LINE_FEED  num 10
+CHAR_SPACE      num 32
+CHAR_PERIOD     num 46
+CHAR_ZERO       num 48
+CHAR_NINE       num 57
+CHAR_UPPER_A    num 65
+CHAR_UPPER_Z    num 90
+CHAR_UNDERSCORE num 95
 
 
-STRING_HALT lab ARRAY_HALT
-ARRAY_HALT num 72
-           num 65
-           num 76
-           num 84
-           num 0
+STRING_HALT lab CHARS_HALT
+CHARS_HALT  num 72
+            num 65
+            num 76
+            num 84
+            num 0
 
 
-TOKEN_BUFFER      lab TOKEN_BUFFER_START
-TOKEN_BUFFER_END  num 0
+TOKEN_BUFFER       lab TOKEN_BUFFER_START
+TOKEN_BUFFER_END   num 0
 TOKEN_BUFFER_START num 0
