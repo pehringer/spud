@@ -7,28 +7,23 @@ INPUT_ADDRESS = 8190
 OUTPUT_ADDRESS = 8191
 
 
-UPPER = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
-def is_label(word):
-	return set(word).issubset(UPPER)
-
-
 DIGIT = set("0123456789")
 def is_number(word):
 	return set(word).issubset(DIGIT)
 
 
-def is_immediate(words):
-	return (words[0] == "lab" and is_label(words[1])) or\
-		(words[0] == "num" and is_number(words[1]))
+LETTER = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
+def is_label(word):
+	return set(word).issubset(LETTER)
 
 
-def is_instruction(words):
-	return (words[0] == "get" or
-		words[0] == "set" or
-		words[0] == "add" or
-		words[0] == "sub" or
-		words[0] == "any" or
-		words[0] == "neg") and is_label(words[1])
+OPCODE = set(["get", "set", "add", "sub", "any", "neg"])
+def is_opcode(word):
+	return set([word]).issubset(OPCODE)
+
+
+def is_operation(words):
+	return is_opcode(words[0]) and (is_label(words[1]) or is_number(word[1]))
 
 
 def set_label(table, address, word):
@@ -60,25 +55,21 @@ def get_number(word):
 	return bits(int(word))
 
 
-def get_immediate(table, words):
-	if words[0] == "lab":
-		if not words[1] in table:
-			print("Undefined label: %s" % (words[1]))
-			exit(-1)
-		return get_label(table, words[1])
-	elif words[0] == "num":
-		return get_number(words[1])
-
-
-OPCODES = {
+GET_OPCODE = {
 "get": ["0", "0", "0"],
 "set": ["1", "0", "0"],
 "add": ["0", "1", "0"],
 "sub": ["1", "1", "0"],
 "any": ["0", "0", "1"],
-"neg": ["1", "0", "1"]}
-def get_instruction(table, words):
-	return get_label(table, words[1])[:-3] + OPCODES[words[0]]
+"neg": ["1", "0", "1"],
+}
+
+
+def get_operation(table, words):
+	if is_label(words[1]):
+		return get_label(table, words[1])[:-3] + GET_OPCODE[words[0]]
+	if is_label(words[1]):
+		return get_number(words[1])[:-3] + GET_OPCODE[words[0]]
 
 
 if __name__ == "__main__":
@@ -106,17 +97,17 @@ if __name__ == "__main__":
 	a = 0
 	i = 0
 	while i < len(words):
-		if is_instruction(words[i:i+2]):
-			a += 1
-			i += 2
-			continue
-		if is_immediate(words[i:i+2]):
-			a += 1
-			i += 2
-			continue
 		if is_label(words[i]):
 			set_label(table, a, words[i])
 			i += 1
+			continue
+		if is_number(words[i]):
+			a += 1
+			i += 1
+			continue
+		if is_operation(words[i:i+2]):
+			a += 1
+			i += 2
 			continue
 		print("Invalid syntax: %s" % (words[i]))
 		exit(-1)
@@ -124,16 +115,16 @@ if __name__ == "__main__":
 	code = []
 	i = 0
 	while i < len(words):
-		if is_instruction(words[i:i+2]):
-			code.append(get_instruction(table, words[i:i+2]))
-			i += 2
-			continue
-		if is_immediate(words[i:i+2]):
-			code.append(get_immediate(table, words[i:i+2]))
-			i += 2
-			continue
 		if is_label(words[i]):
 			i += 1
+			continue
+		if is_number(words[i]):
+			code.append(get_number(words[i]))
+			i += 1
+			continue
+		if is_operation(words[i:i+2]):
+			code.append(get_operation(table, words[i:i+2]))
+			i += 2
 			continue
 		print("Invalid syntax: %s" % (words[i]))
 		exit(-1)

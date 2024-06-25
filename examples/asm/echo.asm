@@ -6,7 +6,5 @@ LOOP get  ZERO
      sub  GETC
      neg  LOOP
 HALT any  HALT
-
-ZERO num 0
-
-CR   num 10
+ZERO 0
+CR 10

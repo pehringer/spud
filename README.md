@@ -54,25 +54,26 @@ Execute Behaviour               |Binary             |Assembly
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
-<bit> ::= “0” | “1”
+<bit> ::= "0" | "1"
 <nibble> ::= <bit><bit><bit><bit>
+<word> ::= <nibble><nibble><nibble><nibble>
+<opcode> ::= "000" | "100" | "010" | "110" | "001" | "101"
 <address> ::= <nibble><nibble><nibble><bit>
-<immediate> ::= <nibble><nibble><nibble><nibble>
-<instruction> ::= <address>”000” | <address>”100” | <address>”010” | <address>”110” | <address>”001” | <address>”101”
-<code> ::= <instruction><code> | <immediate><code> | ""     
+<code> ::= <address><opcode><code> | <word><code> | ""     
 ```
 # Assembly Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
-<space> ::= "\n" | "\s" | "\t"
-<upper> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "_"
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-<ws> ::= <space><ws> | <space>
-<label> ::= <upper><label> | <upper>
 <number> ::= <digit><number> | <digit>
-<immediate> ::= "lab"<ws><label> | "num"<ws><number>
-<instruction> ::= "get"<ws><label> | "set"<ws><label> | "add"<ws><label> | "sub"<ws><label> | "any"<ws><label> | "neg"<ws><label>
-<code> ::= <instruction><ws><code> | <immediate><ws><code> | <label><ws><code> | ""
+<letter> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "_"
+<label> ::= <upper><label> | <upper>
+<whitespace> ::= "\n" | "\s" | "\t"
+<space> ::= <whitespace><delimiter> | <whitespace>
+<opcode> ::= "get" | "set" | "add" | "sub” | "any" | "neg"
+<operation> ::= <opcode><space><number> | <opcode><space><label>
+<code> ::= <label><space><code> | <number><space><code> | <operation><space><code> | "."
+
 ```
 # Assembler
 The assembler takes two filepaths as arguments:  
@@ -155,28 +156,26 @@ To negate a binary number (two's complement):
 ### Dynamic Addresses
 The instruction set only contains operations with fixed addresses.
 The workaround is to use self modifying code:
-1) Get opcode (set opcode -> 001 -> 8192).
-2) Add address.
+1) Get instruction with base address.
+2) Add offset.
 3) Set memory location.
 4) Execute memory location.
 
 For example setting an array element.
 ```
-START  get OPCODE
-       add A
+START  get A_GET
        add I
        set INDEX
-       get J
 INDEX  num 0
+       set J
 END    any END
-OPCODE num 8192
 I      num 2
 J      num 0
-A_I    num 1
-A_II   num 2
-A_III  num 4
-A_IV   num 8
-A      lab A_I
+A_GET  get A
+A      1
+       2
+       4
+       8
 ```
 ### The Stack
 The processor lacks a stack pointer register.
@@ -193,8 +192,8 @@ START get X
       add ONE
       set X
 END   any END
-ONE   num 1
-X     num 4
+ONE   1
+X     4
 ```
 ---
 ```
@@ -206,8 +205,8 @@ START get X
       sub ONE
       set X
 END   any END
-ONE   num 1
-X     num 4
+ONE   1
+X     4
 ```
 ---
 ```
@@ -220,9 +219,9 @@ START get X
       add Y
       set Z
 END   any END
-X     num 4
-Y     num 8
-Z     num 0
+X     4
+Y     8
+Z     0
 ```
 ---
 ```
@@ -235,9 +234,9 @@ START get X
       sub Y
       set Z
 END   any END
-X     num 4
-Y     num 8
-Z     num 0
+X     4
+Y     8
+Z     0
 
 ```
 ---
@@ -255,11 +254,11 @@ START get TRUE
       get FALSE
       set Z
 END   any END
-FALSE num 0
-TRUE  num 1
-X     num 2
-Y     num 4
-Z     num 0
+FALSE 0
+TRUE  1
+X     2
+Y     4
+Z     0
 ```
 ---
 ```
@@ -276,11 +275,11 @@ START get TRUE
       get FALSE
       set Z
 END   any END
-FALSE num 0
-TRUE  num 1
-X     num 2
-Y     num 4
-Z     num 0
+FALSE 0
+TRUE  1
+X     2
+Y     4
+Z     0
 ```
 ---
 ```
@@ -297,11 +296,11 @@ START get FALSE
       get TRUE
       set Z
 END   any END
-FALSE num 0
-TRUE  num 1
-X     num 2
-Y     num 4
-Z     num 0
+FALSE 0
+TRUE  1
+X     2
+Y     4
+Z     0
 ```
 ---
 ```
@@ -318,11 +317,11 @@ START get FALSE
       get TRUE
       set Z
 END   any END
-FALSE num 0
-TRUE  num 1
-X     num 2
-Y     num 4
-Z     num 0
+FALSE 0
+TRUE  1
+X     2
+Y     4
+Z     0
 ```
 ---
 ```
@@ -342,11 +341,11 @@ START get TRUE
       get FALSE
       set Z
 END   any END
-FALSE num 0
-TRUE  num 1
-X     num 2
-Y     num 4
-Z     num 0
+FALSE 0
+TRUE  1
+X     2
+Y     4
+Z     0
 ```
 ---
 ```
@@ -366,11 +365,11 @@ START get FALSE
       get TRUE
       set Z
 END   any END
-FALSE num 0
-TRUE  num 1
-X     num 2
-Y     num 4
-Z     num 0
+FALSE 0
+TRUE  1
+X     2
+Y     4
+Z     0
 ```
 ---
 ```
@@ -381,23 +380,21 @@ J = A[I];
 ```
 All instructions have fixed memory addresses.
 Dynamic memory addresses requires self-modifying code.
-Create and store get instruction with array index address (INDEX).
+Create and store "get" instruction with array index address (INDEX).
 ```
-START  get OPCODE
-       add A
+START  get A_GET
        add I
        set INDEX
 INDEX  num 0
        set J
 END    any END
-OPCODE num 0
 I      num 2
 J      num 0
-A_I    num 1
-A_II   num 2
-A_III  num 4
-A_IV   num 8
-A      lab A_I
+A_GET  get A
+A      1
+       2
+       4
+       8
 ```
 ---
 ```
@@ -408,23 +405,68 @@ A[I] = J;
 ```
 All instructions have fixed memory addresses.
 Dynamic memory addresses requires self-modifying code.
-Create and store set instruction with array index address (INDEX).
+Create and store "set" instruction with array index address (INDEX).
 ```
-START  get OPCODE
-       add A
+START  get A_SET
        add I
        set INDEX
        get J
 INDEX  num 0
 END    any END
-OPCODE num 8192
 I      num 2
 J      num 0
-A_I    num 1
-A_II   num 2
-A_III  num 4
-A_IV   num 8
-A      lab A_I
+A_SET  set A
+A      1
+       2
+       4
+       8
 ```
 ---
+```
+printf("hello world\n");
+```
+All instructions have fixed memory addresses.
+Dynamic memory addresses requires self-modifying code.
+Pass "any" instruction with return address (HALT) to subroutine (PRINT) and store it (PRINT_RET) for later execution. 
+```
+           get STRING
+           set PRINT_ARG
+           get HALT
+           any PRINT_CAL
+HALT       any HALT
+STRING     get CHAR_ARRAY
+CHAR_ARRAY 104
+           101
+           108
+           108
+           111
+           32
+           119
+           111
+           114
+           108
+           100
+           10
+           0
 
+
+
+PRINT_CAL set PRINT_RET
+          get PRINT_ARG
+          set PRINT_IDX
+PRINT_IDX 0
+          set PUTC
+          set PRINT_ARG
+          get PRINT_IDX
+          add PRINT_INC
+          set PRINT_IDX
+          get PRINT_NUL
+          sub PRINT_ARG
+          neg PRINT_IDX
+          get PRINT_IDX
+PRINT_RET 0
+PRINT_ARG 0
+PRINT_INC 1
+PRINT_NUL 0
+```
+---

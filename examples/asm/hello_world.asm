@@ -1,21 +1,38 @@
-GET get STR
-    set PUTC
-    get GET
-    add INC
-    set GET
-    any GET
+           get STRING
+           set PRINT_ARG
+           get HALT
+           any PRINT_CAL
+HALT       any HALT
+STRING     get CHAR_ARRAY
+CHAR_ARRAY 104
+           101
+           108
+           108
+           111
+           32
+           119
+           111
+           114
+           108
+           100
+           10
+           0
 
-INC num 1
 
-STR num 104
-    num 101
-    num 108
-    num 108
-    num 111
-    num 32
-    num 119
-    num 111
-    num 114
-    num 108
-    num 100
-    num 10
+
+PRINT_CAL set PRINT_RET
+          get PRINT_ARG
+          set PRINT_IDX
+PRINT_IDX 0
+          set PUTC
+          set PRINT_ARG
+          get PRINT_IDX
+          add PRINT_INC
+          set PRINT_IDX
+          get PRINT_NUL
+          sub PRINT_ARG
+          neg PRINT_IDX
+PRINT_RET 0
+PRINT_ARG 0
+PRINT_INC 1
+PRINT_NUL 0
