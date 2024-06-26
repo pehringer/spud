@@ -1,26 +1,15 @@
-#include "backend.h"
-#include "frontend.h"
+#include "sim.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <sys/ioctl.h>
 #include <time.h>
-#include<unistd.h>
+#include <unistd.h>
 
 
 void main(int argc, char **argv) {
-  struct winsize terminal;
-  ioctl(STDOUT_FILENO, TIOCGWINSZ, &terminal);
-  int lines = terminal.ws_row;
-  int columns = terminal.ws_col;
-  if(lines < MINIMUM_LINES || columns < MINIMUM_COLUMNS) {
-    printf("Terminal window of (%dX%d) is too small.\n", lines, columns);
-    printf("Minimum window size (%dX%d).\n", MINIMUM_LINES, MINIMUM_COLUMNS);
-    exit(1);
-  }
   const char *filepath = "examples/bin/hello_world.bin";
-  struct timespec cycleTime = {0, 999999999};
+  struct timespec cycleTime = {0, 100000000};
   long cycleCount = 128;
   for(int argi = 1; argi < argc; argi++) {
     if(!strcmp(argv[argi], "-filepath")) {
@@ -46,12 +35,10 @@ void main(int argc, char **argv) {
 
 
   struct Simulation s;
-  InitializeSimulation(&s, file);
+  LoadSimulation(&s, file);
   fclose(file);
-  InitializeTerminal(lines);
   while(cycleCount > 0) {
-    CycleSimulation(&s);
-    DrawTerminal(&s);
+    SimulateCycle(&s);
     nanosleep(&cycleTime, 0);
     cycleCount--;
   }

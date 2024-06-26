@@ -3,17 +3,15 @@ build: build_sim build_exam
 build_sim: compile_sim link_sim clean_sim
 
 compile_sim:
-	gcc -I ./include -c ./src/backend.c -o ./backend.o
-	gcc -I ./include -c ./src/frontend.c -o ./frontend.o
-	gcc -I ./include -c ./src/simulator.c -o ./simulator.o
+	gcc -I ./include -c ./src/sim.c -o ./sim.o
+	gcc -I ./include -c ./src/cli.c -o ./cli.o
 
 link_sim:
-	gcc ./backend.o ./frontend.o ./simulator.o -o ./sim.bin
+	gcc ./sim.o ./cli.o -o ./sim.bin
 
 clean_sim:
-	rm ./backend.o
-	rm ./frontend.o
-	rm ./simulator.o
+	rm ./sim.o
+	rm ./cli.o
 
 build_exam:
 	python ./asm.py ./examples/asm/echo.asm examples/bin/echo.bin

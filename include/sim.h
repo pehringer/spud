@@ -19,8 +19,8 @@ struct Simulation {
 };
 
 
-void InitializeSimulation(struct Simulation *s, FILE *bin);
-void CycleSimulation(struct Simulation *s);
+void LoadSimulation(struct Simulation *s, FILE *bin);
+void SimulateCycle(struct Simulation *s);
 
 
 #endif
