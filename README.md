@@ -88,39 +88,9 @@ The simulator will run the examples/bin/hello_world.bin if no arguments are give
 ```./sim.bin```
   
 Terminal Output:  
-***Note: bits are printed least to most significant, e.g 011 == 6***
 ```
-     
-Accumulator:             
-0101 0000 0000 0000      
-Instruction Pointer: 
-0101 1000 0000 0     
-Instruction Register:
-0101 1000 0000 0001     
-                        
-0010 0100 0000 0000     
-1111 1111 1111 1100     
-1010 0100 0000 0000     
-1111 1111 1111 1100     
-0110 0100 0000 0000     
-1111 1111 1111 1100     
-1110 0100 0000 0000    
-1111 1111 1111 1100    
-0101 1000 0000 0001  <-
-0001 0110 0000 0000    
-1010 0110 0000 0000    
-0011 0110 0000 0000    
-0011 0110 0000 0000    
-1111 0110 0000 0000    
-0011 0100 0000 0000    
-0000 0100 0000 0000    
-1110 1110 0000 0000     
-
-
-
-
-hello, world
-
+hello world
+$
 ```
 If any errors occur try running the Makefile
 
@@ -130,7 +100,7 @@ The simulator supports the following optional arguments:
 - ```cycle_count [NUMBER_CYCLES]``` - Make the simulator run the given number of cycles before halting.
 
 For example if you wanted to execute hello world 4x faster and have it stop after "hello" has beeen printed:  
-```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 250 -cycle_count 27```
+```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 25 -cycle_count 46```
 # Peripherals
 There are two memory mapped peripherals:
 - Input Unit, address ```8190``` (assembly label ```GETC```)
