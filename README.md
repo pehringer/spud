@@ -45,21 +45,21 @@ Fetch/Decode Behaviour  |
 
 Execute Behaviour               |Binary             |Assembly
 --------------------------------|-------------------|--------------------
-```ac = memory[ADDRESS]```      |```[ADDRESS]000``` |```get [LABEL]```
-```memory[ADDRESS] = ac```      |```[ADDRESS]100``` |```set [LABEL]```
-```ac = ac + memory[ADDRESS]``` |```[ADDRESS]010``` |```add [LABEL]```
-```ac = ac - memory[ADDRESS]``` |```[ADDRESS]110``` |```sub [LABEL]```
-```ip = ADDRESS```              |```[ADDRESS]001``` |```any [LABEL]```
-```if(AC < 0) ip = ADDRESS```   |```[ADDRESS]101``` |```neg [LABEL]```
+```ac = memory[ADDRESS]```      |```000[ADDRESS]``` |```get [LABEL]```
+```memory[ADDRESS] = ac```      |```001[ADDRESS]``` |```set [LABEL]```
+```ac = ac + memory[ADDRESS]``` |```010[ADDRESS]``` |```add [LABEL]```
+```ac = ac - memory[ADDRESS]``` |```011[ADDRESS]``` |```sub [LABEL]```
+```ip = ADDRESS```              |```100[ADDRESS]``` |```any [LABEL]```
+```if(AC < 0) ip = ADDRESS```   |```101[ADDRESS]``` |```neg [LABEL]```
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
 <bit> ::= "0" | "1"
 <nibble> ::= <bit><bit><bit><bit>
 <word> ::= <nibble><nibble><nibble><nibble>
-<opcode> ::= "000" | "100" | "010" | "110" | "001" | "101"
-<address> ::= <nibble><nibble><nibble><bit>
-<code> ::= <address><opcode><code> | <word><code> | ""     
+<opcode> ::= "000" | "001" | "010" | "011" | "100" | "101"
+<address> ::= <bit><nibble><nibble><nibble>
+<code> ::= <opcode><address><code> | <word><code> | ""     
 ```
 # Assembly Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)

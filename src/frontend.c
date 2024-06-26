@@ -2,10 +2,9 @@
 
 
 void DrawBits(char *bits, int count) {
-  //while(count--) {
-  for(int i = 0; i < count; i++) {
-    printf("%d", bits[i]);
-    if(i % 4 == 3) {
+  while(count--) {
+    printf("%d", bits[count]);
+    if(count % 4 == 0) {
       printf(" ");
     }
   }
