@@ -136,11 +136,11 @@ For example setting an array element.
 START  get A_GET
        add I
        set INDEX
-INDEX  num 0
+INDEX  0
        set J
 END    any END
-I      num 2
-J      num 0
+I      2
+J      0
 A_GET  get A
 A      1
        2
@@ -355,11 +355,11 @@ Create and store "get" instruction with array index address (INDEX).
 START  get A_GET
        add I
        set INDEX
-INDEX  num 0
+INDEX  0
        set J
 END    any END
-I      num 2
-J      num 0
+I      2
+J      0
 A_GET  get A
 A      1
        2
@@ -381,10 +381,10 @@ START  get A_SET
        add I
        set INDEX
        get J
-INDEX  num 0
+INDEX  0
 END    any END
-I      num 2
-J      num 0
+I      2
+J      0
 A_SET  set A
 A      1
        2
