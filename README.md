@@ -1,6 +1,5 @@
 # spud - Simple Processor Unit Design
-A very simple processor that resembles modern designs.
-That is easy to use and understand in its entirety.
+The simplest processor design (that I could think of) that still resembles modern processors:
  - Von Neumann architecture.
  - Word addressable memory.
  - Accumulator based machine.
