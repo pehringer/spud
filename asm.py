@@ -68,7 +68,7 @@ GET_OPCODE = {
 def get_operation(table, words):
 	if is_label(words[1]):
 		return get_label(table, words[1])[:-3] + GET_OPCODE[words[0]]
-	if is_label(words[1]):
+	if is_number(words[1]):
 		return get_number(words[1])[:-3] + GET_OPCODE[words[0]]
 
 
