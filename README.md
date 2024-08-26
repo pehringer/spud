@@ -3,6 +3,7 @@ The simplest processor design (that I could think of) that still resembles moder
  - Von Neumann architecture.
  - Word addressable memory.
  - Accumulator based machine.
+ - Two complement numbers.
 ### Contents
 - [Hardware Diagram](#hardware-diagram)
 - [Instruction Set](#instruction-set)
