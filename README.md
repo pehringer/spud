@@ -36,21 +36,21 @@ ac = accumulator
 
 ```
 # Instruction Set
-Fetch/Decode Behaviour  |
-------------------------|
-```ir = memory[ip++]``` |
+Fetch/Decode Behaviour  |Description
+------------------------|------------------------------------------------------------
+```ir = memory[ip++]``` |Load instruction register and increment instruction pointer.
 
 ***Note: instruction address is the 13 least significant bits of ir (instruction register).***  
 ***Note: instruction opcode is the 3 most significant bits of ir (instruction register).***  
 
-Execute Behaviour               |Binary             |Assembly
---------------------------------|-------------------|--------------------
-```ac = memory[ADDRESS]```      |```000[ADDRESS]``` |```get [LABEL]```
-```memory[ADDRESS] = ac```      |```001[ADDRESS]``` |```set [LABEL]```
-```ac = ac + memory[ADDRESS]``` |```010[ADDRESS]``` |```add [LABEL]```
-```ac = ac - memory[ADDRESS]``` |```011[ADDRESS]``` |```sub [LABEL]```
-```ip = ADDRESS```              |```100[ADDRESS]``` |```any [LABEL]```
-```if(AC < 0) ip = ADDRESS```   |```101[ADDRESS]``` |```neg [LABEL]```
+Execute Behaviour            |Description                           |Binary             |Assembly
+-----------------------------|--------------------------------------|-------------------|-----------------
+```ac = memory[ADDRESS]```   |Load accumulator.                     |```000[ADDRESS]``` |```get [LABEL]```
+```memory[ADDRESS] = ac```   |Store accumulator.                    |```001[ADDRESS]``` |```set [LABEL]```
+```ac += memory[ADDRESS]```  |Add to accumulator.                   |```010[ADDRESS]``` |```add [LABEL]```
+```ac -= memory[ADDRESS]```  |Subtract from accumulator.            |```011[ADDRESS]``` |```sub [LABEL]```
+```ip = ADDRESS```           |Jump for any accumulator value.       |```100[ADDRESS]``` |```any [LABEL]```
+```if(AC < 0) ip = ADDRESS```|Jump if accumulator value is negative.|```101[ADDRESS]``` |```neg [LABEL]```
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
