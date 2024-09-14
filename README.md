@@ -23,9 +23,9 @@ ______________________________________
   _____ADDRESS          DATA________________
   |          |          |                  |
   |   ______ | ________ | __________     __|__
-  |   |      |   |      |   |      |     \xor/__[~]
+  |   |      |   |      |   |      |     \xor/__BITWISE NOT (~) 
 __|___|__  __|___|__  __|___|__  __|__   __|__
-|  i p  |  |  i r  |  |  a c  |  \    \_/    /__[++]
+|  i p  |  |  i r  |  |  a c  |  \    \_/    /__INCREMENT (++)
 |_______|  |_______|  |_______|   \__adder__/  
     |          |          |            |   
     |__________|__________|____________|
@@ -118,11 +118,14 @@ See ```example_asm/echo.asm``` for an example of how to use the the input and ou
 The processor lacks subtraction hardware.
 The workaround is to negate one of the numbers then add them together.
 ```
-number - number  ==  number + (-number)
+A - B  ==  A + (-B)
 ```  
 To negate a binary number (two's complement):
 1) Bitwise not the number (XOR one of the adders inputs).
 2) Increment the number by one (use adders carry-in input).
+```
+A - B  ==  A + ((~B)++)
+```
 ### Dynamic Addresses
 The instruction set only contains operations with fixed addresses.
 The workaround is to use self modifying code:
@@ -147,10 +150,6 @@ A      1
        4
        8
 ```
-### The Stack
-The processor lacks a stack pointer register.
-The workaround is to store the stack pointer in memory.
-And to use self modifying code to create instructions to load from and store to it.
 # Assembly Code Examples
 ---
 ```
