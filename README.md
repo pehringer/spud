@@ -95,9 +95,9 @@ $
 If any errors occur try running the Makefile
 
 The simulator supports the following optional arguments:
-- ```filepath [PATH_TO_BINARY]``` - Run the .bin at the given filepath.
-- ```cycle_time [NUMBER_MILLISECONDS]``` - Make the simulator take the given number of milliseconds per cycle.
-- ```cycle_count [NUMBER_CYCLES]``` - Make the simulator run the given number of cycles before halting.
+- ```-filepath [PATH_TO_BINARY]``` - Run the .bin at the given filepath.
+- ```-cycle_time [NUMBER_MILLISECONDS]``` - Make the simulator take the given number of milliseconds per cycle.
+- ```-cycle_count [NUMBER_CYCLES]``` - Make the simulator run the given number of cycles before halting.
 
 For example if you wanted to execute hello world 4x faster and have it stop after "hello" has beeen printed:  
 ```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 25 -cycle_count 46```
