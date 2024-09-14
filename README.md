@@ -129,26 +129,27 @@ A - B  ==  A + ((~B)++)
 ### Dynamic Addresses
 The instruction set only contains operations with fixed addresses.
 The workaround is to use self modifying code:
-1) Get instruction with base address.
-2) Add offset.
-3) Set memory location.
-4) Execute memory location.
+1) Load instruction.
+2) modify instruction.
+3) Store instruction.
+4) Execute instruction.
 
-For example setting an array element.
+For example getting an array element.
 ```
-START  get A_GET
-       add I
-       set INDEX
-INDEX  0
-       set J
-END    any END
-I      2
-J      0
-A_GET  get A
-A      1
-       2
-       4
-       8
+LOAD_INSTRUCTION    get GET_ARRAY
+MODIFY_INSTRUCTION  add ARRAY_OFFSET
+STORE_INSTRUCTION   set EXECUTE_INSTRUCTION 
+EXECUTE_INSTRUCTION 0
+
+HALT                any HALT
+
+ARRAY_OFFSET        2
+
+GET_ARRAY           get ARRAY_ADDRESS
+ARRAY_ADDRESS       1
+                    2
+                    3
+                    4
 ```
 # Assembly Code Examples
 ---
