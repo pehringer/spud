@@ -12,10 +12,10 @@
 
 
 struct Simulation {
-  char ac[DATA_SIZE];
-  char ip[DATA_SIZE];
-  char ir[DATA_SIZE];
-  char memory[ADDRESS_SPACE][DATA_SIZE];
+    char ac[DATA_SIZE];
+    char ip[DATA_SIZE];
+    char ir[DATA_SIZE];
+    char memory[ADDRESS_SPACE][DATA_SIZE];
 };
 
 
