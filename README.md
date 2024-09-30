@@ -69,7 +69,7 @@ Execute Behaviour            |Description                           |Binary     
 <letter> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "_"
 <label> ::= <upper><label> | <upper>
 <whitespace> ::= "\n" | "\s" | "\t"
-<space> ::= <whitespace><delimiter> | <whitespace>
+<space> ::= <whitespace><space> | <whitespace>
 <opcode> ::= "get" | "set" | "add" | "sub” | "any" | "neg"
 <operation> ::= <opcode><space><number> | <opcode><space><label>
 <code> ::= <label><space><code> | <number><space><code> | <operation><space><code> | "."
