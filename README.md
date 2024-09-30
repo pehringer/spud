@@ -1,7 +1,7 @@
 # ***spud*** - ***S***imple ***P***rocessor ***U***nit ***D***esign
 The simplest processor design (that I could think of) that still resembles modern processors:
  - Von Neumann architecture.
- - Word addressable memory.
+ - Word (16-bit) addressable memory.
  - Accumulator based machine.
  - Two complement numbers.
 ### Contents
