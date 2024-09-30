@@ -58,7 +58,7 @@ Execute Behaviour            |Description                           |Binary     
 <nibble> ::= <bit><bit><bit><bit>
 <word> ::= <nibble><nibble><nibble><nibble>
 <opcode> ::= "0000" | "0001" | "0010" | "0011" | "0100" | "0101"
-<address> ::= <bit><nibble><nibble><nibble>
+<address> ::= <nibble><nibble><nibble>
 <code> ::= <opcode><address><code> | <word><code> | ""     
 ```
 # Assembly Code Syntax
