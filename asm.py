@@ -2,9 +2,9 @@ from sys import argv
 
 
 DATA_SIZE = 16
-ADDRESS_SPACE = 8192
-INPUT_ADDRESS = 8190
-OUTPUT_ADDRESS = 8191
+ADDRESS_SPACE = 4096
+INPUT_ADDRESS = 4094
+OUTPUT_ADDRESS = 4095
 
 
 DIGIT = set("0123456789")
@@ -56,20 +56,20 @@ def get_number(word):
 
 
 GET_OPCODE = {
-"get": ["0", "0", "0"],
-"set": ["1", "0", "0"],
-"add": ["0", "1", "0"],
-"sub": ["1", "1", "0"],
-"any": ["0", "0", "1"],
-"neg": ["1", "0", "1"],
+"get": ["0", "0", "0", "0"],
+"set": ["1", "0", "0", "0"],
+"add": ["0", "1", "0", "0"],
+"sub": ["1", "1", "0", "0"],
+"any": ["0", "0", "1", "0"],
+"neg": ["1", "0", "1", "0"],
 }
 
 
 def get_operation(table, words):
 	if is_label(words[1]):
-		return get_label(table, words[1])[:-3] + GET_OPCODE[words[0]]
+		return get_label(table, words[1])[:-4] + GET_OPCODE[words[0]]
 	if is_number(words[1]):
-		return get_number(words[1])[:-3] + GET_OPCODE[words[0]]
+		return get_number(words[1])[:-4] + GET_OPCODE[words[0]]
 
 
 if __name__ == "__main__":

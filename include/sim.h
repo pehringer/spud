@@ -6,9 +6,9 @@
 
 
 #define DATA_SIZE 16
-#define ADDRESS_SPACE 8192
-#define INPUT_ADDRESS 8190
-#define OUTPUT_ADDRESS 8191
+#define ADDRESS_SPACE 4096
+#define INPUT_ADDRESS 4094
+#define OUTPUT_ADDRESS 4095
 
 
 struct Simulation {

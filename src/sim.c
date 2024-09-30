@@ -36,7 +36,7 @@ void OutputUnit(struct Simulation *s) {
 
 char* Memory(struct Simulation *s, char *address) {
     int index = 0;
-    for(int i = 0; i < DATA_SIZE-3; i++) {
+    for(int i = 0; i < DATA_SIZE-4; i++) {
         if(address[i]) {
             index |= 1 << i;
         }
@@ -72,12 +72,15 @@ void ProcessorUnit(struct Simulation *s) {
     Datapath(s->ip, s->ip, 0, 0, 1);
     char opcode = 0;
     if(s->ir[DATA_SIZE-1]) {
-        opcode |= 4;
+        opcode |= 8;
     }
     if(s->ir[DATA_SIZE-2]) {
-        opcode |= 2;
+        opcode |= 4;
     }
     if(s->ir[DATA_SIZE-3]) {
+        opcode |= 2;
+    }
+    if(s->ir[DATA_SIZE-4]) {
         opcode |= 1;
     }
     if(opcode == 0) {

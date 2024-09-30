@@ -40,24 +40,24 @@ Fetch/Decode Behaviour  |Description
 ------------------------|------------------------------------------------------------
 ```ir = memory[ip++]``` |Load instruction register and increment instruction pointer.
 
-***Note: instruction address is the 13 least significant bits of ir (instruction register).***  
-***Note: instruction opcode is the 3 most significant bits of ir (instruction register).***  
+***Note: instruction address is the 12 least significant bits of ir (instruction register).***  
+***Note: instruction opcode is the 4 most significant bits of ir (instruction register).***  
 
-Execute Behaviour            |Description                           |Binary             |Assembly
------------------------------|--------------------------------------|-------------------|-----------------
-```ac = memory[ADDRESS]```   |Load accumulator.                     |```000[ADDRESS]``` |```get [LABEL]```
-```memory[ADDRESS] = ac```   |Store accumulator.                    |```001[ADDRESS]``` |```set [LABEL]```
-```ac += memory[ADDRESS]```  |Add to accumulator.                   |```010[ADDRESS]``` |```add [LABEL]```
-```ac -= memory[ADDRESS]```  |Subtract from accumulator.            |```011[ADDRESS]``` |```sub [LABEL]```
-```ip = ADDRESS```           |Jump for any accumulator value.       |```100[ADDRESS]``` |```any [LABEL]```
-```if(AC < 0) ip = ADDRESS```|Jump if accumulator value is negative.|```101[ADDRESS]``` |```neg [LABEL]```
+Execute Behaviour            |Description                           |Binary              |Assembly
+-----------------------------|--------------------------------------|--------------------|-----------------
+```ac = memory[ADDRESS]```   |Load accumulator.                     |```0000[ADDRESS]``` |```get [LABEL]```
+```memory[ADDRESS] = ac```   |Store accumulator.                    |```0001[ADDRESS]``` |```set [LABEL]```
+```ac += memory[ADDRESS]```  |Add to accumulator.                   |```0010[ADDRESS]``` |```add [LABEL]```
+```ac -= memory[ADDRESS]```  |Subtract from accumulator.            |```0011[ADDRESS]``` |```sub [LABEL]```
+```ip = ADDRESS```           |Jump for any accumulator value.       |```0100[ADDRESS]``` |```any [LABEL]```
+```if(AC < 0) ip = ADDRESS```|Jump if accumulator value is negative.|```0101[ADDRESS]``` |```neg [LABEL]```
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
 <bit> ::= "0" | "1"
 <nibble> ::= <bit><bit><bit><bit>
 <word> ::= <nibble><nibble><nibble><nibble>
-<opcode> ::= "000" | "001" | "010" | "011" | "100" | "101"
+<opcode> ::= "0000" | "0001" | "0010" | "0011" | "0100" | "0101"
 <address> ::= <bit><nibble><nibble><nibble>
 <code> ::= <opcode><address><code> | <word><code> | ""     
 ```
@@ -103,16 +103,16 @@ For example if you wanted to execute hello world 4x faster and have it stop afte
 ```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 25 -cycle_count 46```
 # Peripherals
 There are two memory mapped peripherals:
-- Input Unit, address ```8190``` (assembly label ```GETC```)
-- Output Unit, address ```8191``` (assembly label ```PUTC```)
+- Input Unit, address ```4094``` (assembly label ```GETC```)
+- Output Unit, address ```4095``` (assembly label ```PUTC```)
 
 These peripherals are used to read / print characters to standard in/out (terminal).
 
-***Input Unit***: set memory address ```8190``` to zero value, memory address ```8190``` will then be set to ascii value of the next character from stdin.
+***Input Unit***: set memory address ```4094``` to zero value, memory address ```4094``` will then be set to ascii value of the next character from stdin.
 
-***Output Unit***: set memory address ```8191``` to ascii value of next character for stdout, memory address ```8191``` will then be set to zero value.
+***Output Unit***: set memory address ```4095``` to ascii value of next character for stdout, memory address ```4095``` will then be set to zero value.
 
-See ```example_asm/echo.asm``` for an example of how to use the the input and output units.
+See ```example_asm/echo.asm``` for an example of how to use the input and output units.
 # Interesting Workarounds
 ### Subtraction
 The processor lacks subtraction hardware.
