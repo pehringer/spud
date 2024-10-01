@@ -93,7 +93,7 @@ void ProcessorUnit(struct Simulation *s) {
         Datapath(s->ac, s->ac, Memory(s, s->ir), 0, 0);
     }
     if(opcode == 3) {
-        Datapath(s->ac, s->ac, Memory(s, s->ir), 1, 1);
+        Datapath(s->ac, 0, Memory(s, s->ir), 1, 0);
     }
     if(opcode == 4) {
         Datapath(s->ip, s->ir, 0, 0, 0);
