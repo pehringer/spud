@@ -17,7 +17,7 @@ def is_label(word):
 	return set(word).issubset(LETTER)
 
 
-OPCODE = set(["get", "set", "add", "sub", "any", "neg"])
+OPCODE = set(["ld", "st", "ad", "su", "ja", "js"])
 def is_opcode(word):
 	return set([word]).issubset(OPCODE)
 
@@ -56,12 +56,12 @@ def get_number(word):
 
 
 GET_OPCODE = {
-"get": ["0", "0", "0", "0"],
-"set": ["1", "0", "0", "0"],
-"add": ["0", "1", "0", "0"],
-"sub": ["1", "1", "0", "0"],
-"any": ["0", "0", "1", "0"],
-"neg": ["1", "0", "1", "0"],
+"ld": ["0", "0", "0", "0"],
+"st": ["1", "0", "0", "0"],
+"ad": ["0", "1", "0", "0"],
+"su": ["1", "1", "0", "0"],
+"ja": ["0", "0", "1", "0"],
+"js": ["1", "0", "1", "0"],
 }
 
 

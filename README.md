@@ -43,14 +43,14 @@ Fetch/Decode Behaviour  |Description
 ***Note: instruction address is the 12 least significant bits of ir (instruction register).***  
 ***Note: instruction opcode is the 4 most significant bits of ir (instruction register).***  
 
-Execute Behaviour            |Description                           |Binary              |Assembly
------------------------------|--------------------------------------|--------------------|-----------------
-```ac = memory[ADDRESS]```   |Load accumulator.                     |```0000[ADDRESS]``` |```get [LABEL]```
-```memory[ADDRESS] = ac```   |Store accumulator.                    |```0001[ADDRESS]``` |```set [LABEL]```
-```ac += memory[ADDRESS]```  |Add to accumulator.                   |```0010[ADDRESS]``` |```add [LABEL]```
-```ac -= memory[ADDRESS]```  |Subtract from accumulator.            |```0011[ADDRESS]``` |```sub [LABEL]```
-```ip = ADDRESS```           |Jump for any accumulator value.       |```0100[ADDRESS]``` |```any [LABEL]```
-```if(AC < 0) ip = ADDRESS```|Jump if accumulator value is negative.|```0101[ADDRESS]``` |```neg [LABEL]```
+Execute Behaviour            |Description                             |Binary              |Assembly
+-----------------------------|----------------------------------------|--------------------|----------------
+```ac = memory[ADDRESS]```   |Load accumulator.                       |```0000[ADDRESS]``` |```ld [LABEL]```
+```memory[ADDRESS] = ac```   |Store accumulator.                      |```0001[ADDRESS]``` |```st [LABEL]```
+```ac += memory[ADDRESS]```  |Add to accumulator.                     |```0010[ADDRESS]``` |```ad [LABEL]```
+```ac -= memory[ADDRESS]```  |Subtract from accumulator.              |```0011[ADDRESS]``` |```su [LABEL]```
+```ip = ADDRESS```           |Jump to address.                        |```0100[ADDRESS]``` |```ja [LABEL]```
+```if(AC[15]) ip = ADDRESS```|Jump to address if accumulator sign bit.|```0101[ADDRESS]``` |```js [LABEL]```
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
@@ -70,7 +70,7 @@ Execute Behaviour            |Description                           |Binary     
 <label> ::= <upper><label> | <upper>
 <whitespace> ::= "\n" | "\s" | "\t"
 <space> ::= <whitespace><space> | <whitespace>
-<opcode> ::= "get" | "set" | "add" | "sub” | "any" | "neg"
+<opcode> ::= "ld" | "st" | "ad" | "su” | "ja" | "js"
 <operation> ::= <opcode><space><number> | <opcode><space><label>
 <code> ::= <label><space><code> | <number><space><code> | <operation><space><code> | "."
 
@@ -136,16 +136,16 @@ The workaround is to use self modifying code:
 
 For example getting an array element.
 ```
-LOAD_INSTRUCTION    get GET_ARRAY
-MODIFY_INSTRUCTION  add ARRAY_OFFSET
-STORE_INSTRUCTION   set EXECUTE_INSTRUCTION 
+LOAD_INSTRUCTION    ld LD_ARRAY
+MODIFY_INSTRUCTION  ad ARRAY_OFFSET
+STORE_INSTRUCTION   st EXECUTE_INSTRUCTION 
 EXECUTE_INSTRUCTION 0
 
-HALT                any HALT
+HALT                ja HALT
 
 ARRAY_OFFSET        2
 
-GET_ARRAY           get ARRAY_ADDRESS
+LD_ARRAY            ld ARRAY_ADDRESS
 ARRAY_ADDRESS       1
                     2
                     3
@@ -158,10 +158,10 @@ int X = 4;
 X++;
 ```  
 ```
-START get X
-      add ONE
-      set X
-END   any END
+START ld X
+      ad ONE
+      st X
+END   ja END
 ONE   1
 X     4
 ```
@@ -171,10 +171,10 @@ int X = 4;
 X--;
 ```  
 ```
-START get X
-      sub ONE
-      set X
-END   any END
+START ld X
+      su ONE
+      st X
+END   ja END
 ONE   1
 X     4
 ```
@@ -185,10 +185,10 @@ int Y = 8;
 int Z = X + Y;
 ```
 ```
-START get X
-      add Y
-      set Z
-END   any END
+START ld X
+      ad Y
+      st Z
+END   ja END
 X     4
 Y     8
 Z     0
@@ -200,10 +200,10 @@ int Y = 8;
 int Z = X - Y;
 ```
 ```
-START get X
-      sub Y
-      set Z
-END   any END
+START ld X
+      su Y
+      st Z
+END   ja END
 X     4
 Y     8
 Z     0
@@ -216,14 +216,14 @@ int Y = 4;
 int Z = X < Y;
 ```
 ```
-START get TRUE
-      set Z
-      get X
-      sub Y
-      neg END
-      get FALSE
-      set Z
-END   any END
+START ld TRUE
+      st Z
+      ld X
+      su Y
+      js END
+      ld FALSE
+      st Z
+END   ja END
 FALSE 0
 TRUE  1
 X     2
@@ -237,14 +237,14 @@ int Y = 4;
 int Z = X > Y;
 ```
 ```
-START get TRUE
-      set Z
-      get Y
-      sub X
-      neg END
-      get FALSE
-      set Z
-END   any END
+START ld TRUE
+      st Z
+      ld Y
+      su X
+      js END
+      ld FALSE
+      st Z
+END   ja END
 FALSE 0
 TRUE  1
 X     2
@@ -258,14 +258,14 @@ int Y = 4;
 int Z = X <= Y;
 ```
 ```
-START get FALSE
-      set Z
-      get Y
-      sub X
-      neg END
-      get TRUE
-      set Z
-END   any END
+START ld FALSE
+      st Z
+      ld Y
+      su X
+      js END
+      ld TRUE
+      st Z
+END   ja END
 FALSE 0
 TRUE  1
 X     2
@@ -279,14 +279,14 @@ int Y = 4;
 int Z = X >= Y;
 ```
 ```
-START get FALSE
-      set Z
-      get X
-      sub Y
-      neg END
-      get TRUE
-      set Z
-END   any END
+START ld FALSE
+      st Z
+      ld X
+      su Y
+      js END
+      ld TRUE
+      st Z
+END   ja END
 FALSE 0
 TRUE  1
 X     2
@@ -300,17 +300,17 @@ int Y = 4;
 int Z = X != Y;
 ```
 ```
-START get TRUE
-      set Z
-      get X
-      sub Y
-      neg END
-      get Y
-      sub X
-      neg END
-      get FALSE
-      set Z
-END   any END
+START ld TRUE
+      st Z
+      ld X
+      su Y
+      js END
+      ld Y
+      su X
+      js END
+      ld FALSE
+      st Z
+END   ja END
 FALSE 0
 TRUE  1
 X     2
@@ -324,17 +324,17 @@ int Y = 4;
 int Z = X == Y;
 ```
 ```
-START get FALSE
-      set Z
-      get X
-      sub Y
-      neg END
-      get Y
-      sub X
-      neg END
-      get TRUE
-      set Z
-END   any END
+START ld FALSE
+      st Z
+      ld X
+      su Y
+      js END
+      ld Y
+      su X
+      js END
+      ld TRUE
+      st Z
+END   ja END
 FALSE 0
 TRUE  1
 X     2
@@ -350,17 +350,17 @@ J = A[I];
 ```
 All instructions have fixed memory addresses.
 Dynamic memory addresses requires self-modifying code.
-Create and store "get" instruction with array index address (INDEX).
+Create and store "ld" instruction with array index address (INDEX).
 ```
-START  get A_GET
-       add I
-       set INDEX
+START  ld A_LD
+       ad I
+       st INDEX
 INDEX  0
-       set J
-END    any END
+       st J
+END    ja END
 I      2
 J      0
-A_GET  get A
+A_LD   ld A
 A      1
        2
        4
@@ -375,17 +375,17 @@ A[I] = J;
 ```
 All instructions have fixed memory addresses.
 Dynamic memory addresses requires self-modifying code.
-Create and store "set" instruction with array index address (INDEX).
+Create and store "st" instruction with array index address (INDEX).
 ```
-START  get A_SET
-       add I
-       set INDEX
-       get J
+START  ld A_ST
+       ad I
+       st INDEX
+       ld J
 INDEX  0
-END    any END
+END    ja END
 I      2
 J      0
-A_SET  set A
+A_ST  st A
 A      1
        2
        4
@@ -399,28 +399,28 @@ All instructions have fixed memory addresses.
 Dynamic memory addresses requires self-modifying code.
 Pass "any" instruction with return address (HALT) to subroutine (PRINT) and store it (PRINT_RET) for later execution to return. 
 ```
-           get STRING
-           set PRINT_ARG
-           get HALT
-           any PRINT_CAL
-HALT       any HALT
+           ld STRING
+           st PRINT_ARG
+           ld HALT
+           ja PRINT_CAL
+HALT       ja HALT
 
 
 
 
 PRINT_ARG 0
-PRINT_CAL set PRINT_RET
-          get PRINT_ARG
-          set PRINT_IDX
+PRINT_CAL st PRINT_RET
+          ld PRINT_ARG
+          st PRINT_IDX
 PRINT_IDX 0
-          set PUTC
-          set PRINT_ARG
-          get PRINT_IDX
-          add INCREMENT
-          set PRINT_IDX
-          get CHAR_NULL
-          sub PRINT_ARG
-          neg PRINT_IDX
+          st PUTC
+          st PRINT_ARG
+          ld PRINT_IDX
+          ad INCREMENT
+          st PRINT_IDX
+          ld CHAR_NULL
+          su PRINT_ARG
+          js PRINT_IDX
 PRINT_RET 0
 
 
@@ -430,7 +430,7 @@ INCREMENT 1
 
 CHAR_NULL 0
 
-STRING      get CHAR_ARRAY
+STRING      ld CHAR_ARRAY
 CHAR_ARRAY  104
             101
             108
