@@ -41,14 +41,14 @@ Fetch/Decode Behaviour  |Description
 ***Note: instruction address is the 12 least significant bits of ir (instruction register).***  
 ***Note: instruction opcode is the 4 most significant bits of ir (instruction register).***  
 
-Execute Behaviour              |Description                                |Binary              |Assembly
--------------------------------|-------------------------------------------|--------------------|----------------
-```ac = memory[ADDRESS]```     |Load accumulator with value.               |```0000[ADDRESS]``` |```ld [LABEL]```
-```memory[ADDRESS] = ac```     |Store accumulator.                         |```0001[ADDRESS]``` |```st [LABEL]```
-```ac += memory[ADDRESS]```    |Add value to accumulator.                  |```0010[ADDRESS]``` |```ad [LABEL]```
-```ac = ~memory[ADDRESS]```    |Load accumulator with inverted (NOT) value.|```0011[ADDRESS]``` |```nt [LABEL]```
-```ip = ADDRESS```             |Jump to address.                           |```0100[ADDRESS]``` |```ja [LABEL]```
-```if(AC >> 15) ip = ADDRESS```|Jump to address if accumulator sign bit.   |```0101[ADDRESS]``` |```js [LABEL]```
+Operation    |Assembly        |Binary             |Execute Behaviour
+-------------|----------------|-------------------|-------------------------------
+Load         |```ld [LABEL]```|```0000[ADDRESS]```|```ac = memory[ADDRESS]```
+Store        |```st [LABEL]```|```0001[ADDRESS]```|```memory[ADDRESS] = ac```
+Addition     |```ad [LABEL]```|```0010[ADDRESS]```|```ac += memory[ADDRESS]```
+Bitwise Not  |```nt [LABEL]```|```0011[ADDRESS]```|```ac = ~memory[ADDRESS]```
+Jump Address |```ja [LABEL]```|```0100[ADDRESS]```|```ip = ADDRESS```
+Jump Sign Bit|```js [LABEL]```|```0101[ADDRESS]```|```if(AC >> 15) ip = ADDRESS```
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
