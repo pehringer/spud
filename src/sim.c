@@ -1,6 +1,5 @@
 #include "sim.h"
 
-
 void InputUnit(struct Simulation *s) {
     char value = 0;
     for(int i = 0; i < DATA_WIDTH && i < 8; i++) {
@@ -15,7 +14,6 @@ void InputUnit(struct Simulation *s) {
         }
     }
 }
-
 
 void OutputUnit(struct Simulation *s) {
     char value = 0;
@@ -33,7 +31,6 @@ void OutputUnit(struct Simulation *s) {
     }
 }
 
-
 char* Memory(struct Simulation *s, char *address) {
     int index = 0;
     for(int i = 0; i < ADDRESS_WIDTH; i++) {
@@ -43,7 +40,6 @@ char* Memory(struct Simulation *s, char *address) {
     }
     return s->memory[index];
 }
-
 
 void Datapath(char *des, char *reg, char *mem, char width, char not, char cin) {
     char carry = cin;
@@ -66,7 +62,6 @@ void Datapath(char *des, char *reg, char *mem, char width, char not, char cin) {
         des[i] = value % 2;
     }
 }
-
 
 void ProcessorUnit(struct Simulation *s) {
     Datapath(s->ir, 0, Memory(s, s->ip), DATA_WIDTH, 0, 0);
@@ -97,13 +92,11 @@ void ProcessorUnit(struct Simulation *s) {
     }
 }
 
-
 void SimulateCycle(struct Simulation *s) {
     InputUnit(s);
     OutputUnit(s);
     ProcessorUnit(s);
 }
-
 
 void LoadSimulation(struct Simulation *s, FILE *bin) {
     for(int i = 0; i < DATA_WIDTH; i++) {
@@ -124,4 +117,3 @@ void LoadSimulation(struct Simulation *s, FILE *bin) {
     }
     *mem = 0;
 }
-

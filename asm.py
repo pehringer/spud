@@ -1,37 +1,30 @@
 from sys import argv
 
-
 DATA_SIZE = 16
 ADDRESS_SPACE = 4096
 INPUT_ADDRESS = 4094
 OUTPUT_ADDRESS = 4095
 
-
 DIGIT = set("0123456789")
 def is_number(word):
 	return set(word).issubset(DIGIT)
-
 
 LETTER = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 def is_label(word):
 	return set(word).issubset(LETTER)
 
-
 OPCODE = set(["ld", "st", "ad", "nt", "ja", "js"])
 def is_opcode(word):
 	return set([word]).issubset(OPCODE)
 
-
 def is_operation(words):
 	return is_opcode(words[0]) and (is_label(words[1]) or is_number(word[1]))
-
 
 def set_label(table, address, word):
 	if word in table:
 		print("Redefined label: %s" % (word))
 		exit(-1)
 	table[word] = address
-
 
 def bits(num):
 	bits = []
@@ -43,17 +36,14 @@ def bits(num):
 		num //= 2
 	return bits
 
-
 def get_label(table, word):
 	if not word in table:
 		print("Undefined label: %s" % (word))
 		exit(-1)
 	return bits(table[word])
 
-
 def get_number(word):
 	return bits(int(word))
-
 
 GET_OPCODE = {
 "ld": ["0", "0", "0", "0"],
@@ -64,13 +54,11 @@ GET_OPCODE = {
 "js": ["1", "0", "1", "0"],
 }
 
-
 def get_operation(table, words):
 	if is_label(words[1]):
 		return get_label(table, words[1])[:-4] + GET_OPCODE[words[0]]
 	if is_number(words[1]):
 		return get_number(words[1])[:-4] + GET_OPCODE[words[0]]
-
 
 if __name__ == "__main__":
 	######## Check And Read Arguments ########

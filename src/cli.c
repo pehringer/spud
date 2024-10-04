@@ -6,7 +6,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
 void main(int argc, char **argv) {
     const char *filepath = "examples/bin/hello_world.bin";
     struct timespec cycleTime = {0, 100000000};
@@ -32,8 +31,6 @@ void main(int argc, char **argv) {
         printf("Unable to load BIN file.\n");
         exit(2);
     }
-
-
     struct Simulation s;
     LoadSimulation(&s, file);
     fclose(file);
