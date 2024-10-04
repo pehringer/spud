@@ -1,9 +1,13 @@
 from sys import argv
 
-DATA_SIZE = 16
-ADDRESS_SPACE = 4096
-INPUT_ADDRESS = 4094
-OUTPUT_ADDRESS = 4095
+#ONLY MODIFY THESE TWO VARIABLES.
+OPCODE_WIDTH = 4
+ADDRESS_WIDTH = 12
+
+DATA_WIDTH = OPCODE_WIDTH + ADDRESS_WIDTH
+ADDRESS_SPACE = (1 << ADDRESS_WIDTH)
+INPUT_UNIT_ADDRESS = (ADDRESS_SPACE - 2)
+OUTPUT_UNIT_ADDRESS = (ADDRESS_SPACE - 1)
 
 DIGIT = set("0123456789")
 def is_number(word):
@@ -26,9 +30,9 @@ def set_label(table, address, word):
 		exit(-1)
 	table[word] = address
 
-def bits(num):
+def bits(num, width):
 	bits = []
-	for i in range(DATA_SIZE):
+	for i in range(width):
 		if num % 2 == 1:
 			bits.append("1")
 		elif num % 2 == 0:
@@ -36,29 +40,29 @@ def bits(num):
 		num //= 2
 	return bits
 
-def get_label(table, word):
+def get_label(table, word, width):
 	if not word in table:
 		print("Undefined label: %s" % (word))
 		exit(-1)
-	return bits(table[word])
+	return bits(table[word], width)
 
-def get_number(word):
-	return bits(int(word))
+def get_number(word, width):
+	return bits(int(word), width)
 
 GET_OPCODE = {
-"ld": ["0", "0", "0", "0"],
-"st": ["1", "0", "0", "0"],
-"ad": ["0", "1", "0", "0"],
-"nt": ["1", "1", "0", "0"],
-"ja": ["0", "0", "1", "0"],
-"js": ["1", "0", "1", "0"],
+"ld": bits(0, OPCODE_WIDTH),
+"st": bits(1, OPCODE_WIDTH),
+"ad": bits(2, OPCODE_WIDTH),
+"nt": bits(3, OPCODE_WIDTH),
+"ja": bits(4, OPCODE_WIDTH),
+"js": bits(5, OPCODE_WIDTH),
 }
 
 def get_operation(table, words):
 	if is_label(words[1]):
-		return get_label(table, words[1])[:-4] + GET_OPCODE[words[0]]
+		return get_label(table, words[1], ADDRESS_WIDTH) + GET_OPCODE[words[0]]
 	if is_number(words[1]):
-		return get_number(words[1])[:-4] + GET_OPCODE[words[0]]
+		return get_number(words[1], ADDRESS_WIDTH) + GET_OPCODE[words[0]]
 
 if __name__ == "__main__":
 	######## Check And Read Arguments ########
@@ -81,7 +85,7 @@ if __name__ == "__main__":
 	raw = file.read()
 	file.close()
 	words = raw.split()
-	table = {"PUTC": OUTPUT_ADDRESS, "GETC": INPUT_ADDRESS}
+	table = {"GETC": INPUT_UNIT_ADDRESS, "PUTC": OUTPUT_UNIT_ADDRESS}
 	a = 0
 	i = 0
 	while i < len(words):
@@ -107,7 +111,7 @@ if __name__ == "__main__":
 			i += 1
 			continue
 		if is_number(words[i]):
-			code.append(get_number(words[i]))
+			code.append(get_number(words[i], DATA_WIDTH))
 			i += 1
 			continue
 		if is_operation(words[i:i+2]):
