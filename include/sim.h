@@ -1,26 +1,26 @@
 #ifndef BACKEND_H
 #define BACKEND_H
 
-
 #include <stdio.h>
 
+//ONLY MODIFY THESE TWO DEFINES.
+#define OPCODE_WIDTH 4
+#define ADDRESS_WIDTH 12
 
-#define DATA_SIZE 16
-#define ADDRESS_SPACE 4096
-#define INPUT_ADDRESS 4094
-#define OUTPUT_ADDRESS 4095
-
+#define DATA_WIDTH (OPCODE_WIDTH + ADDRESS_WIDTH)
+#define SIGN_BIT (DATA_WIDTH - 1)
+#define ADDRESS_SPACE (1 << ADDRESS_WIDTH)
+#define INPUT_UNIT_ADDRESS (ADDRESS_SPACE - 2)
+#define OUTPUT_UNIT_ADDRESS (ADDRESS_SPACE - 1)
 
 struct Simulation {
-    char ac[DATA_SIZE];
-    char ip[DATA_SIZE];
-    char ir[DATA_SIZE];
-    char memory[ADDRESS_SPACE][DATA_SIZE];
+    char ac[DATA_WIDTH];
+    char ip[ADDRESS_WIDTH];
+    char ir[DATA_WIDTH];
+    char memory[ADDRESS_SPACE][DATA_WIDTH];
 };
-
 
 void LoadSimulation(struct Simulation *s, FILE *bin);
 void SimulateCycle(struct Simulation *s);
-
 
 #endif
