@@ -114,13 +114,36 @@ See ```example_asm/echo.asm``` for an example of how to use the input and output
 # Assembly Code Examples
 ---
 ```
+int A = 5;
+int B = -A;
+```
+The processor lacks sign negation hardware.
+The workaround is to use the twos complement of the nubmer.
+Bitwise not the number, then add one to the number.
+```
+START nt A
+      ad ONE
+      st B
+HALT  ja HALT
+
+
+
+
+ONE   1
+
+A     5
+
+B     0
+```
+---
+```
 int A = 7;
 int B = 2;
 int C = A - B;
 ```
 The processor lacks subtraction hardware.
 The workaround is to negate one of the numbers then add them together.
-To negate a binary number bitwise not the number, then add one to the number.
+Use twos complement to negate one of the numbers.
 ```
 START nt B
       ad ONE
@@ -136,6 +159,68 @@ ONE   1
 A     7
 
 B     2
+
+C     0
+```
+---
+```
+int A = 2;
+int B = 7;
+int C = A <= B;
+```
+The processor lacks comparison hardware.
+The workaround is to subtract the numbers and check the sign.
+Use twos complement to subtract the numbers.
+```
+START nt A
+      ad ONE
+      ad B
+      js HALT
+TRUE  ld ONE
+      st C
+HALT  ja HALT
+
+
+
+
+ONE   1
+
+A     2
+
+B     7
+
+C     0
+```
+---
+```
+int A = 5;
+int B = 5;
+int C = A == B;
+```
+The processor lacks comparison hardware.
+The workaround is to subtract the numbers and check the sign.
+Use twos complement to subtract the numbers.
+```
+START nt A
+      ad ONE
+      ad B
+      js HALT
+      nt B 
+      ad ONE 
+      ad A
+      js HALT 
+TRUE  ld ONE
+      st C
+HALT  ja HALT
+
+
+
+
+ONE   1
+
+A     5
+
+B     5
 
 C     0
 ```
