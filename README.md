@@ -115,104 +115,6 @@ See ```example_asm/echo.asm``` for an example of how to use the input and output
 # Assembly Code Examples
 ---
 ```
-int X = 6;
-X = -X;
-```
-The processor lacks sign negation hardware.
-The workaround is to use the twos complement of the nubmer.
-Bitwise not the number, then add one to the number.
-```
-START nt X
-      ad ONE
-      st X
-HALT  ja HALT
-
-ONE   1
-
-X     6
-```
----
-```
-int X = 9;
-int Y = 6;
-X = X - Y;
-```
-The processor lacks subtraction hardware.
-The workaround is to negate one of the numbers then add them together.
-Use twos complement to negate one of the numbers.
-```
-START nt X
-      ad ONE
-      ad Y
-      st X
-HALT  ja HALT
-
-ONE   1
-
-X     9
-
-Y     6
-```
----
-```
-int X = 2;
-int Y = 7;
-if(X <= Y) {
-    // CODE
-}
-```
-The processor lacks comparison hardware.
-The workaround is to subtract the numbers and check the sign.
-Use twos complement to subtract the numbers.
-```
-START nt X
-      ad ONE
-      ad Y
-      js HALT
-
-CODE
-
-HALT  ja HALT
-
-ONE   1
-
-X     2
-
-Y     7
-```
----
-```
-int X = 5;
-int Y = 5;
-if(X == Y) {
-    // CODE
-}
-```
-The processor lacks comparison hardware.
-The workaround is to subtract the numbers and check the sign.
-Use twos complement to subtract the numbers.
-```
-START nt X
-      ad ONE
-      ad Y
-      js HALT
-      nt Y 
-      ad ONE 
-      ad X
-      js HALT 
-
-CODE
-
-HALT  ja HALT
-
-ONE   1
-
-X     5
-
-Y     5
-```
----
-```
 int A[4] = {1, 2, 4, 8};
 int I = 2;
 int J = A[I];
@@ -292,9 +194,8 @@ PRINT_IDX  0
            ld  PRINT_IDX
            ad  INCREMENT
            st  PRINT_IDX
-           nt  PRINT_ARG
-           ad  INCREMENT
-           ad  CHAR_NULL
+           ld  CHAR_NULL
+           su  PRINT_ARG
            js  PRINT_IDX
 PRINT_RET  0
 
