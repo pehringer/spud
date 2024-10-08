@@ -2,6 +2,7 @@
 The simplest processor design (that I could think of) that still resembles modern processors:
  - Von Neumann architecture.
  - Accumulator based machine.
+ - Twos complement representation.
  - Word (16-bit) addressable memory.
 ### Contents
 - [Hardware Diagram](#hardware-diagram)
@@ -18,15 +19,15 @@ ______________________________________
 |            m e m o r y             | 
 |____________________________________|
              |          |
-  _____ADDRESS          DATA________________
-  |          |          |                  |
-  |   ______ | ________ | __________     __|__
-  |   |      |   |      |   |      |     \xor/__BITWISE NOT (~) 
-__|___|__  __|___|__  __|___|__  __|__   __|__
-|  i p  |  |  i r  |  |  a c  |  \    \_/    /__INCREMENT (++)
-|_______|  |_______|  |_______|   \__adder__/  
-    |          |          |            |   
-    |__________|__________|____________|
+  _____ADDRESS          DATA__________________
+  |          |          |                    | ___NOT (~)
+  |   ______ | ________ | _____________     _|_|_
+  |   |      |   |      |   |         |     \xor/ 
+__|___|__  __|___|__  __|___|__     __|__   __|__
+|  i p  |  |  i r  |  |  a c  |     \    \_/    /__CIN (++)
+|_______|  |_______|  |_______|      \__adder__/  
+    |          |          |               |   
+    |__________|__________|_______________|
 
 ip = instruction pointer
 ir = instruction register
@@ -38,25 +39,25 @@ Fetch/Decode Behaviour  |Description
 ------------------------|------------------------------------------------------------
 ```ir = memory[ip++]``` |Load instruction register and increment instruction pointer.
 
-***Note: instruction address is the 12 least significant bits of ir (instruction register).***  
-***Note: instruction opcode is the 4 most significant bits of ir (instruction register).***  
+***Note: instruction address is the 13 least significant bits of ir (instruction register).***  
+***Note: instruction opcode is the 3 most significant bits of ir (instruction register).***  
 
-Operation    |Assembly        |Binary             |Execute Behaviour
--------------|----------------|-------------------|-------------------------------
-Load         |```ld [LABEL]```|```0000[ADDRESS]```|```ac = memory[ADDRESS]```
-Store        |```st [LABEL]```|```0001[ADDRESS]```|```memory[ADDRESS] = ac```
-Addition     |```ad [LABEL]```|```0010[ADDRESS]```|```ac += memory[ADDRESS]```
-Bitwise Not  |```nt [LABEL]```|```0011[ADDRESS]```|```ac = ~memory[ADDRESS]```
-Jump Address |```ja [LABEL]```|```0100[ADDRESS]```|```ip = ADDRESS```
-Jump Sign Bit|```js [LABEL]```|```0101[ADDRESS]```|```if(AC >> 15) ip = ADDRESS```
+Operation    |Assembly        |Binary            |Execute Behaviour
+-------------|----------------|------------------|-------------------------------
+Load         |```ld [LABEL]```|```000[ADDRESS]```|```ac = memory[ADDRESS]```
+Store        |```st [LABEL]```|```001[ADDRESS]```|```memory[ADDRESS] = ac```
+Addition     |```ad [LABEL]```|```010[ADDRESS]```|```ac += memory[ADDRESS]```
+Subtract     |```su [LABEL]```|```011[ADDRESS]```|```ac = ~memory[ADDRESS] + 1```
+Jump Address |```ja [LABEL]```|```100[ADDRESS]```|```ip = ADDRESS```
+Jump Sign Bit|```js [LABEL]```|```101[ADDRESS]```|```if(AC >> 15) ip = ADDRESS```
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
 <bit> ::= "0" | "1"
 <nibble> ::= <bit><bit><bit><bit>
 <word> ::= <nibble><nibble><nibble><nibble>
-<opcode> ::= "0000" | "0001" | "0010" | "0011" | "0100" | "0101"
-<address> ::= <nibble><nibble><nibble>
+<opcode> ::= "000" | "001" | "010" | "011" | "100" | "101"
+<address> ::= <bit><nibble><nibble><nibble>
 <code> ::= <opcode><address><code> | <word><code> | ""     
 ```
 # Assembly Code Syntax
@@ -68,7 +69,7 @@ Jump Sign Bit|```js [LABEL]```|```0101[ADDRESS]```|```if(AC >> 15) ip = ADDRESS`
 <label> ::= <upper><label> | <upper>
 <whitespace> ::= "\n" | "\s" | "\t"
 <space> ::= <whitespace><space> | <whitespace>
-<opcode> ::= "ld" | "st" | "ad" | "nt” | "ja" | "js"
+<opcode> ::= "ld" | "st" | "ad" | "su" | "ja" | "js"
 <operation> ::= <opcode><space><number> | <opcode><space><label>
 <code> ::= <label><space><code> | <number><space><code> | <operation><space><code> | "."
 
@@ -98,17 +99,17 @@ The simulator supports the following optional arguments:
 - ```-cycle_count [NUMBER_CYCLES]``` - Make the simulator run the given number of cycles before halting.
 
 For example if you wanted to execute hello world 4x faster and have it stop after "hello" has beeen printed:  
-```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 25 -cycle_count 50```
+```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 25 -cycle_count 46```
 # Peripherals
 There are two memory mapped peripherals:
-- Input Unit, address ```4094``` (assembly label ```GETC```)
-- Output Unit, address ```4095``` (assembly label ```PUTC```)
+- Input Unit, address ```8190``` (assembly label ```GETC```)
+- Output Unit, address ```8191``` (assembly label ```PUTC```)
 
 These peripherals are used to read / print characters to standard in/out (terminal).
 
-***Input Unit***: set memory address ```4094``` to zero value, memory address ```4094``` will then be set to ascii value of the next character from stdin.
+***Input Unit***: set memory address ```8190``` to zero value, memory address ```8190``` will then be set to ascii value of the next character from stdin.
 
-***Output Unit***: set memory address ```4095``` to ascii value of next character for stdout, memory address ```4095``` will then be set to zero value.
+***Output Unit***: set memory address ```8191``` to ascii value of next character for stdout, memory address ```8191``` will then be set to zero value.
 
 See ```example_asm/echo.asm``` for an example of how to use the input and output units.
 # Assembly Code Examples

@@ -82,7 +82,7 @@ void ProcessorUnit(struct Simulation *s) {
         Datapath(s->ac, s->ac, Memory(s, s->ir), DATA_WIDTH, 0, 0);
     }
     if(opcode == 3) {
-        Datapath(s->ac, 0, Memory(s, s->ir), DATA_WIDTH, 1, 0);
+        Datapath(s->ac, s->ac, Memory(s, s->ir), DATA_WIDTH, 1, 1);
     }
     if(opcode == 4) {
         Datapath(s->ip, s->ir, 0, ADDRESS_WIDTH, 0, 0);
@@ -108,16 +108,6 @@ void LoadSimulation(struct Simulation *s, FILE *bin) {
         s->memory[INPUT_UNIT_ADDRESS][i] = 1 & '\n' >> i;
         s->memory[OUTPUT_UNIT_ADDRESS][i] = 0 & '\0' >> i;
     }
-    /*
-    char *mem = s->memory[0];
-    while((*mem = getc(bin)) != EOF) {
-        if(*mem == '0' || *mem == '1') {
-            *mem -= '0';
-            mem++;
-        }
-    }
-    *mem = 0;
-    */
     int address = 0;
     int bit = 15;
     while((s->memory[address][bit] = getc(bin)) != EOF) {

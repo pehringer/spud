@@ -7,9 +7,8 @@ PRINTC ld ZERO
        st GETC
        ld GETC
        st PUTC
-       nt GETC
-       ad ONE
-       ad CR
+       ld CR
+       su GETC
        js PRINTC
        ja PROMPT
 ZERO   0

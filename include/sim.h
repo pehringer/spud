@@ -4,8 +4,8 @@
 #include <stdio.h>
 
 //ONLY MODIFY THESE TWO DEFINES.
-#define OPCODE_WIDTH 4
-#define ADDRESS_WIDTH 12
+#define OPCODE_WIDTH 3
+#define ADDRESS_WIDTH 13
 
 #define DATA_WIDTH (OPCODE_WIDTH + ADDRESS_WIDTH)
 #define SIGN_BIT (DATA_WIDTH - 1)

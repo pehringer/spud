@@ -1,8 +1,8 @@
 from sys import argv
 
 #ONLY MODIFY THESE TWO VARIABLES.
-OPCODE_WIDTH = 4
-ADDRESS_WIDTH = 12
+OPCODE_WIDTH = 3
+ADDRESS_WIDTH = 13
 
 DATA_WIDTH = OPCODE_WIDTH + ADDRESS_WIDTH
 ADDRESS_SPACE = (1 << ADDRESS_WIDTH)
@@ -17,7 +17,7 @@ LETTER = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 def is_label(word):
 	return set(word).issubset(LETTER)
 
-OPCODE = set(["ld", "st", "ad", "nt", "ja", "js"])
+OPCODE = set(["ld", "st", "ad", "su", "ja", "js"])
 def is_opcode(word):
 	return set([word]).issubset(OPCODE)
 
@@ -29,17 +29,7 @@ def set_label(table, address, word):
 		print("Redefined label: %s" % (word))
 		exit(-1)
 	table[word] = address
-'''
-def bits(num, width):
-	bits = []
-	for i in range(width):
-		if num % 2 == 1:
-			bits.append("1")
-		elif num % 2 == 0:
-			bits.append("0")
-		num //= 2
-	return bits
-'''
+
 def bits(num, width):
 	bits = []
 	for i in range(width):
@@ -63,18 +53,11 @@ GET_OPCODE = {
 "ld": bits(0, OPCODE_WIDTH),
 "st": bits(1, OPCODE_WIDTH),
 "ad": bits(2, OPCODE_WIDTH),
-"nt": bits(3, OPCODE_WIDTH),
+"su": bits(3, OPCODE_WIDTH),
 "ja": bits(4, OPCODE_WIDTH),
 "js": bits(5, OPCODE_WIDTH),
 }
 
-'''
-def get_operation(table, words):
-	if is_label(words[1]):
-		return get_label(table, words[1], ADDRESS_WIDTH) + GET_OPCODE[words[0]]
-	if is_number(words[1]):
-		return get_number(words[1], ADDRESS_WIDTH) + GET_OPCODE[words[0]]
-'''
 def get_operation(table, words):
 	if is_label(words[1]):
 		return GET_OPCODE[words[0]] + get_label(table, words[1], ADDRESS_WIDTH)
