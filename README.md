@@ -114,115 +114,101 @@ See ```example_asm/echo.asm``` for an example of how to use the input and output
 # Assembly Code Examples
 ---
 ```
-int A = 5;
-int B = -A;
+int X = 6;
+X = -X;
 ```
 The processor lacks sign negation hardware.
 The workaround is to use the twos complement of the nubmer.
 Bitwise not the number, then add one to the number.
 ```
-START nt A
+START nt X
       ad ONE
-      st B
+      st X
 HALT  ja HALT
-
-
-
 
 ONE   1
 
-A     5
-
-B     0
+X     6
 ```
 ---
 ```
-int A = 7;
-int B = 2;
-int C = A - B;
+int X = 9;
+int Y = 6;
+X = X - Y;
 ```
 The processor lacks subtraction hardware.
 The workaround is to negate one of the numbers then add them together.
 Use twos complement to negate one of the numbers.
 ```
-START nt B
+START nt X
       ad ONE
-      ad A
-      st C
+      ad Y
+      st X
 HALT  ja HALT
-
-
-
 
 ONE   1
 
-A     7
+X     9
 
-B     2
-
-C     0
+Y     6
 ```
 ---
 ```
-int A = 2;
-int B = 7;
-int C = A <= B;
+int X = 2;
+int Y = 7;
+if(X <= Y) {
+    // CODE
+}
 ```
 The processor lacks comparison hardware.
 The workaround is to subtract the numbers and check the sign.
 Use twos complement to subtract the numbers.
 ```
-START nt A
+START nt X
       ad ONE
-      ad B
+      ad Y
       js HALT
-TRUE  ld ONE
-      st C
+
+CODE
+
 HALT  ja HALT
-
-
-
 
 ONE   1
 
-A     2
+X     2
 
-B     7
-
-C     0
+Y     7
 ```
 ---
 ```
-int A = 5;
-int B = 5;
-int C = A == B;
+int X = 5;
+int Y = 5;
+if(X == Y) {
+    // CODE
+}
 ```
 The processor lacks comparison hardware.
 The workaround is to subtract the numbers and check the sign.
 Use twos complement to subtract the numbers.
 ```
-START nt A
+START nt X
       ad ONE
-      ad B
+      ad Y
       js HALT
-      nt B 
+      nt Y 
       ad ONE 
-      ad A
+      ad X
       js HALT 
-TRUE  ld ONE
-      st C
+
+CODE
+
 HALT  ja HALT
-
-
-
 
 ONE   1
 
-A     5
+X     5
 
-B     5
-
-C     0
+Y     5
 ```
 ---
 ```
@@ -240,9 +226,6 @@ START ld A_LD
 INDEX 0
       st J
 HALT  ja HALT
-
-
-
 
 I     2
 
@@ -270,9 +253,6 @@ START ld A_ST
       ld J
 INDEX 0
 HALT  ja HALT
-
-
-
 
 I     2
 

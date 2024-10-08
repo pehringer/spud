@@ -29,7 +29,7 @@ def set_label(table, address, word):
 		print("Redefined label: %s" % (word))
 		exit(-1)
 	table[word] = address
-
+'''
 def bits(num, width):
 	bits = []
 	for i in range(width):
@@ -37,6 +37,16 @@ def bits(num, width):
 			bits.append("1")
 		elif num % 2 == 0:
 			bits.append("0")
+		num //= 2
+	return bits
+'''
+def bits(num, width):
+	bits = []
+	for i in range(width):
+		if num % 2 == 1:
+			bits.insert(0, "1")
+		elif num % 2 == 0:
+			bits.insert(0, "0")
 		num //= 2
 	return bits
 
@@ -58,11 +68,18 @@ GET_OPCODE = {
 "js": bits(5, OPCODE_WIDTH),
 }
 
+'''
 def get_operation(table, words):
 	if is_label(words[1]):
 		return get_label(table, words[1], ADDRESS_WIDTH) + GET_OPCODE[words[0]]
 	if is_number(words[1]):
 		return get_number(words[1], ADDRESS_WIDTH) + GET_OPCODE[words[0]]
+'''
+def get_operation(table, words):
+	if is_label(words[1]):
+		return GET_OPCODE[words[0]] + get_label(table, words[1], ADDRESS_WIDTH)
+	if is_number(words[1]):
+		return GET_OPCODE[words[0]] + get_number(words[1], ADDRESS_WIDTH)
 
 if __name__ == "__main__":
 	######## Check And Read Arguments ########

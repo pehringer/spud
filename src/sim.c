@@ -108,6 +108,7 @@ void LoadSimulation(struct Simulation *s, FILE *bin) {
         s->memory[INPUT_UNIT_ADDRESS][i] = 1 & '\n' >> i;
         s->memory[OUTPUT_UNIT_ADDRESS][i] = 0 & '\0' >> i;
     }
+    /*
     char *mem = s->memory[0];
     while((*mem = getc(bin)) != EOF) {
         if(*mem == '0' || *mem == '1') {
@@ -116,4 +117,18 @@ void LoadSimulation(struct Simulation *s, FILE *bin) {
         }
     }
     *mem = 0;
+    */
+    int address = 0;
+    int bit = 15;
+    while((s->memory[address][bit] = getc(bin)) != EOF) {
+        if(s->memory[address][bit] == '0' || s->memory[address][bit] == '1') {
+            s->memory[address][bit] -= '0';
+            bit--;
+        }
+        if(bit < 0) {
+            address++;
+            bit = 15;
+        }
+    }
+    s->memory[address][bit] = 0;
 }
