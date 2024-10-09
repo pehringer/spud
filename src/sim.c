@@ -41,26 +41,26 @@ char* Memory(struct Simulation *s, char *address) {
     return s->memory[index];
 }
 
-void Datapath(char *des, char *reg, char *mem, char width, char not, char cin) {
-    char carry = cin;
+char Datapath(char *destination, char *source, char *memory, char width, char not, char carry) {
     for(int i = 0; i < width; i++) {
         char value = 0;
-        if(mem && mem[i]) {
+        if(memory && memory[i]) {
             value++;
         }
         if(not) {
             value++;
         }
         value %= 2;
-        if(reg && reg[i]) {
+        if(source && source[i]) {
             value++;
         }
         if(carry) {
             value++;
         }
         carry = value > 1;
-        des[i] = value % 2;
+        destination[i] = value % 2;
     }
+    return carry;
 }
 
 void ProcessorUnit(struct Simulation *s) {
@@ -73,21 +73,24 @@ void ProcessorUnit(struct Simulation *s) {
         }
     }
     if(opcode == 0) {
-        Datapath(s->ac, 0, Memory(s, s->ir), DATA_WIDTH, 0, 0);
+        s->ac[CARRY_BIT] = Datapath(s->ac, 0, Memory(s, s->ir), DATA_WIDTH, 0, 0);
     }
     if(opcode == 1) {
         Datapath(Memory(s, s->ir), s->ac, 0, DATA_WIDTH, 0, 0);
     }
     if(opcode == 2) {
-        Datapath(s->ac, s->ac, Memory(s, s->ir), DATA_WIDTH, 0, 0);
+        s->ac[CARRY_BIT] = Datapath(s->ac, s->ac, Memory(s, s->ir), DATA_WIDTH, 0, 0);
     }
     if(opcode == 3) {
-        Datapath(s->ac, s->ac, Memory(s, s->ir), DATA_WIDTH, 1, 1);
+        s->ac[CARRY_BIT] = Datapath(s->ac, s->ac, Memory(s, s->ir), DATA_WIDTH, 1, 1);
     }
     if(opcode == 4) {
         Datapath(s->ip, s->ir, 0, ADDRESS_WIDTH, 0, 0);
     }
     if(opcode == 5 && s->ac[SIGN_BIT]) {
+        Datapath(s->ip, s->ir, 0, ADDRESS_WIDTH, 0, 0);
+    }
+    if(opcode == 6 && s->ac[CARRY_BIT]) {
         Datapath(s->ip, s->ir, 0, ADDRESS_WIDTH, 0, 0);
     }
 }

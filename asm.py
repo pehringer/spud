@@ -17,7 +17,7 @@ LETTER = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 def is_label(word):
 	return set(word).issubset(LETTER)
 
-OPCODE = set(["ld", "st", "ad", "su", "ja", "js"])
+OPCODE = set(["ld", "st", "ad", "su", "ja", "js", "jc"])
 def is_opcode(word):
 	return set([word]).issubset(OPCODE)
 
@@ -56,6 +56,7 @@ GET_OPCODE = {
 "su": bits(3, OPCODE_WIDTH),
 "ja": bits(4, OPCODE_WIDTH),
 "js": bits(5, OPCODE_WIDTH),
+"jc": bits(6, OPCODE_WIDTH),
 }
 
 def get_operation(table, words):
