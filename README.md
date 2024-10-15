@@ -49,7 +49,7 @@ Operation     |Assembly        |Binary            |Execute Behaviour
 Load          |```ld [LABEL]```|```000[ADDRESS]```|```ac = memory[ADDRESS]```
 Store         |```st [LABEL]```|```001[ADDRESS]```|```memory[ADDRESS] = ac```
 Addition      |```ad [LABEL]```|```010[ADDRESS]```|```ac += memory[ADDRESS]```
-Subtract      |```su [LABEL]```|```011[ADDRESS]```|```ac += ~memory[ADDRESS] + 1```
+Bitwise Not   |```nt [LABEL]```|```011[ADDRESS]```|```ac = ~memory[ADDRESS]```
 Jump Address  |```ja [LABEL]```|```100[ADDRESS]```|```ip = ADDRESS```
 Jump Sign Bit |```js [LABEL]```|```101[ADDRESS]```|```if(s) ip = ADDRESS```
 Jump Carry Bit|```jc [LABEL]```|```110[ADDRESS]```|```if(c) ip = ADDRESS```
@@ -72,7 +72,7 @@ Jump Carry Bit|```jc [LABEL]```|```110[ADDRESS]```|```if(c) ip = ADDRESS```
 <label> ::= <upper><label> | <upper>
 <whitespace> ::= "\n" | "\s" | "\t"
 <space> ::= <whitespace><space> | <whitespace>
-<opcode> ::= "ld" | "st" | "ad" | "su" | "ja" | "js" | "jc"
+<opcode> ::= "ld" | "st" | "ad" | "nt" | "ja" | "js" | "jc"
 <operation> ::= <opcode><space><number> | <opcode><space><label>
 <code> ::= <label><space><code> | <number><space><code> | <operation><space><code> | "."
 
@@ -102,7 +102,7 @@ The simulator supports the following optional arguments:
 - ```-cycle_count [NUMBER_CYCLES]``` - Make the simulator run the given number of cycles before halting.
 
 For example if you wanted to execute hello world 4x faster and have it stop after "hello" has beeen printed:  
-```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 25 -cycle_count 46```
+```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 25 -cycle_count 50```
 # Peripherals
 There are two memory mapped peripherals:
 - Input Unit, address ```8190``` (assembly label ```GETC```)
@@ -116,6 +116,58 @@ These peripherals are used to read / print characters to standard in/out (termin
 
 See ```example_asm/echo.asm``` for an example of how to use the input and output units.
 # Assembly Code Examples
+---
+```
+int A = 7;
+int B = 2;
+int C = A - B;
+```
+The processor lacks subtraction hardware.
+The workaround is to negate one of the numbers then add them together.
+Negate the binary number using ones's complement.
+Bitwise not the number, after add the numbers add one if there was a carry out.
+```
+START nt B
+      ad A
+      jc CARRY
+      ja STORE
+CARRY ad ONE
+STORE st C
+HALT  ja HALT
+
+ONE   1
+
+A     7
+
+B     2
+
+C     0
+```
+---
+```
+int A = 7;
+int B = 2;
+int C = A - B;
+```
+The processor lacks subtraction hardware.
+The workaround is to negate one of the numbers then add them together.
+Negate the binary number using two's complement.
+Bitwise not the number, add one to the number.
+```
+START nt B
+      ad ONE
+      ad A
+      st C
+HALT  ja HALT
+
+ONE   1
+
+A     7
+
+B     2
+
+C     0
+```
 ---
 ```
 int A[4] = {1, 2, 4, 8};
@@ -184,9 +236,6 @@ Pass "ja" instruction with return address (HALT) to subroutine (PRINT) and store
            ja  PRINT_CAL
 HALT       ja  HALT
 
-
-
-
 PRINT_ARG  0
 PRINT_CAL  st  PRINT_RET
            ld  PRINT_ARG
@@ -197,13 +246,11 @@ PRINT_IDX  0
            ld  PRINT_IDX
            ad  INCREMENT
            st  PRINT_IDX
-           ld  CHAR_NULL
-           su  PRINT_ARG
+           nt  PRINT_ARG
+           ad  INCREMENT
+           ad  CHAR_NULL
            js  PRINT_IDX
 PRINT_RET  0
-
-
-
 
 INCREMENT  1
 

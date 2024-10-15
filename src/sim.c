@@ -82,7 +82,7 @@ void ProcessorUnit(struct Simulation *s) {
         s->ac[CARRY_BIT] = Datapath(s->ac, s->ac, Memory(s, s->ir), DATA_WIDTH, 0, 0);
     }
     if(opcode == 3) {
-        s->ac[CARRY_BIT] = Datapath(s->ac, s->ac, Memory(s, s->ir), DATA_WIDTH, 1, 1);
+        s->ac[CARRY_BIT] = Datapath(s->ac, 0, Memory(s, s->ir), DATA_WIDTH, 1, 0);
     }
     if(opcode == 4) {
         Datapath(s->ip, s->ir, 0, ADDRESS_WIDTH, 0, 0);

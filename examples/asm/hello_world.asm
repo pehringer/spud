@@ -17,8 +17,9 @@ PRINT_IDX  0
            ld  PRINT_IDX
            ad  INCREMENT
            st  PRINT_IDX
-           ld  CHAR_NULL
-           su  PRINT_ARG
+           nt  PRINT_ARG
+           ad  INCREMENT
+           ad  CHAR_NULL
            js  PRINT_IDX
 PRINT_RET  0
 
