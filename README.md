@@ -2,7 +2,6 @@
 The simplest processor design (that I could think of) that still resembles modern processors:
  - Von Neumann architecture.
  - Accumulator based machine.
- - Twos complement representation.
  - Word (16-bits) addressable memory.
 ### Contents
 - [Hardware Diagram](#hardware-diagram)
@@ -125,7 +124,7 @@ int C = A - B;
 The processor lacks subtraction hardware.
 The workaround is to negate one of the numbers then add them together.
 Negate the binary number using ones's complement.
-Bitwise not the number, after add the numbers add one if there was a carry out.
+Bitwise not the number, after adding the numbers add one if there was a carry out.
 ```
 START nt B
       ad A
