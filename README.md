@@ -41,15 +41,15 @@ __|___|__  __|___|__  __|___|__     __|__   __|__
 |-----------------------|
 |```ir = memory[ip++]```|
 
-|Execute Behaviour                                |Operation     |
-|-------------------------------------------------|--------------|
-|```if(opcode == 0) {ac = memory[address]}```     |Load          |
-|```if(opcode == 1) {memory[address] = ac}```     |Store         |
-|```if(opcode == 2) {ac += memory[address]}```    |Addition      |
-|```if(opcode == 3) {ac = ~memory[address]}```    |Bitwise Not   |
-|```if(opcode == 4) {ip = address}```             |Jump Address  |
-|```if(opcode == 5 && sign_bit) {ip = address}``` |Jump Sign Bit |
-|```if(opcode == 6 && carry_bit) {ip = address}```|Jump Carry Bit|
+|Execute Behaviour                                |Operation                |
+|-------------------------------------------------|-------------------------|
+|```if(opcode == 0) {ac = memory[address]}```     |```ld``` - Load          |
+|```if(opcode == 1) {memory[address] = ac}```     |```st``` - Store         |
+|```if(opcode == 2) {ac += memory[address]}```    |```ad``` - Add           |
+|```if(opcode == 3) {ac = ~memory[address]}```    |```nt``` - Not           |
+|```if(opcode == 4) {ip = address}```             |```ja``` - Jump Address  |
+|```if(opcode == 5 && sign_bit) {ip = address}``` |```js``` - Jump Sign Bit |
+|```if(opcode == 6 && carry_bit) {ip = address}```|```jc``` - Jump Carry Bit|
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
@@ -121,8 +121,8 @@ int C = A - B;
 ```
 The processor lacks subtraction hardware.
 The workaround is to negate one of the numbers then add them together.
-Negate the binary number using ones's complement.
-Bitwise not the number, after adding the numbers add one if there was a carry out.
+Negate the number using ones's complement.
+Bitwise not the number, after adding the numbers together add one if there was a carry out.
 ```
 START nt B
       ad A
@@ -148,8 +148,8 @@ int C = A - B;
 ```
 The processor lacks subtraction hardware.
 The workaround is to negate one of the numbers then add them together.
-Negate the binary number using two's complement.
-Bitwise not the number, add one to the number.
+Negate the number using two's complement.
+Bitwise not the number, then add one to the number.
 ```
 START nt B
       ad ONE
@@ -173,7 +173,7 @@ int J = A[I];
 ```
 All instructions have fixed memory addresses.
 Dynamic memory addresses requires self-modifying code.
-Create and store "ld" instruction with array index address (INDEX).
+Create and load "ld" instruction with array index address (INDEX).
 ```
 START ld A_LD
       ad I
