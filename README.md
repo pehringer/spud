@@ -4,7 +4,6 @@ The simplest processor design (that I could think of) that still resembles moder
  - Accumulator based machine.
  - Word (16-bits) addressable memory.
 ### Contents
-- [Hardware Diagram](#hardware-diagram)
 - [Instruction Set](#instruction-set)
 - [Machine Code Syntax](#machine-code-syntax)
 - [Assembly Code Syntax](#assembly-code-syntax)
@@ -12,7 +11,7 @@ The simplest processor design (that I could think of) that still resembles moder
 - [Simulator](#simulator)
 - [Peripherals](#peripherals)
 - [Assembly Code Examples](#assembly-code-examples)
-# Hardware Diagram
+# Instruction Set
 ```
 ______________________________________
 |            m e m o r y             | 
@@ -28,30 +27,29 @@ __|___|__  __|___|__  __|___|__     __|__   __|__
     |          |          | |____|        |   
     |__________|__________|_______________|
 
-ip = instruction pointer  13-bits
-ir = instruction register 16-bits
-ac = accumulator          17-bits
-s  = sign bit             16th bit of ac
-c  = carry bit            17th (non-data) bit of ac
+(ip) instruction pointer 13-bits
 
+(ir) instruction register 16-bits
+     opcode  bits 13-15 
+     address bits  0-12
+
+(ac) accumulator 17-bits
+     sign_bit  bit 15
+     carry_bit bit 16
 ```
-# Instruction Set
-Fetch/Decode Behaviour  |Description
-------------------------|------------------------------------------------------------
-```ir = memory[ip++]``` |Load instruction register and increment instruction pointer.
+|Fetch/Decode Behaviour |
+|-----------------------|
+|```ir = memory[ip++]```|
 
-***Note: instruction address is the 13 least significant bits of ir (instruction register).***  
-***Note: instruction opcode is the 3 most significant bits of ir (instruction register).***  
-
-Operation     |Assembly        |Binary            |Execute Behaviour
---------------|----------------|------------------|--------------------------------
-Load          |```ld [LABEL]```|```000[ADDRESS]```|```ac = memory[ADDRESS]```
-Store         |```st [LABEL]```|```001[ADDRESS]```|```memory[ADDRESS] = ac```
-Addition      |```ad [LABEL]```|```010[ADDRESS]```|```ac += memory[ADDRESS]```
-Bitwise Not   |```nt [LABEL]```|```011[ADDRESS]```|```ac = ~memory[ADDRESS]```
-Jump Address  |```ja [LABEL]```|```100[ADDRESS]```|```ip = ADDRESS```
-Jump Sign Bit |```js [LABEL]```|```101[ADDRESS]```|```if(s) ip = ADDRESS```
-Jump Carry Bit|```jc [LABEL]```|```110[ADDRESS]```|```if(c) ip = ADDRESS```
+|Execute Behaviour                                |Operation     |
+|-------------------------------------------------|--------------|
+|```if(opcode == 0) {ac = memory[address]}```     |Load          |
+|```if(opcode == 1) {memory[address] = ac}```     |Store         |
+|```if(opcode == 2) {ac += memory[address]}```    |Addition      |
+|```if(opcode == 3) {ac = ~memory[address]}```    |Bitwise Not   |
+|```if(opcode == 4) {ip = address}```             |Jump Address  |
+|```if(opcode == 5 && sign_bit) {ip = address}``` |Jump Sign Bit |
+|```if(opcode == 6 && carry_bit) {ip = address}```|Jump Carry Bit|
 # Machine Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 ```
@@ -73,7 +71,7 @@ Jump Carry Bit|```jc [LABEL]```|```110[ADDRESS]```|```if(c) ip = ADDRESS```
 <space> ::= <whitespace><space> | <whitespace>
 <opcode> ::= "ld" | "st" | "ad" | "nt" | "ja" | "js" | "jc"
 <operation> ::= <opcode><space><number> | <opcode><space><label>
-<code> ::= <label><space><code> | <number><space><code> | <operation><space><code> | "."
+<code> ::= <label><space><code> | <number><space><code> | <operation><space><code> | ""
 
 ```
 # Assembler
