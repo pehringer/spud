@@ -15,4 +15,4 @@ clean_sim:
 
 build_exam:
 	python ./asm.py ./examples/asm/echo.asm examples/bin/echo.bin
-	python ./asm.py ./examples/asm/hello_world.asm examples/bin/hello_world.bin
+	python ./asm.py ./examples/asm/hello.asm examples/bin/hello.bin

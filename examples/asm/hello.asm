@@ -28,7 +28,8 @@ PRINT_RET  0
 
 INCREMENT  1
 
-CHAR_NULL  0
+
+
 
 STRING     ld  CHAR_ARRAY
 CHAR_ARRAY 104
@@ -36,11 +37,5 @@ CHAR_ARRAY 104
            108
            108
            111
-           32
-           119
-           111
-           114
-           108
-           100
            10
-           0
+CHAR_NULL  0

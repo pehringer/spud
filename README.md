@@ -83,12 +83,12 @@ For example if you wanted to regenerate the hello world assembly example:
 
 If any errors occur try running the Makefile.  
 # Simulator
-The simulator will run the examples/bin/hello_world.bin if no arguments are given:  
+The simulator will run the examples/bin/hello.bin if no arguments are given:  
 ```./sim.bin```
   
 Terminal Output:  
 ```
-hello world
+hello
 $
 ```
 If any errors occur try running the Makefile
@@ -98,7 +98,7 @@ The simulator supports the following optional arguments:
 - ```-cycle_time [NUMBER_MILLISECONDS]``` - Make the simulator take the given number of milliseconds per cycle.
 - ```-cycle_count [NUMBER_CYCLES]``` - Make the simulator run the given number of cycles before halting.
 
-For example if you wanted to execute hello world 4x faster and have it stop after "hello" has beeen printed:  
+For example if you wanted to execute hello.bin 4x faster and have it stop before the newline is printed:  
 ```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 25 -cycle_count 50```
 # Peripherals
 There are two memory mapped peripherals:
@@ -221,7 +221,7 @@ A     1
 ```
 ---
 ```
-printf("hello world\n");
+printf("hello\n");
 ```
 All instructions have fixed memory addresses.
 Dynamic memory addresses requires self-modifying code.
@@ -232,6 +232,7 @@ Pass "ja" instruction with return address (HALT) to subroutine (PRINT) and store
            ld  HALT
            ja  PRINT_CAL
 HALT       ja  HALT
+
 
 PRINT_ARG  0
 PRINT_CAL  st  PRINT_RET
@@ -249,9 +250,9 @@ PRINT_IDX  0
            js  PRINT_IDX
 PRINT_RET  0
 
+
 INCREMENT  1
 
-CHAR_NULL  0
 
 STRING     ld  CHAR_ARRAY
 CHAR_ARRAY 104
@@ -259,13 +260,7 @@ CHAR_ARRAY 104
            108
            108
            111
-           32
-           119
-           111
-           114
-           108
-           100
            10
-           0
+CHAR_NULL  0
 ```
 ---

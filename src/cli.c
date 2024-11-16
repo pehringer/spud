@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 void main(int argc, char **argv) {
-    const char *filepath = "examples/bin/hello_world.bin";
+    const char *filepath = "examples/bin/hello.bin";
     struct timespec cycleTime = {0, 100000000};
     long cycleCount = 128;
     for(int argi = 1; argi < argc; argi++) {
