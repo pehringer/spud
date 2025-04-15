@@ -14,5 +14,7 @@ clean_sim:
 	rm ./cli.o
 
 build_exam:
-	python ./asm.py ./examples/asm/echo.asm examples/bin/echo.bin
-	python ./asm.py ./examples/asm/hello.asm examples/bin/hello.bin
+	python ./asm.py ./examples/asm/echo.asm ./examples/bin/echo.bin
+	python ./asm.py ./examples/asm/hello.asm ./examples/bin/hello.bin
+	python ./asm.py ./examples/asm/subtract_ones.asm ./examples/bin/subtract_ones.bin
+	python ./asm.py ./examples/asm/subtract_twos.asm ./examples/bin/subtract_twos.bin

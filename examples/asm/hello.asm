@@ -4,9 +4,6 @@
            ja  PRINT_CAL
 HALT       ja  HALT
 
-
-
-
 PRINT_ARG  0
 PRINT_CAL  st  PRINT_RET
            ld  PRINT_ARG
@@ -23,13 +20,7 @@ PRINT_IDX  0
            js  PRINT_IDX
 PRINT_RET  0
 
-
-
-
 INCREMENT  1
-
-
-
 
 STRING     ld  CHAR_ARRAY
 CHAR_ARRAY 104
