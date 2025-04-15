@@ -167,65 +167,12 @@ C     0
 ```
 ---
 ```
-int A[4] = {1, 2, 4, 8};
-int I = 2;
-int J = A[I];
-```
-All instructions have fixed memory addresses.
-Dynamic memory addresses requires self-modifying code.
-Create and load "ld" instruction with array index address (INDEX).
-```
-START ld A_LD
-      ad I
-      st INDEX
-INDEX 0
-      st J
-HALT  ja HALT
-
-I     2
-
-J     0
-
-A_LD  ld A
-A     1
-      2
-      4
-      8
-```
----
-```
-int A[4] = {1, 2, 4, 8};
-int I = 2;
-int J = A[I] = J;
-```
-All instructions have fixed memory addresses.
-Dynamic memory addresses requires self-modifying code.
-Create and store "st" instruction with array index address (INDEX).
-```
-START ld A_ST
-      ad I
-      st INDEX
-      ld J
-INDEX 0
-HALT  ja HALT
-
-I     2
-
-J     0
-
-A_ST  st A
-A     1
-      2
-      4
-      8
-```
----
-```
 printf("hello\n");
 ```
 All instructions have fixed memory addresses.
 Dynamic memory addresses requires self-modifying code.
-Pass "ja" instruction with return address (HALT) to subroutine (PRINT) and store it (PRINT_RET) for later execution to return. 
+Pass "ja" instruction with return address (HALT) to subroutine (PRINT) and store it (PRINT_RET) for later execution to return.
+Create and load "ld" instruction with string index address (PRINT_IDX).
 ```
            ld  STRING
            st  PRINT_ARG

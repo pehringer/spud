@@ -1,8 +1,3 @@
-PROMPT ld GT
-       st PUTC
-       st PUTC
-       ld SP
-       st PUTC
 PRINTC ld ZERO
        st GETC
        ld GETC
@@ -11,9 +6,7 @@ PRINTC ld ZERO
        ad ONE
        ad CR
        js PRINTC
-       ja PROMPT
+HALT   ja HALT
 ZERO   0
 ONE    1
 CR     10
-SP     32
-GT     62
