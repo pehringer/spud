@@ -83,11 +83,10 @@ For example if you wanted to regenerate the hello world assembly example:
 
 If any errors occur try running the Makefile.
 # Simulator
-The simulator will run the examples/bin/hello.bin if no arguments are given:
-```./sim.bin```
+The simulator will run the ```examples/bin/hello.bin``` if no arguments are given:
 
-Terminal Output:
 ```
+$ ./sim.bin
 hello
 $
 ```
@@ -100,7 +99,10 @@ The simulator supports the following optional arguments:
 - ```-cycle_count [NUMBER_CYCLES]``` - Make the simulator run the given number of cycles before halting.
 
 For example if you wanted to execute hello.bin 4x faster and have it stop before the newline is printed:  
-```./sim.bin -filepath examples/bin/hello_world.bin -cycle_time 25 -cycle_count 50```
+```
+$ ./sim.bin -filepath examples/bin/hello.bin -cycle_time 25 -cycle_count 50
+hello$
+```
 # Peripherals
 There are two memory mapped peripherals:
 - Input Unit, address ```8190``` (assembly label ```GETC```)
@@ -112,6 +114,6 @@ These peripherals are used to read / print characters to standard in/out (termin
 
 ***Output Unit***: set memory address ```8191``` to ascii value of next character for stdout, memory address ```8191``` will then be set to zero value.
 
-See ```./examples/asm/echo.asm``` for an example of how to use the input and output units.
+See ```examples/asm/echo.asm``` for an example of how to use the input and output units.
 # Assembly Code Examples
-See the ```./examples/asm``` directory.
+See the ```examples/asm``` directory.
