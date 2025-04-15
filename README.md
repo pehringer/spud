@@ -58,7 +58,7 @@ __|___|__  __|___|__  __|___|__     __|__   __|__
 <word> ::= <nibble><nibble><nibble><nibble>
 <opcode> ::= "000" | "001" | "010" | "011" | "100" | "101" | "110"
 <address> ::= <bit><nibble><nibble><nibble>
-<code> ::= <opcode><address><code> | <word><code> | ""     
+<code> ::= <opcode><address><code> | <word><code> | ""
 ```
 # Assembly Code Syntax
 [Backus-Naur form](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
@@ -79,18 +79,19 @@ The assembler takes two filepaths as arguments:
 ```python asm.py [INPUT_ASSEMBLY_FILEPATH] [OUTPUT_BINARY_FILEPATH]```  
 
 For example if you wanted to regenerate the hello world assembly example:  
-```python asm.py examples/asm/hello_world.asm examples/bin/hello_world.bin```
+```python asm.py examples/asm/hello.asm examples/bin/hello.bin```
 
-If any errors occur try running the Makefile.  
+If any errors occur try running the Makefile.
 # Simulator
-The simulator will run the examples/bin/hello.bin if no arguments are given:  
+The simulator will run the examples/bin/hello.bin if no arguments are given:
 ```./sim.bin```
-  
-Terminal Output:  
+
+Terminal Output:
 ```
 hello
 $
 ```
+
 If any errors occur try running the Makefile
 
 The simulator supports the following optional arguments:
@@ -111,103 +112,6 @@ These peripherals are used to read / print characters to standard in/out (termin
 
 ***Output Unit***: set memory address ```8191``` to ascii value of next character for stdout, memory address ```8191``` will then be set to zero value.
 
-See ```example_asm/echo.asm``` for an example of how to use the input and output units.
+See ```./examples/asm/echo.asm``` for an example of how to use the input and output units.
 # Assembly Code Examples
----
-```
-int A = 7;
-int B = 2;
-int C = A - B;
-```
-The processor lacks subtraction hardware.
-The workaround is to negate one of the numbers then add them together.
-Negate the number using ones's complement.
-Bitwise not the number, after adding the numbers together add one if there was a carry out.
-```
-START nt B
-      ad A
-      jc CARRY
-      ja STORE
-CARRY ad ONE
-STORE st C
-HALT  ja HALT
-
-ONE   1
-
-A     7
-
-B     2
-
-C     0
-```
----
-```
-int A = 7;
-int B = 2;
-int C = A - B;
-```
-The processor lacks subtraction hardware.
-The workaround is to negate one of the numbers then add them together.
-Negate the number using two's complement.
-Bitwise not the number, then add one to the number.
-```
-START nt B
-      ad ONE
-      ad A
-      st C
-HALT  ja HALT
-
-ONE   1
-
-A     7
-
-B     2
-
-C     0
-```
----
-```
-printf("hello\n");
-```
-All instructions have fixed memory addresses.
-Dynamic memory addresses requires self-modifying code.
-Pass "ja" instruction with return address (HALT) to subroutine (PRINT) and store it (PRINT_RET) for later execution to return.
-Create and load "ld" instruction with string index address (PRINT_IDX).
-```
-           ld  STRING
-           st  PRINT_ARG
-           ld  HALT
-           ja  PRINT_CAL
-HALT       ja  HALT
-
-
-PRINT_ARG  0
-PRINT_CAL  st  PRINT_RET
-           ld  PRINT_ARG
-           st  PRINT_IDX
-PRINT_IDX  0
-           st  PUTC
-           st  PRINT_ARG
-           ld  PRINT_IDX
-           ad  INCREMENT
-           st  PRINT_IDX
-           nt  PRINT_ARG
-           ad  INCREMENT
-           ad  CHAR_NULL
-           js  PRINT_IDX
-PRINT_RET  0
-
-
-INCREMENT  1
-
-
-STRING     ld  CHAR_ARRAY
-CHAR_ARRAY 104
-           101
-           108
-           108
-           111
-           10
-CHAR_NULL  0
-```
----
+See the ```./examples/asm``` directory.
