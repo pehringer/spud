@@ -45,7 +45,7 @@ __|___|__  __|___|__  __|___|__     __|__   __|__
 |-------------------------------------------------|-------------------------|
 |```if(opcode == 0) {ac = memory[address]}```     |```ld``` - Load          |
 |```if(opcode == 1) {memory[address] = ac}```     |```st``` - Store         |
-|```if(opcode == 2) {ac += memory[address]}```    |```ad``` - Add           |
+|```if(opcode == 2) {ac += memory[address]}```    |```ad``` - Add (Unsigned)|
 |```if(opcode == 3) {ac = ~memory[address]}```    |```nt``` - Not           |
 |```if(opcode == 4) {ip = address}```             |```ja``` - Jump Address  |
 |```if(opcode == 5 && sign_bit) {ip = address}``` |```js``` - Jump Sign Bit |
@@ -117,3 +117,4 @@ These peripherals are used to read / print characters to standard in/out (termin
 See ```examples/asm/echo.asm``` for an example of how to use the input and output units.
 # Assembly Code Examples
 See the ```examples/asm``` directory.
+
