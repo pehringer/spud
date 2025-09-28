@@ -67,11 +67,11 @@ __|___|__  __|___|__  __|___|__     __|__   __|__
 <number> ::= <digit><number> | <digit>
 <letter> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "_"
 <label> ::= <upper><label> | <upper>
-<whitespace> ::= "\n" | "\s" | "\t"
-<space> ::= <whitespace><space> | <whitespace>
+<space> ::= "\n" | "\s" | "\t"
+<whitespace> ::= <space><whitespace> | <space>
 <opcode> ::= "ld" | "st" | "ad" | "nt" | "ja" | "js" | "jc"
-<operation> ::= <opcode><space><number> | <opcode><space><label>
-<code> ::= <label><space><code> | <number><space><code> | <operation><space><code> | ""
+<operation> ::= <opcode><whitespace><number> | <opcode><whitespace><label>
+<code> ::= <label><whitespace><code> | <number><whitespace><code> | <operation><whitespace><code> | ""
 
 ```
 # Assembler
@@ -117,4 +117,5 @@ These peripherals are used to read / print characters to standard in/out (termin
 See ```examples/asm/echo.asm``` for an example of how to use the input and output units.
 # Assembly Code Examples
 See the ```examples/asm``` directory.
+
 
