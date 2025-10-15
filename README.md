@@ -128,7 +128,7 @@ $
 ```
 If any errors occur try running the Makefile.
 # Simulator
-The simulator requires one filepath:
+The simulator requires one filepath:  
 ```./sim.bin [INPUT_BINARY_CODE_FILEPATH]```
 
 For example if you wanted to run the hello world program:
@@ -154,5 +154,6 @@ These peripherals are used to read / print characters to standard in/out (termin
 See ```examples/asm/echo.asm``` for an example of how to use the input and output units.
 # Assembly Code Examples
 See the ```examples/asm``` directory.
+
 
 
