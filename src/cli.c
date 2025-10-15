@@ -26,7 +26,9 @@ void main(int argc, char **argv) {
     struct Simulation s;
     LoadSimulation(&s, file);
     fclose(file);
-    int state = RUNNING;
-    while((state = SimulateCycle(&s)) == RUNNING) {};
+    int state = SimulateCycle(&s);
+    while(state == RUNNING) {
+        state = SimulateCycle(&s);
+    }
     printf("\nHALTED: %d\n", state);
 }
