@@ -17,12 +17,12 @@ LETTER = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ_")
 def is_label(word):
 	return set(word).issubset(LETTER)
 
-OPCODE = set(["ld", "st", "ad", "nt", "ja", "js", "jc"])
+OPCODE = set(["ld", "st", "ad", "nt", "ja", "js", "jc", "ht"])
 def is_opcode(word):
 	return set([word]).issubset(OPCODE)
 
 def is_operation(words):
-	return is_opcode(words[0]) and (is_label(words[1]) or is_number(word[1]))
+	return is_opcode(words[0]) and (is_label(words[1]) or is_number(words[1]))
 
 def set_label(table, address, word):
 	if word in table:
@@ -57,6 +57,7 @@ GET_OPCODE = {
 "ja": bits(4, OPCODE_WIDTH),
 "js": bits(5, OPCODE_WIDTH),
 "jc": bits(6, OPCODE_WIDTH),
+"ht": bits(7, OPCODE_WIDTH),
 }
 
 def get_operation(table, words):

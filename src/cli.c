@@ -1,42 +1,34 @@
 #include "sim.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
-#include <time.h>
-#include <unistd.h>
 
 void main(int argc, char **argv) {
-    const char *filepath = "examples/bin/hello.bin";
-    struct timespec cycleTime = {0, 100000000};
-    long cycleCount = 128;
-    for(int argi = 1; argi < argc; argi++) {
-        if(!strcmp(argv[argi], "-filepath")) {
-            filepath = argv[++argi];
-        } else if(!strcmp(argv[argi], "-cycle_time")) {
-            cycleTime.tv_nsec = strtol(argv[++argi], NULL, 10) * 1000000;
-        } else if(!strcmp(argv[argi], "-cycle_count")) {
-            cycleCount = strtol(argv[++argi], NULL, 10);
-        } else {
-            printf("Invalid Option: %s\n", argv[argi]);
-            printf("----------------------------\n");
-            printf("-filepath [PATH_TO_BINARY]\n");
-            printf("-cycle_time [NUMBER_MILLISECONDS]\n");
-            printf("-cycle_count [NUMBER_OF_CYCLES]\n");
-            exit(-1);
-        }
+    if(argc != 2) {
+        printf("Incorrect number of arguments. Use the following format:\n");
+        printf("./sim.bin [INPUT_BINARY_CODE_FILEPATH]\n");
+        exit(-1);
     }
-    FILE *file = fopen(filepath, "r");
+    size_t length = strlen(argv[1]);
+    if (4 > length) {
+        printf("Input file must end with a .bin extension.\n");
+        exit(-1);
+    }
+    if(strncmp(argv[1] + length - 4, ".bin", 4) != 0) {
+        printf("Input file must end with a .bin extension.\n");
+        exit(-1);
+    }
+    FILE *file = fopen(argv[1], "r");
     if(!file) {
-        printf("Unable to load BIN file.\n");
-        exit(2);
+        printf("Cannot read input file: %s\n", argv[1]);
+        exit(-1);
     }
     struct Simulation s;
     LoadSimulation(&s, file);
     fclose(file);
-    while(cycleCount > 0) {
-        SimulateCycle(&s);
-        nanosleep(&cycleTime, 0);
-        cycleCount--;
-    }
+    int state = RUNNING;
+    do {
+        state = SimulateCycle(&s);
+    } while(state == RUNNING);
+    printf("\nHALTED: %d\n", state);
 }

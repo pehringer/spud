@@ -31,14 +31,24 @@ void OutputUnit(struct Simulation *s) {
     }
 }
 
-char* Memory(struct Simulation *s, char *address) {
-    int index = 0;
-    for(int i = 0; i < ADDRESS_WIDTH; i++) {
-        if(address[i]) {
-            index |= 1 << i;
+char Opcode(char *source) {
+    char opcode = 0;
+    for(int i = 0; i < OPCODE_WIDTH; i++) {
+        if(source[ADDRESS_WIDTH + i]) {
+            opcode |= 1 << i;
         }
     }
-    return s->memory[index];
+    return opcode;
+}
+
+int Address(char *source) {
+    int address = 0;
+    for(int i = 0; i < ADDRESS_WIDTH; i++) {
+        if(source[i]) {
+            address |= 1 << i;
+        }
+    }
+    return address;
 }
 
 char Datapath(char *destination, char *source, char *memory, char width, char not, char carry) {
@@ -63,26 +73,21 @@ char Datapath(char *destination, char *source, char *memory, char width, char no
     return carry;
 }
 
-void ProcessorUnit(struct Simulation *s) {
-    Datapath(s->ir, 0, Memory(s, s->ip), DATA_WIDTH, 0, 0);
+int ProcessorUnit(struct Simulation *s) {
+    Datapath(s->ir, 0, s->memory[Address(s->ip)], DATA_WIDTH, 0, 0);
     Datapath(s->ip, s->ip, 0, ADDRESS_WIDTH, 0, 1);
-    char opcode = 0;
-    for(int i = 0; i < OPCODE_WIDTH; i++) {
-        if(s->ir[ADDRESS_WIDTH + i]) {
-            opcode |= 1 << i;
-        }
-    }
+    char opcode = Opcode(s->ir);
     if(opcode == 0) {
-        s->ac[CARRY_BIT] = Datapath(s->ac, 0, Memory(s, s->ir), DATA_WIDTH, 0, 0);
+        s->ac[CARRY_BIT] = Datapath(s->ac, 0, s->memory[Address(s->ir)], DATA_WIDTH, 0, 0);
     }
     if(opcode == 1) {
-        Datapath(Memory(s, s->ir), s->ac, 0, DATA_WIDTH, 0, 0);
+        Datapath(s->memory[Address(s->ir)], s->ac, 0, DATA_WIDTH, 0, 0);
     }
     if(opcode == 2) {
-        s->ac[CARRY_BIT] = Datapath(s->ac, s->ac, Memory(s, s->ir), DATA_WIDTH, 0, 0);
+        s->ac[CARRY_BIT] = Datapath(s->ac, s->ac, s->memory[Address(s->ir)], DATA_WIDTH, 0, 0);
     }
     if(opcode == 3) {
-        s->ac[CARRY_BIT] = Datapath(s->ac, 0, Memory(s, s->ir), DATA_WIDTH, 1, 0);
+        s->ac[CARRY_BIT] = Datapath(s->ac, 0, s->memory[Address(s->ir)], DATA_WIDTH, 1, 0);
     }
     if(opcode == 4) {
         Datapath(s->ip, s->ir, 0, ADDRESS_WIDTH, 0, 0);
@@ -93,23 +98,29 @@ void ProcessorUnit(struct Simulation *s) {
     if(opcode == 6 && s->ac[CARRY_BIT]) {
         Datapath(s->ip, s->ir, 0, ADDRESS_WIDTH, 0, 0);
     }
+    if(opcode == 7) {
+        return Address(s->ir);
+    }
+    return RUNNING;
 }
 
-void SimulateCycle(struct Simulation *s) {
+int SimulateCycle(struct Simulation *s) {
     InputUnit(s);
     OutputUnit(s);
-    ProcessorUnit(s);
+    return ProcessorUnit(s);
 }
 
 void LoadSimulation(struct Simulation *s, FILE *bin) {
-    for(int i = 0; i < DATA_WIDTH; i++) {
+    for(int i = 0; i < ACCUMULATOR_WIDTH; i++) {
         s->ac[i] = 0;
+        if(i < DATA_WIDTH) {
+            s->ir[i] = 0;
+            s->memory[INPUT_UNIT_ADDRESS][i] = 1 & '\n' >> i;
+            s->memory[OUTPUT_UNIT_ADDRESS][i] = 0 & '\0' >> i;
+        }
         if(i < ADDRESS_WIDTH) {
             s->ip[i] = 0;
         }
-        s->ir[i] = 0;
-        s->memory[INPUT_UNIT_ADDRESS][i] = 1 & '\n' >> i;
-        s->memory[OUTPUT_UNIT_ADDRESS][i] = 0 & '\0' >> i;
     }
     int address = 0;
     int bit = 15;

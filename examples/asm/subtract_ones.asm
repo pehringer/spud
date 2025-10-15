@@ -27,8 +27,7 @@ PRINT_NEWLINE  ld ZERO
                st GETC
                ld GETC
                st PUTC
-
-HALT           ja HALT
+               ht 0
 
 RESULT 0
 ZERO   0

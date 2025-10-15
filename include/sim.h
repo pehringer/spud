@@ -15,6 +15,8 @@
 #define INPUT_UNIT_ADDRESS (ADDRESS_SPACE - 2)
 #define OUTPUT_UNIT_ADDRESS (ADDRESS_SPACE - 1)
 
+#define RUNNING -1
+
 struct Simulation {
     char ac[ACCUMULATOR_WIDTH];
     char ip[ADDRESS_WIDTH];
@@ -23,6 +25,6 @@ struct Simulation {
 };
 
 void LoadSimulation(struct Simulation *s, FILE *bin);
-void SimulateCycle(struct Simulation *s);
+int SimulateCycle(struct Simulation *s);
 
 #endif

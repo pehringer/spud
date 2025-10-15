@@ -6,8 +6,7 @@ PRINT_CHAR ld ZERO
            ad ONE
            ad NEWLINE
            js PRINT_CHAR
-
-HALT       ja HALT
+           ht 0
 
 ZERO    0
 ONE     1

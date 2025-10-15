@@ -2,7 +2,7 @@
                st  PRINT_ARGUMENT
                ld  HALT
                ja  PRINT_ROUTINE
-HALT           ja  HALT
+HALT           ht  0
 
 PRINT_ARGUMENT 0
 PRINT_ROUTINE  st  PRINT_RETURN
