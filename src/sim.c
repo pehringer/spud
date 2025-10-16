@@ -1,8 +1,8 @@
 #include "sim.h"
 
 void InputUnit(struct Simulation *s) {
-    char value = 0;
-    for(int i = 0; i < DATA_WIDTH && i < 8; i++) {
+    int value = 0;
+    for(int i = 0; i < DATA_WIDTH; i++) {
         if(s->memory[INPUT_UNIT_ADDRESS][i]) {
             value |= 1 << i;
         }
@@ -16,8 +16,8 @@ void InputUnit(struct Simulation *s) {
 }
 
 void OutputUnit(struct Simulation *s) {
-    char value = 0;
-    for(int i = 0; i < DATA_WIDTH && i < 8; i++) {
+    int value = 0;
+    for(int i = 0; i < DATA_WIDTH; i++) {
         if(s->memory[OUTPUT_UNIT_ADDRESS][i]) {
             value |= 1 << i;
         }
@@ -25,7 +25,7 @@ void OutputUnit(struct Simulation *s) {
     if(value) {
         putc(value, stdout);
         fflush(stdout);
-        for(int i = 0; i < DATA_WIDTH && i < 8; i++) {
+        for(int i = 0; i < DATA_WIDTH; i++) {
             s->memory[OUTPUT_UNIT_ADDRESS][i] = 0;
         }
     }
