@@ -67,7 +67,7 @@ __|___|__  __|___|__  __|___|__     __|__   __|__
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 <number> ::= <digit><number> | <digit>
 <letter> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "_"
-<label> ::= <upper><label> | <upper>
+<label> ::= <letter><label> | <letter>
 <space> ::= "\n" | "\s" | "\t"
 <whitespace> ::= <space><whitespace> | <space>
 <opcode> ::= "ld" | "st" | "ad" | "nt" | "ja" | "js" | "jc" | "ht"
