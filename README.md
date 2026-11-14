@@ -1,4 +1,4 @@
-# ***spud*** - ***S***imple ***P***rocessor ***U***nit ***D***esign
+# spud (simple processor unit design)
 The simplest processor design (that I could think of) that still resembles modern processors:
  - Von Neumann architecture.
  - Accumulator based machine.
